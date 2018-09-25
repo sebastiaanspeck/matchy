@@ -24,3 +24,7 @@ Homestead.json
 
 # SoccerAPI
 config/soccerapi.php
+
+# Mac file
+.DS_Store
+
