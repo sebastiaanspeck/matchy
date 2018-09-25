@@ -55,7 +55,7 @@ class SoccerAPIController extends BaseController
 	function fixturesBetweenDates(Request $request) {
 		$fromDate = $request->query('from', Carbon::now()->subDays(8)->toDateString());
 		$toDate = $request->query('to', Carbon::now()->subDays(1)->toDateString());
-		$leagues = $request->query('leagues');
+		$leagues = $request->query('leagues', '2,5,8,24,72,74,78,82,109,163,166,208,214,217,301,307,384,390,564,570,720,732,1325,1326,1353,1371');
 
 		$soccerAPI = new SoccerAPI();
 		$include = 'league,localTeam,visitorTeam';
