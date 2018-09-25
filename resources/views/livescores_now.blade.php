@@ -1,10 +1,15 @@
 @extends('layouts.default')
 
+@section('meta')
+    <meta http-equiv="refresh" content="60">
+@endsection
+
 @section('content')
     <div class = "container">
 
         @php
             echo "<h1> Livescores in-play - " . date("Y-m-d") . "</h1>";
+            echo "<p>Last update: " . date("Y-m-d H:i:s") . "</p>";
         
             if(isset($livescores)) {
                 if(count($livescores) >= 1) {
