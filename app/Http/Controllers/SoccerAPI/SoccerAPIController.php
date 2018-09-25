@@ -60,7 +60,7 @@ class SoccerAPIController extends BaseController
 			usort($livescores, function($a, $b) {
 				if ($a->league_id == $b->league_id) {
 					if($a->time->starting_at->date_time == $b->time->starting_at->date_time) {
-						return $a->id <=> $b->id;
+						return $b->time->minute <=> $a->time->minute;
 					}
 					return $a->time->starting_at->date_time <=> $b->time->starting_at->date_time;
 				}
@@ -74,7 +74,7 @@ class SoccerAPIController extends BaseController
 			usort($livescores, function($a, $b) {
 				if ($a->league_id == $b->league_id) {
 					if($a->time->starting_at->date_time == $b->time->starting_at->date_time) {
-						return $a->id <=> $b->id;
+						return $b->time->minute <=> $a->time->minute;
 					}
 					return $a->time->starting_at->date_time <=> $b->time->starting_at->date_time;
 				}
