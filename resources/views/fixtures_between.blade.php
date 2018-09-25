@@ -22,7 +22,6 @@
                         }
                         if($fixture->league_id == $last_league_id) {
                             echo "<tr>";
-                                echo "<td>" . $fixture->id . "</td>";
                                 if($winningTeam == $homeTeam->name) {
                                     echo "<td scope='row' style='color:green'>" . $homeTeam->name . "</td>";
                                     echo "<td scope='row' style='color:red'>" . $awayTeam->name . "</td>";
@@ -49,7 +48,6 @@
                                 echo "</thead>";
                                 echo "<tbody>";
                                     echo "<tr>";
-                                        echo "<td>" . $fixture->id . "</td>";
                                         if($winningTeam == $homeTeam->name) {
                                             echo "<td scope='row' style='color:green'>" . $homeTeam->name . "</td>";
                                             echo "<td scope='row' style='color:red'>" . $awayTeam->name . "</td>";
