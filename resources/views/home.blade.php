@@ -3,7 +3,29 @@
 @section('style')
     <!-- Styles -->
     <style>
-        .container {
+        html, body {
+            background-color: #fff;
+            color: #636b6f;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 200;
+            height: 100vh;
+            margin: 0;
+        }
+        .full-height {
+            height: 100vh;
+        }
+
+        .flex-center {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+        }
+
+        .position-ref {
+            position: relative;
+        }
+
+        .content {
             text-align: center;
         }
 
@@ -20,27 +42,19 @@
             text-decoration: none;
             text-transform: uppercase;
         }
-
         .m-b-md {
             margin-bottom: 30px;
-        }
-
-        .div-centered {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
         }
     </style>
 @endsection
 
 @section('content')
-    <div class="container">
-        <div class="div-centered">
+    <div class="flex-center position-ref full-height">
+        <div class="content">
             <div class="title m-b-md">
                 {{ config('app.name') }}
             </div>
-
+            
             <div class="links">
                 <a href="{{action('SoccerAPI\SoccerAPIController@viewAllLeagues')}}"> Leagues </a>
             </div>
