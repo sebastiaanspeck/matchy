@@ -55,7 +55,7 @@
                                         echo "<th scope='col' width='35%'>Home team</th>";
                                         echo "<th scope='col' width='35%'>Away team</th>";
                                         echo "<th scope='col' width='10%'>Score</th>";
-                                        echo "<th scope='col' width='15%'>Date and time</th>";
+                                        echo "<th scope='col' width='15%'>Time</th>";
                                         echo "<th scope='col' width='5%'>Details</th>";
                                     echo "</tr>";
                                 echo "</thead>";
