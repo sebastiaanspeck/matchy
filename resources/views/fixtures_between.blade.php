@@ -13,11 +13,26 @@
                         $league = $fixture->league->data;
                         $homeTeam = $fixture->localTeam->data;
                         $awayTeam = $fixture->visitorTeam->data;
+                        if($fixture->scores->localteam_score > $fixture->scores->visitorteam_score) {
+                            $winningTeam = $homeTeam->name;
+                        } elseif ($fixture->scores->localteam_score == $fixture->scores->visitorteam_score){
+                            $winningTeam = 'None';
+                        } else {
+                            $winningTeam = $awayTeam->name;
+                        }
                         if($fixture->league_id == $last_league_id) {
                             echo "<tr>";
-                                echo "<td>" . $homeTeam->name . "</td>";
-                                echo "<td>" . $awayTeam->name . "</td>";
                                 echo "<td>" . $fixture->id . "</td>";
+                                if($winningTeam == $homeTeam->name) {
+                                    echo "<td scope='row' style='color:green'>" . $homeTeam->name . "</td>";
+                                    echo "<td scope='row' style='color:red'>" . $awayTeam->name . "</td>";
+                                } elseif ($winningTeam == $awayTeam->name) {
+                                    echo "<td scope='row' style='color:red'>" . $homeTeam->name . "</td>";
+                                    echo "<td scope='row' style='color:green'>" . $awayTeam->name . "</td>";
+                                }  else {
+                                    echo "<td scope='row' style='color:orange'>" . $homeTeam->name . "</td>";
+                                    echo "<td scope='row' style='color:orange'>" . $awayTeam->name . "</td>";
+                                }
                                 echo "<td scope='row'>" . $fixture->scores->ft_score . "</td>";
                                 echo "<td scope='row'>" . $fixture->time->starting_at->date_time . "</td>";
                             echo "</tr>";
@@ -34,9 +49,17 @@
                                 echo "</thead>";
                                 echo "<tbody>";
                                     echo "<tr>";
-                                        echo "<td>" . $homeTeam->name . "</td>";
-                                        echo "<td>" . $awayTeam->name . "</td>";
                                         echo "<td>" . $fixture->id . "</td>";
+                                        if($winningTeam == $homeTeam->name) {
+                                            echo "<td scope='row' style='color:green'>" . $homeTeam->name . "</td>";
+                                            echo "<td scope='row' style='color:red'>" . $awayTeam->name . "</td>";
+                                        } elseif ($winningTeam == $awayTeam->name) {
+                                            echo "<td scope='row' style='color:red'>" . $homeTeam->name . "</td>";
+                                            echo "<td scope='row' style='color:green'>" . $awayTeam->name . "</td>";
+                                        } else {
+                                            echo "<td scope='row' style='color:orange'>" . $homeTeam->name . "</td>";
+                                            echo "<td scope='row' style='color:orange'>" . $awayTeam->name . "</td>";
+                                        }
                                         echo "<td scope='row'>" . $fixture->scores->ft_score . "</td>";
                                         echo "<td scope='row'>" . $fixture->time->starting_at->date_time . "</td>";
                                     echo "<tr>";
