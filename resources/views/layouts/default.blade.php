@@ -33,21 +33,15 @@
         <a class="navbar-brand" href="{{ url('/') }}">
             {{ config('app.name') }}
         </a>
-
-{{--        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownFixtures" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Fixtures
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownFixtures">
-                        <a class="dropdown-item" href="{{'/fixtures_between'}}">Fixture between two dates</a>
-                        <a class="dropdown-item" href="#">Fixture between two dates for team</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Fixture for specific date</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Fixture by id</a>
-                        <a class="dropdown-item" href="#">Multiple fixtures by id</a>
+                        <a class="dropdown-item" href="{{action('SoccerAPI\SoccerAPIController@fixturesBetweenDates', ['day' => 'yesterday'])}}">Fixtures yesterday</a>
+                        <a class="dropdown-item" href="{{action('SoccerAPI\SoccerAPIController@fixturesBetweenDates', ['day' => 'tomorrow'])}}">Fixture tomorrow</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -55,9 +49,9 @@
                         Livescores
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownLivescores">
-                        <a class="dropdown-item" href="{{'/livescores/now'}}">Livescores - now</a>
+                        <a class="dropdown-item" href="{{action('SoccerAPI\SoccerAPIController@livescores', ['type' => 'now'])}}">Livescores - now</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{{'/livescores/today'}}">Livescores - today</a>
+                        <a class="dropdown-item" href="{{action('SoccerAPI\SoccerAPIController@livescores', ['type' => 'today'])}}">Livescores - today</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -65,13 +59,11 @@
                         Leagues
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownLeagues">
-                        <a class="dropdown-item" href="{{'/leagues'}}">All leagues</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">League by id</a>
+                        <a class="dropdown-item" href="{{action('SoccerAPI\SoccerAPIController@viewAllLeagues')}}">All leagues</a>
                     </div>
                 </li>
             </ul>
-        </div>--}}
+        </div>
     </nav>
     <main class="py-4">
         @yield('content')
