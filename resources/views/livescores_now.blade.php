@@ -75,7 +75,7 @@
                                             echo "<td scope='row'>" . date('Y-m-d H:i', strtotime($livescore->time->starting_at->date_time)) . "</td>";
                                         }
                                         echo "<td scope='row'><a href='#'>Details</a></td>"; //link to details page (fixtures/{id})
-                                    echo "<tr>";
+                                    echo "</tr>";
                         }
                         $last_league_id = $livescore->league_id;
                     }
