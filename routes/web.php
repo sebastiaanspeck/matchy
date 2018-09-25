@@ -16,7 +16,7 @@ Route::get('/', function () {
 });
 
 Route::get('/leagues', 'SoccerAPI\SoccerAPIController@viewAllLeagues');
-Route::get('/livescores/{type}', 'SoccerAPI\SoccerAPIController@liveScores');
-Route::get('/livescores/{type}', 'SoccerAPI\SoccerAPIController@liveScores');
+Route::get('/livescores/{type}', 'SoccerAPI\SoccerAPIController@livescores');
+Route::get('/livescores/{type}', 'SoccerAPI\SoccerAPIController@livescores');
 
 Route::get('/fixtures/between', 'SoccerAPI\SoccerAPIController@fixturesBetweenDates');
