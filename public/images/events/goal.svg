@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>A00_goal_icon </title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M12,22.5 C17.7989901,22.5 22.5,17.7989901 22.5,12 C22.5,6.20100984 17.7989901,1.5 12,1.5 C6.20100984,1.5 1.5,6.20100984 1.5,12 C1.5,17.7989901 6.20100984,22.5 12,22.5 Z" id="path-1"></path>
+        <path d="M10.5,21 C16.2989901,21 21,16.2989901 21,10.5 C21,4.70100984 16.2989901,0 10.5,0 C4.70100984,0 0,4.70100984 0,10.5 C0,16.2989901 4.70100984,21 10.5,21 Z" id="path-2"></path>
+        <path d="M10.5,21 C16.2989901,21 21,16.2989901 21,10.5 C21,4.70100984 16.2989901,0 10.5,0 C4.70100984,0 0,4.70100984 0,10.5 C0,16.2989901 4.70100984,21 10.5,21 Z" id="path-4"></path>
+        <path d="M10.5,21 C16.2989901,21 21,16.2989901 21,10.5 C21,4.70100984 16.2989901,0 10.5,0 C4.70100984,0 0,4.70100984 0,10.5 C0,16.2989901 4.70100984,21 10.5,21 Z" id="path-6"></path>
+        <path d="M10.5,21 C16.2989901,21 21,16.2989901 21,10.5 C21,4.70100984 16.2989901,0 10.5,0 C4.70100984,0 0,4.70100984 0,10.5 C0,16.2989901 4.70100984,21 10.5,21 Z" id="path-8"></path>
+        <path d="M10.5,21 C16.2989901,21 21,16.2989901 21,10.5 C21,4.70100984 16.2989901,0 10.5,0 C4.70100984,0 0,4.70100984 0,10.5 C0,16.2989901 4.70100984,21 10.5,21 Z" id="path-10"></path>
+        <path d="M10.5,21 C16.2989901,21 21,16.2989901 21,10.5 C21,4.70100984 16.2989901,0 10.5,0 C4.70100984,0 0,4.70100984 0,10.5 C0,16.2989901 4.70100984,21 10.5,21 Z" id="path-12"></path>
+    </defs>
+    <g id="Latest" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="A00_goal_icon">
+            <g id="Soccer-ball">
+                <g id="Oval-1">
+                    <circle id="Oval" fill="#FFFFFF" cx="12" cy="12" r="12"></circle>
+                    <g id="path-1" fill-rule="nonzero">
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        <path stroke="#000000" stroke-width="2" d="M12,21.5 C17.2467054,21.5 21.5,17.2467054 21.5,12 C21.5,6.7532946 17.2467054,2.5 12,2.5 C6.75329459,2.5 2.5,6.75329459 2.5,12 C2.5,17.2467054 6.7532946,21.5 12,21.5 Z"></path>
+                    </g>
+                </g>
+                <g id="Polygon-1-Clipped" transform="translate(1.500000, 1.500000)">
+                    <mask id="mask-3" fill="white">
+                        <use xlink:href="#path-2"></use>
+                    </mask>
+                    <g id="path-1"></g>
+                    <polygon id="Polygon-1" fill="#000000" fill-rule="nonzero" mask="url(#mask-3)" points="10.5 7 13.8286978 9.41844051 12.5572484 13.3315595 8.44275162 13.3315595 7.17130219 9.41844051"></polygon>
+                </g>
+                <g id="Polygon-1-copy-Clipped" transform="translate(1.500000, 1.500000)">
+                    <mask id="mask-5" fill="white">
+                        <use xlink:href="#path-4"></use>
+                    </mask>
+                    <g id="path-1"></g>
+                    <polygon id="Polygon-1-copy" fill="#000000" fill-rule="nonzero" mask="url(#mask-5)" points="10.5 -2.8 13.8286978 -0.38155948 12.5572484 3.53155949 8.44275162 3.53155949 7.17130219 -0.38155948"></polygon>
+                </g>
+                <g id="Polygon-1-copy-2-Clipped" transform="translate(1.500000, 1.500000)">
+                    <mask id="mask-7" fill="white">
+                        <use xlink:href="#path-6"></use>
+                    </mask>
+                    <g id="path-1"></g>
+                    <polygon id="Polygon-1-copy-2" fill="#000000" fill-rule="nonzero" mask="url(#mask-7)" points="4.9 15.4 8.22869781 17.8184405 6.95724838 21.7315595 2.84275162 21.7315595 1.57130219 17.8184405"></polygon>
+                </g>
+                <g id="Polygon-1-copy-3-Clipped" transform="translate(1.500000, 1.500000)">
+                    <mask id="mask-9" fill="white">
+                        <use xlink:href="#path-8"></use>
+                    </mask>
+                    <g id="path-1"></g>
+                    <polygon id="Polygon-1-copy-3" fill="#000000" fill-rule="nonzero" mask="url(#mask-9)" points="16.1 15.4 19.4286978 17.8184405 18.1572483 21.7315595 14.0427517 21.7315595 12.7713022 17.8184405"></polygon>
+                </g>
+                <g id="Polygon-1-copy-3-Clipped" transform="translate(1.500000, 1.500000)">
+                    <mask id="mask-11" fill="white">
+                        <use xlink:href="#path-10"></use>
+                    </mask>
+                    <g id="path-1"></g>
+                    <polygon id="Polygon-1-copy-3" fill="#000000" fill-rule="nonzero" mask="url(#mask-11)" points="0.7 4.2 4.02869781 6.61844051 2.75724838 10.5315595 -1.35724838 10.5315595 -2.62869781 6.61844051"></polygon>
+                </g>
+                <g id="Polygon-1-copy-4-Clipped" transform="translate(1.500000, 1.500000)">
+                    <mask id="mask-13" fill="white">
+                        <use xlink:href="#path-12"></use>
+                    </mask>
+                    <g id="path-1"></g>
+                    <polygon id="Polygon-1-copy-4" fill="#000000" fill-rule="nonzero" mask="url(#mask-13)" points="20.3 4.2 23.6286978 6.61844051 22.3572483 10.5315595 18.2427517 10.5315595 16.9713022 6.61844051"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
