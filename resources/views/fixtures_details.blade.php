@@ -16,17 +16,21 @@
             $awayTeam = $fixture->visitorTeam->data;
             $events = $fixture->events->data;
 
-
-            echo "<h2 style='text-align: center'>" . $league->name . "</h2>"; // add link to league-details page
-            echo "<table width='100%'>";
-                echo "<tr>";
-                    echo "<td width='49%' style='text-align: center; vertical-align: top'><h1>" . $homeTeam->name . "</h1><br><img src=" . $homeTeam->logo_path . "></td>";
-                    echo "<td width='2%'  style='text-align: center; vertical-align: middle'><h1> - </h1></td>";
-                    echo "<td width='49%' style='text-align: center; vertical-align: top'><h1>" . $awayTeam->name . "</h1><br><img src=" . $awayTeam->logo_path . "></td>";
-                echo "</tr>";
-            echo "</table>";
-
             echo "<div id='heading' style='text-align: center'>";
+                echo "<h2>" . $league->name . "</h2>"; // add link to league-details page
+                    echo "<table width='100%'>";
+                        echo "<tr>";
+                            echo "<td width='49%'><img src=" . $homeTeam->logo_path . "></td>";
+                            echo "<td width='2%'><h1> - </h1></td>";
+                            echo "<td width='49%'><img src=" . $awayTeam->logo_path . "></td>";
+                        echo "</tr>";
+                        echo "<tr>";
+                            echo "<td width='49%' style='vertical-align: top'><h1>" . $homeTeam->name . "</h1></td>";
+                            echo "<td></td>";
+                            echo "<td width='49%' style='vertical-align: top'><h1>" . $awayTeam->name . "</h1></td>";
+                        echo "</tr>";
+                    echo "</table>";
+
 
                 if($fixture->time->status == 'FT_PEN') {
                     echo "<h3>" . $fixture->scores->localteam_score . " - " . $fixture->scores->visitorteam_score . "</h3><h6>(" . $fixture->scores->localteam_pen_score . " - " . $fixture->scores->visitorteam_pen_score . ") penalties" ."</h6>";
@@ -37,6 +41,21 @@
                 }
 
                 echo "<h6>" . date('Y-m-d H:i', strtotime($fixture->time->starting_at->date_time)) . "</h6>";
+
+
+                if(in_array($fixture->time->status, array('LIVE', 'HT', 'ET', 'PEN_LIVE', 'AET', 'BREAK'))) {
+                    if($fixture->time->status == 'HT') {
+                        echo "<h6>" . $fixture->time->status . "</h6>";
+                    } elseif ($fixture->time->minute == 'None' && $fixture->time->added_time == 0) {
+                        echo "<td scope='row'>0&apos;</td>";
+                    } elseif(in_array($fixture->time->added_time, array(0, 'None'))) {
+                        echo "<h6>" . $fixture->time->status . " - " . $fixture->time->minute . "&apos;</h6>";
+                    } elseif(!in_array($fixture->time->added_time, array(0, 'None'))) {
+                        echo "<h6>" . $fixture->time->status . " - " . $fixture->time->minute . "&apos;+" . $fixture->time->added_time . "</h6>";
+                    }
+                } else {
+                    echo "<td scope='row'>" . date('Y-m-d H:i', strtotime($fixture->time->starting_at->date_time)) . "</td>";
+                }
             echo "</div>";
 
             if(count($events) > 0) {
@@ -49,7 +68,7 @@
                             echo "<tr>";
                                 if($event->team_id == $homeTeamId) {
                                     if($event->type == 'substitution') {
-                                        echo "<td scope='row' style='text-align:left'>" . $event->minute . "&apos;&nbsp;&nbsp;<img src='/images/events/" . $event->type . ".svg'>&nbsp;&nbsp;" . $event->player_name . " (in) " . $event->related_player_name . " (out) " . "</td>";
+                                        echo "<td scope='row' style='text-align:left'>" . $event->minute . "&apos;&nbsp;&nbsp;<img src='/images/events/" . $event->type . ".svg'>&nbsp;&nbsp;" . $event->player_name . " (in) " . $event->related_player_name . " (out)" . "</td>";
                                         echo "<td></td>";
                                     } else {
                                         echo "<td scope='row' style='text-align:left'>" . $event->minute . "&apos;&nbsp;&nbsp;<img src='/images/events/" . $event->type . ".svg'>&nbsp;&nbsp;" . $event->player_name . "</td>";
@@ -58,7 +77,7 @@
                                 } else {
                                     if($event->type == 'substitution') {
                                         echo "<td></td>";
-                                        echo "<td scope='row' style='text-align:right'>" . $event->player_name . " (in) " .$event->related_player_name . " (out) " . "&nbsp;&nbsp;<img src='/images/events/" . $event->type . ".svg'>&nbsp;&nbsp;" . $event->minute ."&apos;</td>";
+                                        echo "<td scope='row' style='text-align:right'>" . $event->player_name . " (in) " .$event->related_player_name . " (out)" . "&nbsp;&nbsp;<img src='/images/events/" . $event->type . ".svg'>&nbsp;&nbsp;" . $event->minute ."&apos;</td>";
                                     } else {
                                         echo "<td></td>";
                                         echo "<td scope='row' style='text-align:right'>" . $event->player_name . "&nbsp;&nbsp;<img src='/images/events/" . $event->type . ".svg'>&nbsp;&nbsp;" . $event->minute ."&apos;</td>";
