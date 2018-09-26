@@ -6,7 +6,6 @@
 
 @section('content')
     <div class = "container">
-
         @php
             echo "<h1> Livescores in-play - " . date("Y-m-d") . "</h1>";
             echo "<p>Last update: " . date("Y-m-d H:i:s") . "</p>";
@@ -28,7 +27,17 @@
                             echo "<tr>";
                                 echo "<td scope='row'>" . $homeTeam->name . "</td>";
                                 echo "<td scope='row'>" . $awayTeam->name . "</td>";
-                                echo "<td scope='row'>" . $livescore->scores->localteam_score . " - " . $livescore->scores->visitorteam_score . "</td>";
+
+                                // show score, if FT_PEN -> show penalty score, if AET -> show (ET)
+                                if($livescore->time->status == 'FT_PEN') {
+                                    echo "<td scope='row'>" . $livescore->scores->localteam_score . " - " . $livescore->scores->visitorteam_score . " (" . $livescore->scores->localteam_pen_score . " - " . $livescore->scores->visitorteam_pen_score . ")" ."</td>";
+                                } elseif($livescore->time->status == 'AET') {
+                                    echo "<td scope='row'>" . $livescore->scores->localteam_score . " - " . $livescore->scores->visitorteam_score . " (ET)" ."</td>";
+                                } else {
+                                    echo "<td scope='row'>" . $livescore->scores->localteam_score . " - " . $livescore->scores->visitorteam_score . "</td>";
+                                }
+
+                                // show time, if status in array (LIVE, HT, ET, PEN_LIVE, AET, BREAK) -> show minute, else show start date-time
                                 if(in_array($livescore->time->status, array('LIVE', 'HT', 'ET', 'PEN_LIVE', 'AET', 'BREAK'))) {
                                     if($livescore->time->status == 'HT') {
                                         echo "<td scope='row'>HT</td>";
@@ -38,11 +47,13 @@
                                         echo "<td scope='row'>" . $livescore->time->minute . "&apos;</td>";
                                     } elseif(!in_array($livescore->time->added_time, array(0, 'None'))) {
                                         echo "<td scope='row'>" . $livescore->time->minute . "&apos;+" . $livescore->time->added_time . "</td>";
+                                    } else {
+                                        echo "<td scope='row'>BUG</td>";
                                     }
                                 } else {
                                     echo "<td scope='row'>" . date('Y-m-d H:i', strtotime($livescore->time->starting_at->date_time)) . "</td>";
                                 }
-                                echo "<td scope='row'><a href='#'>Details</a></td>"; //link to details page (fixtures/{id})
+                                echo "<td scope='row'><a href='#'><i class='fa fa-info-circle'></i></i></a></td>"; //link to details page (fixtures/{id})
                             echo "</tr>";
                         } else {
                             echo "<table class='table table-striped table-light' width='100%'>";
@@ -60,7 +71,17 @@
                                     echo "<tr>";
                                         echo "<td scope='row'>" . $homeTeam->name . "</td>";
                                         echo "<td scope='row'>" . $awayTeam->name . "</td>";
-                                        echo "<td scope='row'>" . $livescore->scores->localteam_score . " - " . $livescore->scores->visitorteam_score . "</td>";
+
+                                        // show score, if FT_PEN -> show penalty score, if AET -> show (ET)
+                                        if($livescore->time->status == 'FT_PEN') {
+                                            echo "<td scope='row'>" . $livescore->scores->localteam_score . " - " . $livescore->scores->visitorteam_score . " (" . $livescore->scores->localteam_pen_score . " - " . $livescore->scores->visitorteam_pen_score . ")" ."</td>";
+                                        } elseif($livescore->time->status == 'AET') {
+                                            echo "<td scope='row'>" . $livescore->scores->localteam_score . " - " . $livescore->scores->visitorteam_score . " (ET)" ."</td>";
+                                        } else {
+                                            echo "<td scope='row'>" . $livescore->scores->localteam_score . " - " . $livescore->scores->visitorteam_score . "</td>";
+                                        }
+
+                                        // show time, if status in array (LIVE, HT, ET, PEN_LIVE, AET, BREAK) -> show minute, else show start date-time
                                         if(in_array($livescore->time->status, array('LIVE', 'HT', 'ET', 'PEN_LIVE', 'AET', 'BREAK'))) {
                                             if($livescore->time->status == 'HT') {
                                                 echo "<td scope='row'>HT</td>";
@@ -74,7 +95,7 @@
                                         } else {
                                             echo "<td scope='row'>" . date('Y-m-d H:i', strtotime($livescore->time->starting_at->date_time)) . "</td>";
                                         }
-                                        echo "<td scope='row'><a href='#'>Details</a></td>"; //link to details page (fixtures/{id})
+                                        echo "<td scope='row'><a href='#'><i class='fa fa-info-circle'></i></i></a></td>"; //link to details page (fixtures/{id})
                                     echo "</tr>";
                         }
                         $last_league_id = $livescore->league_id;
@@ -87,6 +108,5 @@
                 }
             }
         @endphp
-
     </div>
 @endsection
