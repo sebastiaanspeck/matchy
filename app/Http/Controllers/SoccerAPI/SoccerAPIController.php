@@ -123,6 +123,9 @@ class SoccerAPIController extends BaseController
 		});
 
 		return view('fixtures_by_date', ['fixtures' => $fixtures, 'date' => $date]);
+
+	}
+
 	function fixturesDetails($id) {
 		$soccerAPI = new SoccerAPI();
 		$include = 'league,localTeam,visitorTeam,events';
