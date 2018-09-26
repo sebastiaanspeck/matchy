@@ -41,8 +41,6 @@
                         Fixtures
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownFixtures">
-                        <a class="dropdown-item" href="{{action('SoccerAPI\SoccerAPIController@fixturesBetweenDates', ['day' => 'yesterday'])}}">Fixtures yesterday</a>
-                        <a class="dropdown-item" href="{{action('SoccerAPI\SoccerAPIController@fixturesBetweenDates', ['day' => 'tomorrow'])}}">Fixture tomorrow</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -50,9 +48,7 @@
                         Livescores
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownLivescores">
-                        <a class="dropdown-item" href="{{action('SoccerAPI\SoccerAPIController@livescores', ['type' => 'now'])}}">Livescores - now</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{{action('SoccerAPI\SoccerAPIController@livescores', ['type' => 'today'])}}">Livescores - today</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -60,10 +56,14 @@
                         Leagues
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownLeagues">
-                        <a class="dropdown-item" href="{{action('SoccerAPI\SoccerAPIController@viewAllLeagues')}}">All leagues</a>
                     </div>
                 </li>
             </ul>
+                            <a class="dropdown-item" href="{{route('fixturesByDate', ['day' => 'yesterday'])}}">Fixtures yesterday</a>
+                            <a class="dropdown-item" href="{{route('fixturesByDate', ['day' => 'tomorrow'])}}">Fixture tomorrow</a>
+                            <a class="dropdown-item" href="{{route('livescores', ['type' => 'now'])}}">Livescores - now</a>
+                            <a class="dropdown-item" href="{{route('livescores', ['type' => 'today'])}}">Livescores - today</a>
+                            <a class="dropdown-item" href="{{route('leagues')}}">All leagues</a>
         </div>
     </nav>
     <main class="py-4">
