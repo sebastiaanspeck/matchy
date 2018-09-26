@@ -60,6 +60,7 @@
                 </li>
             </ul>
                             <a class="dropdown-item" href="{{route('fixturesByDate', ['day' => 'yesterday'])}}">Fixtures yesterday</a>
+                            <a class="dropdown-item" href="{{route('fixturesByDate', ['day' => 'today'])}}">Fixtures today</a>
                             <a class="dropdown-item" href="{{route('fixturesByDate', ['day' => 'tomorrow'])}}">Fixture tomorrow</a>
                             <a class="dropdown-item" href="{{route('livescores', ['type' => 'now'])}}">Livescores - now</a>
                             <a class="dropdown-item" href="{{route('livescores', ['type' => 'today'])}}">Livescores - today</a>
