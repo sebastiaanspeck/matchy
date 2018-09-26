@@ -2,12 +2,9 @@
 
 @section('content')
     <div class = "container">
-
         @php
-            if($fromDate == $toDate && $fromDate != '' && $toDate != '') {
-                echo "<h1> Fixtures - {$fromDate} </h1>";
-            } elseif($fromDate == $toDate && $fromDate == '' && $toDate == ''){
-                echo "<h1> Fixtures </h1>";
+            if(isset($date)) {
+                echo "<h1> Fixtures - {$date} </h1>";
             } else {
                 echo "<h1> Fixtures - {$fromDate} - {$toDate} </h1>";
             }
@@ -22,17 +19,18 @@
                         $league = $fixture->league->data;
                         $homeTeam = $fixture->localTeam->data;
                         $awayTeam = $fixture->visitorTeam->data;
-                        if($fixture->scores->localteam_score > $fixture->scores->visitorteam_score && $fixture->time->status == 'FT') {
+                        if($fixture->scores->localteam_score > $fixture->scores->visitorteam_score && $fixture->time->status != 'NS') {
                             $winningTeam = $homeTeam->name;
-                        } elseif ($fixture->scores->localteam_score == $fixture->scores->visitorteam_score && $fixture->time->status == 'FT'){
+                        } elseif ($fixture->scores->localteam_score == $fixture->scores->visitorteam_score && $fixture->time->status != 'NS'){
                             $winningTeam = 'draw';
-                        } elseif ($fixture->scores->localteam_score < $fixture->scores->visitorteam_score && $fixture->time->status == 'FT') {
+                        } elseif ($fixture->scores->localteam_score < $fixture->scores->visitorteam_score && $fixture->time->status != 'NS') {
                             $winningTeam = $awayTeam->name;
                         } else {
                             $winningTeam = 'TBD';
                         }
                         if($fixture->league_id == $last_league_id) {
                             echo "<tr>";
+                                // show winning team in green, losing team in red, if draw, show both in orange
                                 if($winningTeam == $homeTeam->name) {
                                     echo "<td scope='row' style='color:green'>" . $homeTeam->name . "</td>";
                                     echo "<td scope='row' style='color:red'>" . $awayTeam->name . "</td>";
@@ -46,9 +44,18 @@
                                     echo "<td scope='row'>" . $homeTeam->name . "</td>";
                                     echo "<td scope='row'>" . $awayTeam->name . "</td>";
                                 }
-                                echo "<td scope='row'>" . $fixture->scores->localteam_score . " - " . $fixture->scores->visitorteam_score . "</td>";
+
+                                // show score, if FT_PEN -> show penalty score, if AET -> show (ET)
+                                if($fixture->time->status == 'FT_PEN') {
+                                    echo "<td scope='row'>" . $fixture->scores->localteam_score . " - " . $fixture->scores->visitorteam_score . " (" . $fixture->scores->localteam_pen_score . " - " . $fixture->scores->visitorteam_pen_score . ")" ."</td>";
+                                } elseif($fixture->time->status == 'AET') {
+                                    echo "<td scope='row'>" . $fixture->scores->localteam_score . " - " . $fixture->scores->visitorteam_score . " (ET)" ."</td>";
+                                } else {
+                                    echo "<td scope='row'>" . $fixture->scores->localteam_score . " - " . $fixture->scores->visitorteam_score . "</td>";
+                                }
+
                                 echo "<td scope='row'>" . date('Y-m-d H:i', strtotime($fixture->time->starting_at->date_time)) . "</td>";
-                                echo "<td scope='row'><a href='#'>Details</a></td>"; //link to details page (fixtures/{id})
+                                echo "<td scope='row'><a href=" . route('fixturesDetails', ['id' => $fixture->id]) . "><i class='fa fa-info-circle'></i></i></a></td>"; //link to details page (fixtures/{id})
                             echo "</tr>";
                         } else {
                             echo "<table class='table table-striped table-light' width='100%'>";
@@ -64,6 +71,7 @@
                                 echo "</thead>";
                                 echo "<tbody>";
                                     echo "<tr>";
+                                        // show winning team in green, losing team in red, if draw, show both in orange
                                         if($winningTeam == $homeTeam->name) {
                                             echo "<td scope='row' style='color:green'>" . $homeTeam->name . "</td>";
                                             echo "<td scope='row' style='color:red'>" . $awayTeam->name . "</td>";
@@ -77,9 +85,18 @@
                                             echo "<td scope='row'>" . $homeTeam->name . "</td>";
                                             echo "<td scope='row'>" . $awayTeam->name . "</td>";
                                         }
-                                        echo "<td scope='row'>" . $fixture->scores->localteam_score . " - " . $fixture->scores->visitorteam_score . "</td>";
+
+                                        // show score, if FT_PEN -> show penalty score, if AET -> show (ET)
+                                        if($fixture->time->status == 'FT_PEN') {
+                                            echo "<td scope='row'>" . $fixture->scores->localteam_score . " - " . $fixture->scores->visitorteam_score . " (" . $fixture->scores->localteam_pen_score . " - " . $fixture->scores->visitorteam_pen_score . ")" ."</td>";
+                                        } elseif($fixture->time->status == 'AET') {
+                                            echo "<td scope='row'>" . $fixture->scores->localteam_score . " - " . $fixture->scores->visitorteam_score . " (ET)" ."</td>";
+                                        } else {
+                                            echo "<td scope='row'>" . $fixture->scores->localteam_score . " - " . $fixture->scores->visitorteam_score . "</td>";
+                                        }
+
                                         echo "<td scope='row'>" . date('Y-m-d H:i', strtotime($fixture->time->starting_at->date_time)) . "</td>";
-                                        echo "<td scope='row'><a href='#'>Details</a></td>"; //link to details page (fixtures/{id})
+                                        echo "<td scope='row'><a href=" . route('fixturesDetails', ['id' => $fixture->id]) . "><i class='fa fa-info-circle'></i></i></a></td>"; //link to details page (fixtures/{id})
                                     echo "</tr>";
                         }
                         $last_league_id = $fixture->league_id;
@@ -90,6 +107,5 @@
 
             }
         @endphp
-
     </div>
 @endsection
