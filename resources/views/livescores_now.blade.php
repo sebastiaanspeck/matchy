@@ -84,13 +84,13 @@
                                         // show time, if status in array (LIVE, HT, ET, PEN_LIVE, AET, BREAK) -> show minute, else show start date-time
                                         if(in_array($livescore->time->status, array('LIVE', 'HT', 'ET', 'PEN_LIVE', 'AET', 'BREAK'))) {
                                             if($livescore->time->status == 'HT') {
-                                                echo "<td scope='row'>HT</td>";
+                                                echo "<td scope='row'>" . $livescore->time->status . "</td>";
                                             } elseif ($livescore->time->minute == 'None' && $livescore->time->added_time == 0) {
-                                                echo "<td scope='row'>0'</td>";
+                                                echo "<td scope='row'>0&apos;</td>";
                                             } elseif(in_array($livescore->time->added_time, array(0, 'None'))) {
                                                 echo "<td scope='row'>" . $livescore->time->minute . "&apos;</td>";
                                             } elseif(!in_array($livescore->time->added_time, array(0, 'None'))) {
-                                                echo "<td scope='row'>" . $livescore->time->minute . "&apos;+" . $livescore->time->added_time . "</td>";
+                                                echo "<td scope='row'>" . $livescore->time->minute . "&apos; + " . $livescore->time->added_time . "</td>";
                                             }
                                         } else {
                                             echo "<td scope='row'>" . date('Y-m-d H:i', strtotime($livescore->time->starting_at->date_time)) . "</td>";
