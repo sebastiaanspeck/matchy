@@ -40,9 +40,6 @@
                     echo "<h3>" . $fixture->scores->localteam_score . " - " . $fixture->scores->visitorteam_score . " </h3>";
                 }
 
-                echo "<h6>" . date('Y-m-d H:i', strtotime($fixture->time->starting_at->date_time)) . "</h6>";
-
-
                 if(in_array($fixture->time->status, array('LIVE', 'HT', 'ET', 'PEN_LIVE', 'AET', 'BREAK'))) {
                     if($fixture->time->status == 'HT') {
                         echo "<h6>" . $fixture->time->status . "</h6>";
@@ -54,7 +51,7 @@
                         echo "<h6>" . $fixture->time->status . " - " . $fixture->time->minute . "&apos;+" . $fixture->time->added_time . "</h6>";
                     }
                 } else {
-                    echo "<td scope='row'>" . date('Y-m-d H:i', strtotime($fixture->time->starting_at->date_time)) . "</td>";
+                    echo "<h6>" . date('Y-m-d H:i', strtotime($fixture->time->starting_at->date_time)) . "</h6>";
                 }
             echo "</div>";
 
