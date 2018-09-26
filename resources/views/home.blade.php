@@ -35,8 +35,8 @@
             </div>
 
             <div class="links">
-                <a href="{{action('SoccerAPI\SoccerAPIController@viewAllLeagues')}}"> Leagues </a>
-                <a href="{{action('SoccerAPI\SoccerAPIController@livescores', ['type' => 'today'])}}"> Today's fixtures </a>
+                <a href="{{route('leagues')}}"> Leagues </a>
+                <a href="{{route('fixturesByDate', ['day' => 'today'])}}"> Today's fixtures </a>
             </div>
         </div>
     </div>
