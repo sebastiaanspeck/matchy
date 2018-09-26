@@ -19,11 +19,11 @@
                         $league = $fixture->league->data;
                         $homeTeam = $fixture->localTeam->data;
                         $awayTeam = $fixture->visitorTeam->data;
-                        if($fixture->scores->localteam_score > $fixture->scores->visitorteam_score && $fixture->time->status != 'NS') {
+                        if($fixture->scores->localteam_score > $fixture->scores->visitorteam_score && in_array($fixture->time->status,  array('FT', 'AET', 'FT_PEN'))) {
                             $winningTeam = $homeTeam->name;
-                        } elseif ($fixture->scores->localteam_score == $fixture->scores->visitorteam_score && $fixture->time->status != 'NS'){
+                        } elseif ($fixture->scores->localteam_score == $fixture->scores->visitorteam_score && in_array($fixture->time->status,  array('FT', 'AET', 'FT_PEN'))) {
                             $winningTeam = 'draw';
-                        } elseif ($fixture->scores->localteam_score < $fixture->scores->visitorteam_score && $fixture->time->status != 'NS') {
+                        } elseif ($fixture->scores->localteam_score < $fixture->scores->visitorteam_score && in_array($fixture->time->status,  array('FT', 'AET', 'FT_PEN'))) {
                             $winningTeam = $awayTeam->name;
                         } else {
                             $winningTeam = 'TBD';
