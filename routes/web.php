@@ -15,8 +15,11 @@ Route::get('/', function () {
     return view('home');
 });
 
-Route::get('/leagues', 'SoccerAPI\SoccerAPIController@viewAllLeagues');
-Route::get('/livescores/{type}', 'SoccerAPI\SoccerAPIController@livescores');
-Route::get('/livescores/{type}', 'SoccerAPI\SoccerAPIController@livescores');
+Route::get('/leagues', 'SoccerAPI\SoccerAPIController@viewAllLeagues')->name('leagues');
 
-Route::get('/fixtures/between', 'SoccerAPI\SoccerAPIController@fixturesBetweenDates');
+// Livescores
+Route::get('/livescores/{type}', 'SoccerAPI\SoccerAPIController@livescores')->name('livescores');
+
+// Fixtures
+Route::get('/fixtures', 'SoccerAPI\SoccerAPIController@fixturesByDate')->name('fixturesByDate');
+Route::get('/fixtures/{id}', 'SoccerAPI\SoccerAPIController@fixturesDetails')->name('fixturesDetails');
