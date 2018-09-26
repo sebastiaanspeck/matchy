@@ -53,7 +53,7 @@
                                 } else {
                                     echo "<td scope='row'>" . date('Y-m-d H:i', strtotime($livescore->time->starting_at->date_time)) . "</td>";
                                 }
-                                echo "<td scope='row'><a href='#'><i class='fa fa-info-circle'></i></i></a></td>"; //link to details page (fixtures/{id})
+                                echo "<td scope='row'><a href=" . route('fixturesDetails', ['id' => $livescore->id]) . "><i class='fa fa-info-circle'></i></i></a></td>"; //link to details page (fixtures/{id})
                             echo "</tr>";
                         } else {
                             echo "<table class='table table-striped table-light' width='100%'>";
@@ -95,7 +95,7 @@
                                         } else {
                                             echo "<td scope='row'>" . date('Y-m-d H:i', strtotime($livescore->time->starting_at->date_time)) . "</td>";
                                         }
-                                        echo "<td scope='row'><a href='#'><i class='fa fa-info-circle'></i></i></a></td>"; //link to details page (fixtures/{id})
+                                        echo "<td scope='row'><a href=" . route('fixturesDetails', ['id' => $livescore->id]) . "><i class='fa fa-info-circle'></i></i></a></td>"; //link to details page (fixtures/{id})
                                     echo "</tr>";
                         }
                         $last_league_id = $livescore->league_id;
