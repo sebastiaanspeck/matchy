@@ -90,18 +90,16 @@ class SoccerAPIController extends BaseController
 	function fixturesByDate(Request $request) {
 		if($request->has('day')) {
 			if ($request->query('day') == 'yesterday') {
-				$fromDate = Carbon::now()->subDays(1)->toDateString();
-				$toDate = Carbon::now()->subDays(1)->toDateString();
+				$date = Carbon::now()->subDays(1)->toDateString();
 			} elseif ($request->query('day') == 'tomorrow') {
-				$fromDate = Carbon::now()->addDays(1)->toDateString();
-				$toDate = Carbon::now()->addDays(1)->toDateString();
+				$date = Carbon::now()->addDays(1)->toDateString();
+			} elseif ($request->query('day') == 'today') {
+				$date = Carbon::now()->toDateString();
 			}
-		} elseif($request->has('from') && self::validateDate($request->query('from')) == true && $request->has('to') && self::validateDate($request->query('to')) == true) {
-			error_log("valid date");
-			$fromDate = $request->query('from', Carbon::now()->subDays(1)->toDateString());
-			$toDate = $request->query('to', Carbon::now()->subDays(1)->toDateString());
+		} elseif($request->has('date')) {
+			$date = $request->query('date');
 		} else {
-			return view('fixtures_between', ['fixtures' => 'Error', 'fromDate' => '', 'toDate' => '']);
+			$date = Carbon::now()->toDateString();
 		}
 
 		if($request->query('leagues') == 'all') {
