@@ -55,7 +55,7 @@ class SoccerAPIController extends BaseController
 		}
 
 		if($type == 'today') {
-			$livescores = $soccerAPI->livescores()->setInclude($include)->setLeagues($leagues)->setTimezone('Europe/Amsterdam')->today();
+			$livescores = $soccerAPI->livescores()->setInclude($include)->setLeagues($leagues)->today();
 
 			usort($livescores, function($a, $b) {
 				if ($a->league_id == $b->league_id) {
@@ -69,7 +69,7 @@ class SoccerAPIController extends BaseController
 
 			return view('livescores_today', ['livescores' => $livescores]);
 		} elseif($type == 'now') {
-			$livescores = $soccerAPI->livescores()->setInclude($include)->setLeagues($leagues)->setTimezone('Europe/Amsterdam')->now();
+			$livescores = $soccerAPI->livescores()->setInclude($include)->setLeagues($leagues)->now();
 
 			usort($livescores, function($a, $b) {
 				if ($a->league_id == $b->league_id) {
@@ -112,7 +112,7 @@ class SoccerAPIController extends BaseController
 		$soccerAPI = new SoccerAPI();
 		$include = 'league,localTeam,visitorTeam';
 
-		$fixtures = $soccerAPI->fixtures()->setInclude($include)->setLeagues($leagues)->setTimezone('Europe/Amsterdam')->betweenDates($fromDate, $toDate);
+		$fixtures = $soccerAPI->fixtures()->setInclude($include)->setLeagues($leagues)->byDate($date);
 
 		usort($fixtures, function($a, $b) {
 			if ($a->league_id == $b->league_id) {
