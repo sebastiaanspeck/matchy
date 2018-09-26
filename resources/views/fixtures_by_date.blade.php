@@ -54,7 +54,11 @@
                                     echo "<td scope='row'>" . $fixture->scores->localteam_score . " - " . $fixture->scores->visitorteam_score . "</td>";
                                 }
 
-                                echo "<td scope='row'>" . date('Y-m-d H:i', strtotime($fixture->time->starting_at->date_time)) . "</td>";
+                                if($fixture->time->status == 'LIVE') {
+                                    echo "<td scope='row'>" . date('Y-m-d H:i', strtotime($fixture->time->starting_at->date_time)) . " <span style='color:#FF0000'> LIVE</span></td>";
+                                } else {
+                                    echo "<td scope='row'>" . date('Y-m-d H:i', strtotime($fixture->time->starting_at->date_time)) . "</td>";
+                                }
                                 echo "<td scope='row'><a href=" . route('fixturesDetails', ['id' => $fixture->id]) . "><i class='fa fa-info-circle'></i></i></a></td>"; //link to details page (fixtures/{id})
                             echo "</tr>";
                         } else {
@@ -65,8 +69,8 @@
                                         echo "<th scope='col' width='35%'>Home team</th>";
                                         echo "<th scope='col' width='35%'>Away team</th>";
                                         echo "<th scope='col' width='10%'>Score</th>";
-                                        echo "<th scope='col' width='15%'>Date and time</th>";
-                                        echo "<th scope='col' width='5%'>Details</th>";
+                                        echo "<th scope='col' width='17%'>Date and time</th>";
+                                        echo "<th scope='col' width='3%'>Details</th>";
                                     echo "</tr>";
                                 echo "</thead>";
                                 echo "<tbody>";
@@ -95,7 +99,11 @@
                                             echo "<td scope='row'>" . $fixture->scores->localteam_score . " - " . $fixture->scores->visitorteam_score . "</td>";
                                         }
 
-                                        echo "<td scope='row'>" . date('Y-m-d H:i', strtotime($fixture->time->starting_at->date_time)) . "</td>";
+                                        if($fixture->time->status == 'LIVE') {
+                                            echo "<td scope='row'>" . date('Y-m-d H:i', strtotime($fixture->time->starting_at->date_time)) . " <span style='color:#FF0000'> LIVE</span></td>";
+                                        } else {
+                                            echo "<td scope='row'>" . date('Y-m-d H:i', strtotime($fixture->time->starting_at->date_time)) . "</td>";
+                                        }
                                         echo "<td scope='row'><a href=" . route('fixturesDetails', ['id' => $fixture->id]) . "><i class='fa fa-info-circle'></i></i></a></td>"; //link to details page (fixtures/{id})
                                     echo "</tr>";
                         }
