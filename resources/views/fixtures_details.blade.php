@@ -1,0 +1,75 @@
+@extends('layouts.default')
+
+@section('style')
+    .borderless td, .borderless th {
+        border: none;
+    }
+@endsection
+
+@section('content')
+    <div class = "container">
+        @php
+
+            $league = $fixture->league->data;
+            $homeTeam = $fixture->localTeam->data;
+            $homeTeamId = $homeTeam->id;
+            $awayTeam = $fixture->visitorTeam->data;
+            $events = $fixture->events->data;
+
+
+            echo "<h2 style='text-align: center'>" . $league->name . "</h2>"; // add link to league-details page
+            echo "<table width='100%'>";
+                echo "<tr>";
+                    echo "<td width='49%' style='text-align: center; vertical-align: top'><h1>" . $homeTeam->name . "</h1><br><img src=" . $homeTeam->logo_path . "></td>";
+                    echo "<td width='2%'  style='text-align: center; vertical-align: middle'><h1> - </h1></td>";
+                    echo "<td width='49%' style='text-align: center; vertical-align: top'><h1>" . $awayTeam->name . "</h1><br><img src=" . $awayTeam->logo_path . "></td>";
+                echo "</tr>";
+            echo "</table>";
+
+            echo "<div id='heading' style='text-align: center'>";
+
+                if($fixture->time->status == 'FT_PEN') {
+                    echo "<h3>" . $fixture->scores->localteam_score . " - " . $fixture->scores->visitorteam_score . "</h3><h6>(" . $fixture->scores->localteam_pen_score . " - " . $fixture->scores->visitorteam_pen_score . ") penalties" ."</h6>";
+                } elseif($fixture->time->status == 'AET') {
+                    echo "<h3>" . $fixture->scores->localteam_score . " - " . $fixture->scores->visitorteam_score . " (ET) </h3>";
+                } else {
+                    echo "<h3>" . $fixture->scores->localteam_score . " - " . $fixture->scores->visitorteam_score . " </h3>";
+                }
+
+                echo "<h6>" . date('Y-m-d H:i', strtotime($fixture->time->starting_at->date_time)) . "</h6>";
+            echo "</div>";
+
+            if(count($events) > 0) {
+            	echo "<table class='table borderless table-light' align='center'>";
+                    echo "<tbody>";
+                        foreach($events as $event) {
+                            if(in_array($event->type, array('pen_shootout_goal', 'pen_shootout_miss'))) {
+                                continue;
+                            }
+                            echo "<tr>";
+                                if($event->team_id == $homeTeamId) {
+                                    if($event->type == 'substitution') {
+                                        echo "<td scope='row' style='text-align:left'>" . $event->minute . "&apos;&nbsp;&nbsp;<img src='/images/events/" . $event->type . ".svg'>&nbsp;&nbsp;" . $event->player_name . " (in) " . $event->related_player_name . " (out) " . "</td>";
+                                        echo "<td></td>";
+                                    } else {
+                                        echo "<td scope='row' style='text-align:left'>" . $event->minute . "&apos;&nbsp;&nbsp;<img src='/images/events/" . $event->type . ".svg'>&nbsp;&nbsp;" . $event->player_name . "</td>";
+                                        echo "<td></td>";
+                                    }
+                                } else {
+                                    if($event->type == 'substitution') {
+                                        echo "<td></td>";
+                                        echo "<td scope='row' style='text-align:right'>" . $event->player_name . " (in) " .$event->related_player_name . " (out) " . "&nbsp;&nbsp;<img src='/images/events/" . $event->type . ".svg'>&nbsp;&nbsp;" . $event->minute ."&apos;</td>";
+                                    } else {
+                                        echo "<td></td>";
+                                        echo "<td scope='row' style='text-align:right'>" . $event->player_name . "&nbsp;&nbsp;<img src='/images/events/" . $event->type . ".svg'>&nbsp;&nbsp;" . $event->minute ."&apos;</td>";
+                                    }
+                                }
+                            echo "<tr>";
+                        }
+                    echo "</tbody>";
+                echo "</table>";
+            }
+        
+        @endphp
+    </div>
+@endsection
