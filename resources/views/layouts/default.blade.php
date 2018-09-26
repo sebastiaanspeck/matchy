@@ -25,48 +25,57 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
     <style>
+        body {
+            padding-top: 60px;
+        }
         @yield('style')
     </style>
 </head>
 <body>
 <div id="app">
-    <nav class="navbar navbar-expand-lg navbar-light navbar-laravel">
-        <a class="navbar-brand" href="{{ url('/') }}">
-            {{ config('app.name') }}
-        </a>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownFixtures" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Fixtures
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownFixtures">
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownLivescores" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Livescores
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownLivescores">
-                        <div class="dropdown-divider"></div>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownLeagues" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Leagues
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownLeagues">
-                    </div>
-                </li>
-            </ul>
+
+    <nav class="navbar navbar-expand-lg navbar-light navbar-laravel fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{{ url('/') }}">
+                    {{ config('app.name') }}
+                </a>
+            </div>
+            <div id="navbarSupportedContent" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav mr-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownFixtures" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Fixtures
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownFixtures">
                             <a class="dropdown-item" href="{{route('fixturesByDate', ['day' => 'yesterday'])}}">Fixtures yesterday</a>
                             <a class="dropdown-item" href="{{route('fixturesByDate', ['day' => 'today'])}}">Fixtures today</a>
                             <a class="dropdown-item" href="{{route('fixturesByDate', ['day' => 'tomorrow'])}}">Fixture tomorrow</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownLivescores" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Livescores
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownLivescores">
                             <a class="dropdown-item" href="{{route('livescores', ['type' => 'now'])}}">Livescores - now</a>
+                            <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{route('livescores', ['type' => 'today'])}}">Livescores - today</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownLeagues" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Leagues
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownLeagues">
                             <a class="dropdown-item" href="{{route('leagues')}}">All leagues</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
+
     <main class="py-4">
         @yield('content')
     </main>
