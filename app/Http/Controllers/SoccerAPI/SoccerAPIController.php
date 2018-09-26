@@ -87,7 +87,7 @@ class SoccerAPIController extends BaseController
 		}
 	}
 
-	function fixturesBetweenDates(Request $request) {
+	function fixturesByDate(Request $request) {
 		if($request->has('day')) {
 			if ($request->query('day') == 'yesterday') {
 				$fromDate = Carbon::now()->subDays(1)->toDateString();
@@ -124,7 +124,7 @@ class SoccerAPIController extends BaseController
 			return $a->league_id <=> $b->league_id;
 		});
 
-		return view('fixtures_between', ['fixtures' => $fixtures, 'fromDate' => $fromDate, 'toDate' => $toDate]);
+		return view('fixtures_by_date', ['fixtures' => $fixtures, 'date' => $date]);
 	}
 
 	function addPagination($data, $per_page) {
