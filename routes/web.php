@@ -15,7 +15,9 @@ Route::get('/', function () {
     return view('home');
 });
 
-Route::get('/leagues', 'SoccerAPI\SoccerAPIController@viewAllLeagues')->name('leagues');
+// Leagues
+Route::get('/leagues', 'SoccerAPI\SoccerAPIController@allLeagues')->name('leagues');
+Route::get('/leagues/{id}', 'SoccerAPI\SoccerAPIController@leaguesDetails')->name('leaguesDetails');
 
 // Livescores
 Route::get('/livescores/{type}', 'SoccerAPI\SoccerAPIController@livescores')->name('livescores');
