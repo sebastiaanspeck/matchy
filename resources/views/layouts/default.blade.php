@@ -27,6 +27,20 @@
     <style>
         body {
             padding-top: 60px;
+            overflow-y: scroll;
+        }
+        a:link {
+            color: black;
+            background-color: transparent;
+            text-decoration:none;
+        }
+        a:visited {
+            color: black;
+            background-color: transparent;
+            text-decoration:none;
+        }
+        a:hover {
+            color: grey;
         }
         @yield('style')
     </style>
