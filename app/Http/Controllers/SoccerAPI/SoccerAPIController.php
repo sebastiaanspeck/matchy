@@ -42,6 +42,15 @@ class SoccerAPIController extends BaseController
 		$paginated_data->setPath($url);
 
 		return view('leagues', ['leagues' => $paginated_data]);
+	function leaguesDetails($id) {
+		$soccerAPI = new SoccerAPI();
+		$include = 'country,season';
+
+		$league = $soccerAPI->leagues()->setInclude($include)->byId($id)->data;
+
+		$standings_raw = $soccerAPI->standings()->bySeasonId($league->current_season_id);
+
+		return view('leagues/leagues_details', ['league' => $league, 'standings_raw' => $standings_raw]);
 	}
 
 	function livescores($type, Request $request) {
