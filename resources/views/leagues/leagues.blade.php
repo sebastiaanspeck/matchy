@@ -18,10 +18,10 @@
                     echo "<tbody>";
                     foreach($leagues as $league) {
                     	echo "<tr>";
-                            echo "<td scope='row' width='50%'>" . $league->name . "</td>";
+                            echo "<td scope='row' width='50%'><a href=" . route('leaguesDetails', ['id' => $league->id]) . ">" . $league->name . "</a></td>";
                             if($league->country->data->extra != null) {
                                 $flag_code = strtolower($league->country->data->extra->iso);
-                                echo "<td scope='row' width='50%'> " . $league->country->data->name . "&nbsp;&nbsp; <img src=\"images/flags/" . $flag_code . ".gif\"> </td>";
+                                echo "<td scope='row' width='50%'>" . $league->country->data->name . "&nbsp;&nbsp; <img src=\"images/flags/" . $flag_code . ".gif\"> </td>";
                             } elseif ($league->country->data->name == "Europe") {
                                 echo "<td scope='row' width='50%'>" . $league->country->data->name . "&nbsp;&nbsp; <img src=\"images/flags/europeanunion.gif\"> </td>";
                             } else {

@@ -17,7 +17,7 @@
             $events = $fixture->events->data;
 
             echo "<div id='heading' style='text-align: center'>";
-                echo "<h2>" . $league->name . "</h2>"; // add link to league-details page
+                echo "<h2><a href=" . route('leaguesDetails', ['id' => $league->id]) . ">" . $league->name . "</a></h2>";
                     echo "<table width='100%'>";
                         echo "<tr>";
                             echo "<td width='49%'><img src=" . $homeTeam->logo_path . "></td>";
@@ -53,6 +53,7 @@
                 } else {
                     echo "<h6>" . date('Y-m-d H:i', strtotime($fixture->time->starting_at->date_time)) . "</h6>";
                 }
+
             echo "</div>";
 
             if(count($events) > 0) {
@@ -65,19 +66,35 @@
                             echo "<tr>";
                                 if($event->team_id == $homeTeamId) {
                                     if($event->type == 'substitution') {
-                                        echo "<td scope='row' style='text-align:left'>" . $event->minute . "&apos;&nbsp;&nbsp;<img src='/images/events/" . $event->type . ".svg'>&nbsp;&nbsp;" . $event->player_name . " (in) " . $event->related_player_name . " (out)" . "</td>";
+                                        echo "<td scope='row' style='text-align:right' width='1%'>" . $event->minute . "&apos;</td>";
+                                        echo "<td scope='row' style='text-align:center' width='1%'><img src='/images/events/" . $event->type . ".svg'></td>";
+                                        echo "<td scope='row' style='text-align:left' width='49%'>" . $event->player_name . " (in) " . $event->related_player_name . " (out)" . "</td>";
+                                        echo "<td></td>";
+                                        echo "<td></td>";
                                         echo "<td></td>";
                                     } else {
-                                        echo "<td scope='row' style='text-align:left'>" . $event->minute . "&apos;&nbsp;&nbsp;<img src='/images/events/" . $event->type . ".svg'>&nbsp;&nbsp;" . $event->player_name . "</td>";
+                                        echo "<td scope='row' style='text-align:right' width='1%'>" . $event->minute . "&apos;</td>";
+                                        echo "<td scope='row' style='text-align:center' width='1%'><img src='/images/events/" . $event->type . ".svg'></td>";
+                                        echo "<td scope='row' style='text-align:left' width='49%'>" . $event->player_name . "</td>";
+                                        echo "<td></td>";
+                                        echo "<td></td>";
                                         echo "<td></td>";
                                     }
                                 } else {
                                     if($event->type == 'substitution') {
                                         echo "<td></td>";
-                                        echo "<td scope='row' style='text-align:right'>" . $event->player_name . " (in) " .$event->related_player_name . " (out)" . "&nbsp;&nbsp;<img src='/images/events/" . $event->type . ".svg'>&nbsp;&nbsp;" . $event->minute ."&apos;</td>";
+                                        echo "<td></td>";
+                                        echo "<td></td>";
+                                        echo "<td scope='row' style='text-align:right' width='49%'>" . $event->player_name . " (in) " . $event->related_player_name . " (out)</td>";
+                                        echo "<td scope='row' style='text-align:center' width='1%'><img src='/images/events/" . $event->type . ".svg'></td>";
+                                        echo "<td scope='row' style='text-align:left' width='1%'>" . $event->minute ."&apos;</td>";
                                     } else {
                                         echo "<td></td>";
-                                        echo "<td scope='row' style='text-align:right'>" . $event->player_name . "&nbsp;&nbsp;<img src='/images/events/" . $event->type . ".svg'>&nbsp;&nbsp;" . $event->minute ."&apos;</td>";
+                                        echo "<td></td>";
+                                        echo "<td></td>";
+                                        echo "<td scope='row' style='text-align:right' width='49%'>" . $event->player_name . "</td>";
+                                        echo "<td scope='row' style='text-align:center' width='1%'><img src='/images/events/" . $event->type . ".svg'></td>";
+                                        echo "<td scope='row' style='text-align:left' width='1%'>" . $event->minute ."&apos;</td>";
                                     }
                                 }
                             echo "<tr>";

@@ -53,18 +53,18 @@
                                 } else {
                                     echo "<td scope='row'>" . date('Y-m-d H:i', strtotime($livescore->time->starting_at->date_time)) . "</td>";
                                 }
-                                echo "<td scope='row'><a href=" . route('fixturesDetails', ['id' => $livescore->id]) . "><i class='fa fa-info-circle'></i></i></a></td>"; //link to details page (fixtures/{id})
+                                echo "<td scope='row'><a href=" . route('fixturesDetails', ['id' => $livescore->id]) . "><i class='fa fa-info-circle'></i></i></a></td>"; //link to details page (leagues/{id})
                             echo "</tr>";
                         } else {
                             echo "<table class='table table-striped table-light' width='100%'>";
-                                echo "<br><h3>" . $league->name . "</h3>"; // add link to league-details page
+                                echo "<br><h3><a href=" . route('leaguesDetails', ['id' => $league->id]) . ">" . $league->name . "</a></h3>"; // add link to league-details page
                                 echo "<thead>";
                                     echo "<tr>";
-                                        echo "<th scope='col' width='37.5%'>Home team</th>";
-                                        echo "<th scope='col' width='37.5%'>Away team</th>";
+                                        echo "<th scope='col' width='35%'>Home team</th>";
+                                        echo "<th scope='col' width='35%'>Away team</th>";
                                         echo "<th scope='col' width='10%'>Score</th>";
-                                        echo "<th scope='col' width='10%'>Time</th>";
-                                        echo "<th scope='col' width='5%'>Details</th>";
+                                        echo "<th scope='col' width='17%'>Date and time</th>";
+                                        echo "<th scope='col' width='3%'>Info</th>";
                                     echo "</tr>";
                                 echo "</thead>";
                                 echo "<tbody>";
