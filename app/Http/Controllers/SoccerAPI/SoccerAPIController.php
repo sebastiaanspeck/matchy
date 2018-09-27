@@ -22,7 +22,7 @@ class SoccerAPIController extends BaseController
 {
 	use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-	function viewAllLeagues(Request $request) {
+	function allLeagues(Request $request) {
 		$soccerAPI = new SoccerAPI();
 		$include = 'country,season';
 
@@ -41,7 +41,9 @@ class SoccerAPIController extends BaseController
 
 		$paginated_data->setPath($url);
 
-		return view('leagues', ['leagues' => $paginated_data]);
+		return view('leagues/leagues', ['leagues' => $paginated_data]);
+	}
+
 	function leaguesDetails($id) {
 		$soccerAPI = new SoccerAPI();
 		$include = 'country,season';
@@ -76,7 +78,7 @@ class SoccerAPIController extends BaseController
 				return $a->league_id <=> $b->league_id;
 			});
 
-			return view('livescores_today', ['livescores' => $livescores]);
+			return view('livescores/livescores_today', ['livescores' => $livescores]);
 		} elseif($type == 'now') {
 			$livescores = $soccerAPI->livescores()->setInclude($include)->setLeagues($leagues)->now();
 
@@ -90,7 +92,7 @@ class SoccerAPIController extends BaseController
 				return $a->league_id <=> $b->league_id;
 			});
 
-			return view('livescores_now', ['livescores' => $livescores]);
+			return view('livescores/livescores_now', ['livescores' => $livescores]);
 		} else {
 			return '';
 		}
@@ -131,7 +133,7 @@ class SoccerAPIController extends BaseController
 			return $a->league_id <=> $b->league_id;
 		});
 
-		return view('fixtures_by_date', ['fixtures' => $fixtures, 'date' => $date]);
+		return view('fixtures/fixtures_by_date', ['fixtures' => $fixtures, 'date' => $date]);
 
 	}
 
@@ -141,7 +143,7 @@ class SoccerAPIController extends BaseController
 
 		$fixture = $soccerAPI->fixtures()->setInclude($include)->byMatchId($id)->data;
 
-		return view('fixtures_details', ['fixture' => $fixture]);
+		return view('fixtures/fixtures_details', ['fixture' => $fixture]);
 	}
 
 	function addPagination($data, $per_page) {
