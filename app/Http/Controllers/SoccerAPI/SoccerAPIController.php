@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Carbon\Carbon;
 use DateTime;
+use GuzzleHttp;
 
 class SoccerAPIController extends BaseController
 {
@@ -182,4 +183,28 @@ class SoccerAPIController extends BaseController
 		// The Y ( 4 digits year ) returns TRUE for any integer with any number of digits so changing the comparison from == to === fixes the issue.
 		return $d && $d->format($format) === $date;
 	}
+
+	public static function getAlpha2CountryCode($country) {
+        if(strlen($country) == 3) {
+            $response = self::APIResponse('https://restcountries.eu/rest/v2/alpha?codes=' . $country .  '&fields=name;alpha2Code;alpha3Code;flag');
+        } else {
+            $response = self::APIResponse('https://restcountries.eu/rest/v2/name/' . $country . '?fullText=true&fields=name;alpha2Code;alpha3Code;flag');
+        }
+        return $response[0]->alpha2Code;
+    }
+
+    static function APIResponse($url)
+    {
+        $client = new GuzzleHttp\Client();
+
+        try {
+            $response = $client->request('GET', $url);
+
+            return json_decode($response->getBody()->getContents());
+        } catch (GuzzleHttp\Exception\ClientException $e) {
+            return "ClientException";
+        } catch (GuzzleHttp\Exception\GuzzleException $e) {
+            return "GuzzleException";
+        }
+    }
 }
