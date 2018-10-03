@@ -25,3 +25,6 @@ Route::get('/livescores/{type}', 'SoccerAPI\SoccerAPIController@livescores')->na
 // Fixtures
 Route::get('/fixtures', 'SoccerAPI\SoccerAPIController@fixturesByDate')->name('fixturesByDate');
 Route::get('/fixtures/{id}', 'SoccerAPI\SoccerAPIController@fixturesDetails')->name('fixturesDetails');
+
+// Teams
+Route::get('/teams/{id}', 'SoccerAPI\SoccerAPIController@teamsDetails')->name('teamsDetails');
