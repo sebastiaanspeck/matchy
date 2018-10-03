@@ -32,10 +32,34 @@
         content: "\f105";
     }
 @endsection
+        {{-- Nav tabs  --}}
+        <ul class="nav nav-tabs" id="nav_tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="last_fixtures-tab" data-toggle="tab" href="#last_fixtures" role="tab" aria-controls="last_fixtures" aria-selected="true">Last {{ $last_fixtures->count() }} fixtures</a>
+            </li>
+            @if($upcoming_fixtures->count() > 0)
+                <li class="nav-item">
+                    <a class="nav-link" id="upcoming_fixtures-tab" data-toggle="tab" href="#upcoming_fixtures" role="tab" aria-controls="upcoming_fixtures" aria-selected="false">Upcoming {{ $upcoming_fixtures->count() }} fixtures</a>
+                </li>
+            @endif
+            @if(count($standings_raw) > 0)
+                <li class="nav-item">
+                    <a class="nav-link" id="standings-tab" data-toggle="tab" href="#standings" role="tab" aria-controls="standings" aria-selected="false">Standings</a>
+                </li>
+            @endif
+            @if(count($topscorers) > 0)
+                <li class="nav-item">
+                    <a class="nav-link" id="topscorers-tab" data-toggle="tab" href="#topscorers" role="tab" aria-controls="topscorers" aria-selected="false">Topscorers</a>
+                </li>
+            @endif
+        </ul>
 
 @section('content')
     <div class = "container">
         @php
+        {{-- Tab panes --}}
+        <div class="tab-content" id="tab_content">
+            <div class="tab-pane fade show active" id="last_fixtures" role="tabpanel" aria-labelledby="last_fixtures-tab">
 
             echo "<div id='heading' style='text-align: center'>";
                 echo "<h2>" . $league->name . "</h2>";
@@ -135,6 +159,8 @@
                                     }
                                 echo "</td>";
                                 echo "</tr>";
+            </div>
+            <div class="tab-pane fade" id="upcoming_fixtures" role="tabpanel" aria-labelledby="upcoming_fixtures-tab">
                             }
                         echo "</tbody>";
                     echo "</table>";
@@ -162,5 +188,9 @@
 
 
         @endphp
+            </div>
+            <div class="tab-pane fade" id="topscorers" role="tabpanel" aria-labelledby="topscorers-tab">
+            </div>
+        </div>
     </div>
 @endsection
