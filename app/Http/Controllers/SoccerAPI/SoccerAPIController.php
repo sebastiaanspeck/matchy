@@ -56,13 +56,54 @@ class SoccerAPIController extends BaseController
      */
     function leaguesDetails($id, Request $request) {
 		$soccerAPI = new SoccerAPI();
-		$include = 'country,season';
+		$include_league = 'country,season';
+		$include_season = 'upcoming.localTeam,upcoming.visitorTeam,upcoming.league,results:order(starting_at|desc),results.localTeam,results.visitorTeam,results.league';
+		$include_topscorers = 'goalscorers.player,goalscorers.team';
 
-		$league = $soccerAPI->leagues()->setInclude($include)->byId($id)->data;
+        /* $include_topscorers_aggregated = 'aggregatedGoalscorers.player,aggregatedGoalscorers.team'; */
+
+		$league = $soccerAPI->leagues()->setInclude($include_league)->byId($id)->data;
+
+		$excluded_leagues = array(214,1371,24,2,5,720,1325,1326,307,109,390);
 
 		$standings_raw = $soccerAPI->standings()->bySeasonId($league->current_season_id);
 
-		return view('leagues/leagues_details', ['league' => $league, 'standings_raw' => $standings_raw]);
+		$season = $soccerAPI->seasons()->setInclude($include_season)->byId($league->current_season_id);
+
+
+        if(in_array($id, $excluded_leagues)) {
+            $topscorers = array();
+        } else {
+            $topscorers_default = $soccerAPI->topscorers()->setInclude($include_topscorers)->bySeasonId($league->current_season_id)->goalscorers->data;
+
+            /* cups don't work yet -> try: check with current_stage_id */
+            if(count($topscorers_default) > 0) {
+                $topscorers = self::addPagination($topscorers_default, 10);
+            } else {
+                $topscorers = array();
+               /* $topscorers_aggregated = $soccerAPI->topscorers()->setInclude($include_topscorers_aggregated)->aggregatedBySeasonId($league->current_season_id)->aggregatedGoalscorers->data;
+                if(count($topscorers_aggregated) > 0) {
+                    $topscorers = $topscorers_aggregated;
+                } else {
+                    $topscorers = array();
+                }*/
+            }
+        }
+
+
+		if(count($season) > 0) {
+			$number_of_matches = $request->query('matches', 10);
+			$last_fixtures = self::addPagination($season->data->results->data, $number_of_matches);
+			$upcoming_fixtures = self::addPagination($season->data->upcoming->data, $number_of_matches);
+
+		} else {
+			$last_fixtures = array();
+			$upcoming_fixtures = array();
+			$number_of_matches = 10;
+		}
+
+		return view('leagues/leagues_details', ['league' => $league, 'standings_raw' => $standings_raw, 'last_fixtures' => $last_fixtures,
+			'upcoming_fixtures' => $upcoming_fixtures, 'number_of_matches' => $number_of_matches, 'topscorers' => $topscorers]);
 	}
 
     /**
