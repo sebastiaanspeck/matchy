@@ -23,15 +23,7 @@
         background-color: #f0be4b;
     }
 
-    .div-toggle:after{
-        content: "\f107";
-        font-family: FontAwesome;
-    }
 
-    .div-toggle.collapsed:after {
-        content: "\f105";
-    }
-@endsection
         {{-- Nav tabs  --}}
         <ul class="nav nav-tabs" id="nav_tabs" role="tablist">
             <li class="nav-item">
