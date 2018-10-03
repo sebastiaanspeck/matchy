@@ -322,10 +322,11 @@ class SoccerAPIController extends BaseController
      */
     public static function getAlpha2CountryCode($country) {
         if(strlen($country) == 3) {
-            $response = self::APIResponse('https://restcountries.eu/rest/v2/alpha?codes=' . $country .  '&fields=name;alpha2Code;alpha3Code;flag');
+            $response = self::APIResponse('https://restcountries.eu/rest/v2/alpha?codes=' . $country . '&fields=name;alpha2Code;alpha3Code;flag');
         } else {
-            $response = self::APIResponse('https://restcountries.eu/rest/v2/name/' . $country . '?fullText=true&fields=name;alpha2Code;alpha3Code;flag');
+            $response = self::APIResponse('https://restcountries.eu/rest/v2/name/'. $country . '?fullText=true&fields=name;alpha2Code;alpha3Code;flag');
         }
+
         return $response[0]->alpha2Code;
     }
 
