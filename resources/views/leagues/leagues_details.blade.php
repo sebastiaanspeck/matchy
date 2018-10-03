@@ -1,27 +1,4 @@
 @extends('layouts.default')
-@section('style')
-    .result-icon {
-        display: inline-block;
-        padding: 8px;
-        font-size: .75rem;
-        line-height: 1.3;
-        font-weight: 500;
-        color: #fff;
-        text-transform: uppercase;
-        width: 30px;
-        height: 30px;
-        text-align: center;
-        margin-right: 4px;
-    }
-    .result-icon-w {
-        background-color: #83cd7b;
-    }
-    .result-icon-l {
-        background-color: #dc656a;
-    }
-    .result-icon-d {
-        background-color: #f0be4b;
-    }
 
 
         {{-- Nav tabs  --}}
