@@ -321,6 +321,14 @@ class SoccerAPIController extends BaseController
      * @return string
      */
     public static function getAlpha2CountryCode($country) {
+	    if(in_array($country, array("england","wales", "northern ireland", "scotland"))) {
+            return "GB";
+        } elseif($country == "republic of ireland") {
+	        return "IE";
+        } elseif($country == "tanzania") {
+	        return "TZ";
+        }
+
         if(strlen($country) == 3) {
             $response = self::APIResponse('https://restcountries.eu/rest/v2/alpha?codes=' . $country . '&fields=name;alpha2Code;alpha3Code;flag');
         } else {
