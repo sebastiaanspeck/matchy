@@ -10,7 +10,8 @@
         "laravel/framework": "5.7.*",
         "laravel/tinker": "^1.0",
         "kirill-latish/laravel-sportmonks-soccer": "^2.0",
-        "jakeasmith/http_build_url": "^1"
+        "jakeasmith/http_build_url": "^1",
+        "ext-json": "^1"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
