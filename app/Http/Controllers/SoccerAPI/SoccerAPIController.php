@@ -240,7 +240,7 @@ class SoccerAPIController extends BaseController
      */
     function fixturesDetails($id) {
 		$soccerAPI = new SoccerAPI();
-		$include = 'league,localTeam,visitorTeam,events';
+		$include = 'localTeam,visitorTeam,lineup.player,bench.player,sidelined.player,stats,comments,highlights,league,season,referee,events,venue,localCoach,visitorCoach';
 
 		$fixture = $soccerAPI->fixtures()->setInclude($include)->byMatchId($id)->data;
 
