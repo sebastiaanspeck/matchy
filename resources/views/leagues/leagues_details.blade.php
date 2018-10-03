@@ -1,5 +1,14 @@
-@extends('layouts.default')
+@extends("layouts.default")
 
+@section("content")
+    <div class="container">
+        <div id="heading" style="text-align: center">
+            <table width="100%">
+                <tr>
+                    <td><h2>{{$league->name}} - {{$league->season->data->name}}</h2></td>
+                </tr>
+            </table>
+        </div>
 
         {{-- Nav tabs  --}}
         <ul class="nav nav-tabs" id="nav_tabs" role="tablist">
@@ -23,142 +32,355 @@
             @endif
         </ul>
 
-@section('content')
-    <div class = "container">
-        @php
         {{-- Tab panes --}}
         <div class="tab-content" id="tab_content">
             <div class="tab-pane fade show active" id="last_fixtures" role="tabpanel" aria-labelledby="last_fixtures-tab">
+                @if($last_fixtures->count() > 0)
+                    @php
+                        $last_league_id = 0;
+                    @endphp
+                    @foreach($last_fixtures as $last_fixture)
+                        @php
+                            $homeTeam = $last_fixture->localTeam->data;
+                            $awayTeam = $last_fixture->visitorTeam->data;
+                            if($last_fixture->scores->localteam_score > $last_fixture->scores->visitorteam_score && in_array($last_fixture->time->status, array("FT", "AET", "FT_PEN"))) {
+                                $winningTeam = $homeTeam->name;
+                            } elseif ($last_fixture->scores->localteam_score == $last_fixture->scores->visitorteam_score && in_array($last_fixture->time->status, array("FT", "AET", "FT_PEN"))) {
+                                $winningTeam = "draw";
+                            } elseif ($last_fixture->scores->localteam_score < $last_fixture->scores->visitorteam_score && in_array($last_fixture->time->status, array("FT", "AET", "FT_PEN"))) {
+                                $winningTeam = $awayTeam->name;
+                            } else {
+                                $winningTeam = "TBD";
+                            }
+                        @endphp
+                        @if($last_fixture->league_id == $last_league_id)
+                            <tr>
+                                {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
+                                @switch($winningTeam)
+                                    @case($homeTeam->name)
+                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" style="color:green">{{$homeTeam->name}}</a></td>
+                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" style="color:red">{{$awayTeam->name}}</a></td>
+                                        @break
+                                    @case($awayTeam->name)
+                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" style="color:red">{{$homeTeam->name}}</a></td>
+                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" style="color:green">{{$awayTeam->name}}</a></td>
+                                        @break
+                                    @case("draw")
+                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" style="color:orange">{{$homeTeam->name}}</a></td>
+                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" style="color:orange">{{$awayTeam->name}}</a></td>
+                                        @break
+                                    @default
+                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}">{{$homeTeam->name}}</a></td>
+                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}">{{$awayTeam->name}}</a></td>
+                                        @break
+                                @endswitch
 
-            echo "<div id='heading' style='text-align: center'>";
-                echo "<h2>" . $league->name . "</h2>";
-            echo "</div>";
-/*            if(count($last_fixtures) > 0) {
-                echo "<h3><a href='#last_fixtures' data-toggle='collapse'>Last 10 fixtures</a></h3>";
-                    echo "<div id='standings' class='collapse show'>";
+                                {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
+                                @switch($last_fixture->time->status)
+                                    @case("FT_PEN")
+                                        <td scope="row">{{$last_fixture->scores->localteam_score}} - {{$last_fixture->scores->visitorteam_score}} ({{$last_fixture->scores->localteam_pen_score}} - {{$last_fixture->scores->visitorteam_pen_score}})</td>
+                                        @break
+                                    @case("AET")
+                                        <td scope="row">{{$last_fixture->scores->localteam_score}} - {{$last_fixture->scores->visitorteam_score}} (ET)</td>
+                                        @break
+                                    @default
+                                        <td scope="row">{{$last_fixture->scores->localteam_score}} - {{$last_fixture->scores->visitorteam_score}}</td>
+                                    @break
+                                @endswitch
 
-            }*/
+                                @if($last_fixture->time->status == "LIVE")
+                                    <td scope="row">{{date("Y-m-d H:i", strtotime($last_fixture->time->starting_at->date_time))}}<span style="color:#FF0000"> LIVE</span></td>
+                                @else
+                                    <td scope="row">{{date("Y-m-d H:i", strtotime($last_fixture->time->starting_at->date_time))}}</td>
+                                @endif
+                                <td scope="row"><a href= {{route("fixturesDetails", ["id" => $last_fixture->id])}}><i class="fa fa-info-circle"></i></a></td>
+                            </tr>
+                        @else
+                            <table class="table table-striped table-light table-sm" style="width:100%">
+                                <caption><a href=" {{route("leaguesDetails", ["id" => $league->id])}}" style="font-weight: bold">{{$league->name}}</a></caption>
+                                <thead>
+                                <tr>
+                                    <th scope="col" width="32%">Home</th>
+                                    <th scope="col" width="32%">Away</th>
+                                    <th scope="col" width="11%">Score</th>
+                                    <th scope="col" width="17%">Date</th>
+                                    <th scope="col" width="5%">Info</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
+                                        @switch($winningTeam)
+                                            @case($homeTeam->name)
+                                                <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" style="color:green">{{$homeTeam->name}}</a></td>
+                                                <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" style="color:red">{{$awayTeam->name}}</a></td>
+                                                @break
+                                            @case($awayTeam->name)
+                                                <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" style="color:red">{{$homeTeam->name}}</a></td>
+                                                <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" style="color:green">{{$awayTeam->name}}</a></td>
+                                                @break
+                                            @case("draw")
+                                                <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" style="color:orange">{{$homeTeam->name}}</a></td>
+                                                <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" style="color:orange">{{$awayTeam->name}}</a></td>
+                                                @break
+                                            @default
+                                                <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}">{{$homeTeam->name}}</a></td>
+                                                <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}">{{$awayTeam->name}}</a></td>
+                                                @break
+                                        @endswitch
 
-            if(count($standings_raw) > 0) {
-                $standings_legend = array();
-                echo "<h3><a href='#standings' class='div-toggle' data-toggle='collapse'>Standings&nbsp;&nbsp;</a></h3>";
-                echo "<div id='standings' class='collapse show'>";
-                foreach($standings_raw as $standings) {
-                	$standing = $standings->standings->data;
-                	if(count($standings_raw) > 1) {
-                	    echo "<h5>" . $standings->name . "</h5>";
-                	}
-                	echo "<table class='table table-light'>";
-                        echo "<thead>";
-                            echo "<tr>";
-                                echo "<th scope='col'>Nr.</th>";
-                                echo "<th scope='col' width='35%'>Team name</th>";
-                                echo "<th scope='col'>Played</th>";
-                                echo "<th scope='col'>Won</th>";
-                                echo "<th scope='col'>Draw</th>";
-                                echo "<th scope='col'>Lost</th>";
-                                echo "<th scope='col'>Goals</th>";
-                                echo "<th scope='col'>Points</th>";
-                                echo "<th scope='col'>Form</th>";
-                                // 24
-                            echo "</tr>";
-                        echo "<thead>";
-                        echo "<tbody>";
-                            foreach($standing as $team) {
-                                if(strpos($team->result, 'Champions League (Group Stage)') !== false || strpos($team->result, 'Champions League (Play Offs)') !== false || strpos($team->result, 'Championship') !== false && strpos($team->result, 'Relegation') === false || $team->result == "Promotion") {
-                                    echo "<tr class='bg-primary'>";
-                                    if(!in_array($team->result, $standings_legend)) {
-                                        $standings_legend[$team->result] = 'bg-primary';
-                                    }
-                                }
-                                elseif(strpos($team->result, 'Champions League (Qualification)') !== false) {
-                                    echo "<tr class='table-primary'>";
-                                    if(!array_key_exists($team->result, $standings_legend)) {
-                                        $standings_legend[$team->result] = 'table-primary';
-                                    }
-                                } elseif(strpos($team->result, 'Europa League') !== false || $team->result == "Promotion Play-off") {
-                                    echo "<tr class='table-warning'>";
-                                    if(!array_key_exists($team->result, $standings_legend)) {
-                                        $standings_legend[$team->result] = 'table-warning';
-                                    }
-                                } elseif(strpos($team->result, '(Relegation)') !== false) {
-                                    echo "<tr class='table-danger'>";
-                                    if(!array_key_exists($team->result, $standings_legend)) {
-                                        $standings_legend[$team->result] = 'table-danger';
-                                    }
-                                } elseif(strpos($team->result, 'Relegation') !== false) {
-                                    echo "<tr class='bg-danger'>";
-                                    if(!array_key_exists($team->result, $standings_legend)) {
-                                        $standings_legend[$team->result] = 'bg-danger';
-                                    }
-                                }
-                                echo "<td scope='row'>" . $team->position . "</td>";
-                                echo "<td scope='row'>" . $team->team_name . "</td>";
-                                echo "<td scope='row'>" . $team->overall->games_played . "</td>";
-                                echo "<td scope='row'>" . $team->overall->won . "</td>";
-                                echo "<td scope='row'>" . $team->overall->draw . "</td>";
-                                echo "<td scope='row'>" . $team->overall->lost . "</td>";
-                                echo "<td scope='row'>" . $team->overall->goals_scored . ":" . $team->overall->goals_against . " (" . $team->total->goal_difference . ")</td>";
-                                echo "<td scope='row'>" . $team->points . "</td>";
-                                $recent_forms = str_split($team->recent_form);
-                                echo "<td scope='row'>";
-                                foreach($recent_forms as $recent_form) {
-                                    switch($recent_form) {
-                                        case('W'):
-                                            echo "<span class='result-icon result-icon-w'>" . $recent_form . "</span>";
-                                            break;
-                                        case('D'):
-                                            echo "<span class='result-icon result-icon-d'>" . $recent_form . "</span>";
-                                            break;
-                                        case('L'):
-                                            echo "<span class='result-icon result-icon-l'>" . $recent_form . "</span>";
-                                            break;
-                                    }
-                                }
-                                switch($team->status) {
-                                        case('same'):
-                                            echo "&nbsp;<i class='fa fa-caret-left'></i>";
-                                            break;
-                                        case('down'):
-                                            echo "&nbsp;<i class='fa fa-caret-down'></i>";
-                                            break;
-                                        case('up'):
-                                            echo "&nbsp;<i class='fa fa-caret-up'></i>";
-                                            break;
-                                    }
-                                echo "</td>";
-                                echo "</tr>";
+                                        {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
+                                        @switch($last_fixture->time->status)
+                                            @case("FT_PEN")
+                                                <td scope="row">{{$last_fixture->scores->localteam_score}} - {{$last_fixture->scores->visitorteam_score}} ({{$last_fixture->scores->localteam_pen_score}} - {{$last_fixture->scores->visitorteam_pen_score}})</td>
+                                                @break
+                                            @case("AET")
+                                                <td scope="row">{{$last_fixture->scores->localteam_score}} - {{$last_fixture->scores->visitorteam_score}} (ET)</td>
+                                                @break
+                                            @default
+                                                <td scope="row">{{$last_fixture->scores->localteam_score}} - {{$last_fixture->scores->visitorteam_score}}</td>
+                                                @break
+                                        @endswitch
+
+                                        {{-- show date_time, if LIVE -> show LIVE after date_time --}}
+                                        @if($last_fixture->time->status == "LIVE")
+                                            <td scope="row">{{date("Y-m-d H:i", strtotime($last_fixture->time->starting_at->date_time))}}<span style="color:#FF0000"> LIVE</span></td>
+                                        @else
+                                            <td scope="row">{{date("Y-m-d H:i", strtotime($last_fixture->time->starting_at->date_time))}}</td>
+                                        @endif
+                                        {{-- show button to view fixtures-details --}}
+                                        <td scope="row"><a href="{{route("fixturesDetails", ["id" => $last_fixture->id])}}"><i class="fa fa-info-circle"></i></a></td>
+                                    </tr>
+                        @endif
+                        @php
+                            $last_league_id = $last_fixture->league_id;
+                        @endphp
+                    @endforeach
+                    </tbody>
+                    </table>
+                @endif
             </div>
             <div class="tab-pane fade" id="upcoming_fixtures" role="tabpanel" aria-labelledby="upcoming_fixtures-tab">
+                @if($upcoming_fixtures->count() > 0)
+                    @php
+                        $last_league_id = 0;
+                    @endphp
+                    @foreach($upcoming_fixtures as $upcoming_fixture)
+                        @php
+                            $league = $upcoming_fixture->league->data;
+                            $homeTeam = $upcoming_fixture->localTeam->data;
+                            $awayTeam = $upcoming_fixture->visitorTeam->data;
+                            if($upcoming_fixture->scores->localteam_score > $upcoming_fixture->scores->visitorteam_score && in_array($upcoming_fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
+                                $winningTeam = $homeTeam->name;
+                            } elseif ($upcoming_fixture->scores->localteam_score == $upcoming_fixture->scores->visitorteam_score && in_array($upcoming_fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
+                                $winningTeam = "draw";
+                            } elseif ($upcoming_fixture->scores->localteam_score < $upcoming_fixture->scores->visitorteam_score && in_array($upcoming_fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
+                                $winningTeam = $awayTeam->name;
+                            } else {
+                                $winningTeam = "TBD";
                             }
-                        echo "</tbody>";
-                    echo "</table>";
-                }
-                if(count($standings_legend) > 0) {
-                	echo "<table>";
-                        echo "<thead>";
-                            echo "<tr>";
-                                echo "<th scope='col'>Legend</th>";
-                            echo "</tr>";
-                        echo "</thead>";
-                        echo "<tbody>";
-                        foreach($standings_legend as $legend_key => $legend_item) {
-                            echo "<tr>";
-                                echo "<td scope='row' class=". $legend_item . ">" . $legend_key . "</td>";
-                            echo "</tr>";
-                        }
-                        echo "</tbody>";
-                    echo "</table>";
-                }
+                        @endphp
+                        @if($upcoming_fixture->league_id == $last_league_id)
+                            <tr>
+                                {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
+                                @switch($winningTeam)
+                                    @case($homeTeam->name)
+                                    <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" style="color:green">{{$homeTeam->name}}</a></td>
+                                    <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" style="color:red">{{$awayTeam->name}}</a></td>
+                                    @break
+                                    @case($awayTeam->name)
+                                    <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" style="color:red">{{$homeTeam->name}}</a></td>
+                                    <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" style="color:green">{{$awayTeam->name}}</a></td>
+                                    @break
+                                    @case("draw")
+                                    <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" style="color:orange">{{$homeTeam->name}}</a></td>
+                                    <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" style="color:orange">{{$awayTeam->name}}</a></td>
+                                    @break
+                                    @default
+                                    <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}">{{$homeTeam->name}}</a></td>
+                                    <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}">{{$awayTeam->name}}</a></td>
+                                    @break
+                                @endswitch
 
+                                {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
+                                @switch($upcoming_fixture->time->status)
+                                    @case("FT_PEN")
+                                        <td scope="row">{{$upcoming_fixture->scores->localteam_score}} - {{$upcoming_fixture->scores->visitorteam_score}} ({{$upcoming_fixture->scores->localteam_pen_score}} - {{$upcoming_fixture->scores->visitorteam_pen_score}})</td>
+                                        @break
+                                    @case("AET")
+                                        <td scope="row">{{$upcoming_fixture->scores->localteam_score}} - {{$upcoming_fixture->scores->visitorteam_score}} (ET)</td>
+                                        @break
+                                    @default
+                                        <td scope="row">{{$upcoming_fixture->scores->localteam_score}} - {{$upcoming_fixture->scores->visitorteam_score}}</td>
+                                        @break
+                                @endswitch
 
-                echo "</div>";
-            }
+                                @if($upcoming_fixture->time->status == "LIVE")
+                                    <td scope="row">{{date("Y-m-d H:i", strtotime($upcoming_fixture->time->starting_at->date_time))}}<span style="color:#FF0000"> LIVE</span></td>
+                                @else
+                                    <td scope="row">{{date("Y-m-d H:i", strtotime($upcoming_fixture->time->starting_at->date_time))}}</td>
+                                @endif
+                                <td scope="row"><a href= {{route("fixturesDetails", ["id" => $upcoming_fixture->id])}}><i class="fa fa-info-circle"></i></a></td>
+                            </tr>
+                        @else
+                            <table class="table table-striped table-light table-sm" style="width:100%">
+                                <caption><a href=" {{route("leaguesDetails", ["id" => $league->id])}}" style="font-weight: bold">{{$league->name}}</a></caption>
+                                <thead>
+                                <tr>
+                                    <th scope="col" width="32%">Home</th>
+                                    <th scope="col" width="32%">Away</th>
+                                    <th scope="col" width="11%">Score</th>
+                                    <th scope="col" width="17%">Date</th>
+                                    <th scope="col" width="5%">Info</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
+                                    @switch($winningTeam)
+                                        @case($homeTeam->name)
+                                            <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" style="color:green">{{$homeTeam->name}}</a></td>
+                                            <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" style="color:red">{{$awayTeam->name}}</a></td>
+                                            @break
+                                        @case($awayTeam->name)
+                                            <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" style="color:red">{{$homeTeam->name}}</a></td>
+                                            <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" style="color:green">{{$awayTeam->name}}</a></td>
+                                            @break
+                                        @case("draw")
+                                            <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" style="color:orange">{{$homeTeam->name}}</a></td>
+                                            <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" style="color:orange">{{$awayTeam->name}}</a></td>
+                                            @break
+                                        @default
+                                            <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}">{{$homeTeam->name}}</a></td>
+                                            <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}">{{$awayTeam->name}}</a></td>
+                                            @break
+                                    @endswitch
 
+                                    {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
+                                    @switch($upcoming_fixture->time->status)
+                                        @case("FT_PEN")
+                                            <td scope="row">{{$upcoming_fixture->scores->localteam_score}} - {{$upcoming_fixture->scores->visitorteam_score}} ({{$upcoming_fixture->scores->localteam_pen_score}} - {{$upcoming_fixture->scores->visitorteam_pen_score}})</td>
+                                            @break
+                                        @case("AET")
+                                            <td scope="row">{{$upcoming_fixture->scores->localteam_score}} - {{$upcoming_fixture->scores->visitorteam_score}} (ET)</td>
+                                            @break
+                                        @default
+                                            <td scope="row">{{$upcoming_fixture->scores->localteam_score}} - {{$upcoming_fixture->scores->visitorteam_score}}</td>
+                                            @break
+                                    @endswitch
 
-        @endphp
+                                    @if($upcoming_fixture->time->status == "LIVE")
+                                        <td scope="row">{{date("Y-m-d H:i", strtotime($upcoming_fixture->time->starting_at->date_time))}}<span style="color:#FF0000"> LIVE</span></td>
+                                    @else
+                                        <td scope="row">{{date("Y-m-d H:i", strtotime($upcoming_fixture->time->starting_at->date_time))}}</td>
+                                    @endif
+                                    <td scope="row"><a href= {{route("fixturesDetails", ["id" => $upcoming_fixture->id])}}><i class="fa fa-info-circle"></i></a></td>
+                                </tr>
+                        @endif
+                        @php
+                            $last_league_id = $upcoming_fixture->league_id;
+                        @endphp
+                    @endforeach
+                    </tbody>
+                    </table>
+                @endif
+            </div>
+            <div class="tab-pane fade" id="standings" role="tabpanel" aria-labelledby="standings-tab">
+                @if(count($standings_raw) > 0)
+                    @foreach($standings_raw as $standings)
+                        @php
+                            $standing = $standings->standings->data;
+                        @endphp
+                        <table class="table table-light table-sm" style="width:100%">
+                            @if(count($standings_raw) > 1)
+                                <caption>{{$standings->name}}</caption>
+                            @endif
+                            <thead>
+                                <tr>
+                                    <th scope="col">No.</th>
+                                    <th scope="col" width="35%">Team name</th>
+                                    <th scope="col">Played</th>
+                                    <th scope="col">Won</th>
+                                    <th scope="col">Draw</th>
+                                    <th scope="col">Lost</th>
+                                    <th scope="col">Goals</th>
+                                    <th scope="col">Points</th>
+                                    <th scope="col" width="24%">Form</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    @foreach($standing as $team)
+                                        <tr>
+                                            <td scope="row">{{$team->position}}</td>
+                                            <td scope="row"><a href ="{{route("teamsDetails", ["id" => $team->team_id])}}">{{$team->team_name}}</a></td>
+                                            <td scope="row">{{$team->overall->games_played}}</td>
+                                            <td scope="row">{{$team->overall->won}}</td>
+                                            <td scope="row">{{$team->overall->draw}}</td>
+                                            <td scope="row">{{$team->overall->lost}}</td>
+                                            <td scope="row">{{$team->overall->goals_scored}} : {{$team->overall->goals_against}} ({{$team->total->goal_difference}})</td>
+                                            <td scope="row">{{$team->points}}</td>
+                                            @php
+                                                $recent_forms = str_split($team->recent_form);
+                                            @endphp
+                                            <td scope="row">
+                                                @foreach($recent_forms as $recent_form)
+                                                    @switch($recent_form)
+                                                        @case("W")
+                                                            <span class="result-icon result-icon-w">{{$recent_form}}</span>
+                                                            @break
+                                                        @case("D")
+                                                            <span class="result-icon result-icon-d">{{$recent_form}}</span>
+                                                            @break
+                                                        @case("L")
+                                                            <span class="result-icon result-icon-l">{{$recent_form}}</span>
+                                                            @break
+                                                    @endswitch
+                                                @endforeach
+                                                @switch($team->status)
+                                                    @case("same")
+                                                        &nbsp;<i class="fa fa-caret-left"></i>
+                                                        @break
+                                                    @case("down")
+                                                        &nbsp;<i class="fa fa-caret-down"></i>
+                                                        @break
+                                                    @case("up")
+                                                        &nbsp;<i class="fa fa-caret-up"></i>
+                                                        @break
+                                                @endswitch
+                                            </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    @endforeach
+                @endif
             </div>
             <div class="tab-pane fade" id="topscorers" role="tabpanel" aria-labelledby="topscorers-tab">
+                @if(count($topscorers) > 0)
+                    <table class="table table-light table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th scope="col">No.</th>
+                                <th scope="col">Player name</th>
+                                <th scope="col">Team</th>
+                                <th scope="col">Goals</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($topscorers as $topscorer)
+                                @php
+                                    $alpha2_country_code = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getAlpha2CountryCode(mb_strtolower($topscorer->player->data->nationality));
+                                @endphp
+                                <tr>
+                                    <td scope="row">{{$topscorer->position}}</td>
+                                    <td scope="row"><img src="https://www.countryflags.io/{{$alpha2_country_code}}/shiny/16.png">&nbsp;&nbsp;{{$topscorer->player->data->common_name}}</td>
+                                    <td scope="row">{{$topscorer->team->data->name}}</td>
+                                    <td scope="row">{{$topscorer->goals}}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @endif
             </div>
         </div>
     </div>
