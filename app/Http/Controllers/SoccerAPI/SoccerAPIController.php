@@ -253,6 +253,18 @@ class SoccerAPIController extends BaseController
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     function teamsDetails($id, Request $request) {
+		$soccerAPI = new SoccerAPI();
+		$include = 'squad,coach,latest.league,latest.localTeam,latest.visitorTeam,upcoming.league,upcoming.localTeam,upcoming.visitorTeam';
+
+		$team = $soccerAPI->teams()->setInclude($include)->byId($id)->data;
+
+		$number_of_matches = $request->query('matches', 10);
+		$last_fixtures = self::addPagination($team->latest->data, $number_of_matches);
+		$upcoming_fixtures = self::addPagination($team->upcoming->data, $number_of_matches);
+
+		return view('teams/teams_details', ['team' => $team, 'last_fixtures' => $last_fixtures, 'upcoming_fixtures' => $upcoming_fixtures]);
+	}
+
     /**
      * @param $data
      * @param $per_page
