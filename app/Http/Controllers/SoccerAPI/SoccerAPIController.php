@@ -23,7 +23,11 @@ class SoccerAPIController extends BaseController
 {
 	use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-	function allLeagues(Request $request) {
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    function allLeagues(Request $request) {
 		$soccerAPI = new SoccerAPI();
 		$include = 'country,season';
 
@@ -45,7 +49,12 @@ class SoccerAPIController extends BaseController
 		return view('leagues/leagues', ['leagues' => $paginated_data]);
 	}
 
-	function leaguesDetails($id) {
+    /**
+     * @param $id
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    function leaguesDetails($id, Request $request) {
 		$soccerAPI = new SoccerAPI();
 		$include = 'country,season';
 
@@ -56,7 +65,12 @@ class SoccerAPIController extends BaseController
 		return view('leagues/leagues_details', ['league' => $league, 'standings_raw' => $standings_raw]);
 	}
 
-	function livescores($type, Request $request) {
+    /**
+     * @param $type
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     */
+    function livescores($type, Request $request) {
 		$soccerAPI = new SoccerAPI();
 		$include = 'league,localTeam,visitorTeam';
 
@@ -99,7 +113,15 @@ class SoccerAPIController extends BaseController
 		}
 	}
 
-	function fixturesByDate(Request $request) {
+    /**
+     * @return int
+     */
+    function countLivescores() {
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    function fixturesByDate(Request $request) {
 		if($request->has('day')) {
 			if ($request->query('day') == 'yesterday') {
 				$date = Carbon::now()->subDays(1)->toDateString();
@@ -122,7 +144,8 @@ class SoccerAPIController extends BaseController
 		$soccerAPI = new SoccerAPI();
 		$include = 'league,localTeam,visitorTeam';
 
-		$fixtures = $soccerAPI->fixtures()->setInclude($include)->setLeagues($leagues)->byDate($date);
+        /** @var Carbon $date */
+        $fixtures = $soccerAPI->fixtures()->setInclude($include)->setLeagues($leagues)->byDate($date);
 
 		usort($fixtures, function($a, $b) {
 			if ($a->league_id == $b->league_id) {
@@ -138,7 +161,11 @@ class SoccerAPIController extends BaseController
 
 	}
 
-	function fixturesDetails($id) {
+    /**
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    function fixturesDetails($id) {
 		$soccerAPI = new SoccerAPI();
 		$include = 'league,localTeam,visitorTeam,events';
 
@@ -147,7 +174,18 @@ class SoccerAPIController extends BaseController
 		return view('fixtures/fixtures_details', ['fixture' => $fixture]);
 	}
 
-	function addPagination($data, $per_page) {
+    /**
+     * @param $id
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    function teamsDetails($id, Request $request) {
+    /**
+     * @param $data
+     * @param $per_page
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    function addPagination($data, $per_page) {
 		$current_page = LengthAwarePaginator::resolveCurrentPage();
 
 		$data_collection = collect($data);
@@ -159,7 +197,11 @@ class SoccerAPIController extends BaseController
 		return $paginated_data;
 	}
 
-	function removePageParameter(Request $request)
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @return mixed|string
+     */
+    function removePageParameter(Request $request)
 	{
 		// set url path for generated links
 		$url = parse_url($request->fullUrl());
@@ -177,14 +219,23 @@ class SoccerAPIController extends BaseController
 		return $url;
 	}
 
-	function validateDate($date, $format = 'Y-m-d')
+    /**
+     * @param $date
+     * @param string $format
+     * @return bool
+     */
+    function validateDate($date, $format = 'Y-m-d')
 	{
 		$d = DateTime::createFromFormat($format, $date);
 		// The Y ( 4 digits year ) returns TRUE for any integer with any number of digits so changing the comparison from == to === fixes the issue.
 		return $d && $d->format($format) === $date;
 	}
 
-	public static function getAlpha2CountryCode($country) {
+    /**
+     * @param $country
+     * @return string
+     */
+    public static function getAlpha2CountryCode($country) {
         if(strlen($country) == 3) {
             $response = self::APIResponse('https://restcountries.eu/rest/v2/alpha?codes=' . $country .  '&fields=name;alpha2Code;alpha3Code;flag');
         } else {
@@ -193,6 +244,10 @@ class SoccerAPIController extends BaseController
         return $response[0]->alpha2Code;
     }
 
+    /**
+     * @param $url
+     * @return mixed|string
+     */
     static function APIResponse($url)
     {
         $client = new GuzzleHttp\Client();
