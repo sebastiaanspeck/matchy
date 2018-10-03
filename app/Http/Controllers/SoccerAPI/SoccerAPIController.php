@@ -158,6 +158,38 @@ class SoccerAPIController extends BaseController
      * @return int
      */
     function countLivescores() {
+        $soccerAPI = new SoccerAPI();
+        $livescores = $soccerAPI->livescores()->setInclude('league,localTeam,visitorTeam')->now();
+
+        $count = 0;
+
+        if(count($livescores) >= 1) {
+            foreach ($livescores as $livescore) {
+                if (in_array($livescore->time->status, [
+                    'NS',
+                    'FT',
+                    'FT_PEN',
+                    'CANCL',
+                    'POSTP',
+                    'INT',
+                    'ABAN',
+                    'SUSP',
+                    'AWARDED',
+                    'DELAYED',
+                    'TBA',
+                    'WO',
+                    'AU'
+                ])) {
+                    continue;
+                } else {
+                    $count++;
+                }
+            }
+        }
+
+        return($count);
+    }
+
     /**
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
