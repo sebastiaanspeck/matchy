@@ -98,7 +98,7 @@
                             Livescores
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownLivescores">
-                            <a class="dropdown-item" href="{{route('livescores', ['type' => 'now'])}}">Livescores - now</a>
+                            <a class="dropdown-item" href="{{route('livescores', ['type' => 'now'])}}">Livescores - now <span class="badge badge-danger">{{ $live }}</span></a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{route('livescores', ['type' => 'today'])}}">Livescores - today</a>
                         </div>
