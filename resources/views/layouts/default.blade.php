@@ -90,7 +90,6 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownFixtures">
                             <a class="dropdown-item" href="{{route('fixturesByDate', ['day' => 'yesterday'])}}">Fixtures yesterday</a>
-                            <a class="dropdown-item" href="{{route('fixturesByDate', ['day' => 'today'])}}">Fixtures today</a>
                             <a class="dropdown-item" href="{{route('fixturesByDate', ['day' => 'tomorrow'])}}">Fixture tomorrow</a>
                         </div>
                     </li>
