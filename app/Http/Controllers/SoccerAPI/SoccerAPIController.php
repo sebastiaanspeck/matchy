@@ -17,7 +17,6 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Carbon\Carbon;
 use DateTime;
-use GuzzleHttp;
 
 class SoccerAPIController extends BaseController
 {
