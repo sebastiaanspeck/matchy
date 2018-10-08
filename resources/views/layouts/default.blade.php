@@ -43,18 +43,59 @@
             color: grey;
         }
 
+        .won-team:link {
+            color: green;
+            background-color: transparent;
+            text-decoration:none;
+        }
+        .won-team:visited {
+            color: green;
+            background-color: transparent;
+            text-decoration:none;
+        }
+        .won-team:hover {
+            color: #32B232;
+        }
+
+        .lost-team:link {
+            color: #FF0000;
+            background-color: transparent;
+            text-decoration:none;
+        }
+        .lost-team:visited {
+            color: #FF0000;
+            background-color: transparent;
+            text-decoration:none;
+        }
+        .lost-team:hover {
+            color: #FF5050;
+        }
+
+        .draw-team:link {
+            color: #FF8040;
+            background-color: transparent;
+            text-decoration:none;
+        }
+        .draw-team:visited {
+            color: #FF8040;
+            background-color: transparent;
+            text-decoration:none;
+        }
+        .draw-team:hover {
+            color: #FFB272;
+        }
+
         .result-icon {
             display: inline-block;
-            padding: 8px;
+            padding: 4px;
             font-size: .75rem;
             line-height: 1.3;
             font-weight: 500;
             color: #fff;
             text-transform: uppercase;
-            width: 30px;
-            height: 30px;
+            width: 20px;
+            height: 20px;
             text-align: center;
-            margin-right: 4px;
         }
         .result-icon-w {
             background-color: #83cd7b;
@@ -65,6 +106,9 @@
         .result-icon-d {
             background-color: #f0be4b;
         }
+
+
+
         caption {
             caption-side: top;
         }
