@@ -2,44 +2,32 @@
 
 @section('content')
     <div class = "container">
+        <h1>Leagues</h1>
 
-        @php
-            echo "<h1> Leagues </h1>";
-
-            if(isset($leagues)) {
-                if(count($leagues) >= 1) {
-                    echo "<table class='table table-striped table-light' width='100%'>";
-                    echo "<thead>";
-                        echo "<tr>";
-                            echo "<th scope='col' width='50%'>League name</th>";
-                            echo "<th scope='col' width='50%'>Country</th>";
-                        echo "</tr>";
-                    echo "</thead>";
-                    echo "<tbody>";
-                    foreach($leagues as $league) {
-                    	echo "<tr>";
-                            echo "<td scope='row' width='50%'><a href=" . route('leaguesDetails', ['id' => $league->id]) . ">" . $league->name . "</a></td>";
-                            if($league->country->data->extra != null) {
-                                $flag_code = strtolower($league->country->data->extra->iso);
-                                echo "<td scope='row' width='50%'>" . $league->country->data->name . "&nbsp;&nbsp; <img src=\"images/flags/" . $flag_code . ".gif\"> </td>";
-                            } elseif ($league->country->data->name == "Europe") {
-                                echo "<td scope='row' width='50%'>" . $league->country->data->name . "&nbsp;&nbsp; <img src=\"images/flags/europeanunion.gif\"> </td>";
-                            } else {
-                                echo "<td scope='row' width='50%'>" . $league->country->data->name . "</td>";
-                            }
-                        echo "</tr>";
-                    }
-                    echo "</tbody>";
-                    echo "</table>";
-                    echo "<div>";
-                        echo $leagues->links();
-                    echo "</div>";
-                } else {
-                    echo "<p> {{ $leagues }}</p>";
-                }
-            }
-
-        @endphp
-
+        @if(count($leagues) >= 1)
+            <table class='table table-striped table-light table-sm' width='100%'>
+                <thead>
+                    <tr>
+                        <th scope="col" width="50%">League name</th>
+                        <th scope="col" width="50%" colspan="2">Country</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($leagues as $league)
+                        @php $country = $league->country->data; @endphp
+                        <tr>
+                            <td scope="row" width="25%"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{$league->name}}</a></td>
+                            @php $country->flag = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($country->name); @endphp
+                            <td scope="row" width="50%"><img src="/images/flags/shiny/16/{{$country->flag}}.png">&nbsp;&nbsp;{{$country->name}}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            <div>
+                {{$leagues->links()}}
+            </div>
+        @else
+            <p>{{$leagues}}</p>
+        @endif
     </div>
 @endsection
