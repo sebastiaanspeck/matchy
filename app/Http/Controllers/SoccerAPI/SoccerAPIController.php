@@ -341,40 +341,30 @@ class SoccerAPIController extends BaseController
      * @param $country
      * @return string
      */
-    public static function getAlpha2CountryCode($country) {
-	    if(in_array($country, array("england","wales", "northern ireland", "scotland"))) {
-            return "GB";
-        } elseif($country == "republic of ireland") {
-	        return "IE";
-        } elseif($country == "tanzania") {
-	        return "TZ";
-        }
-
-        if(strlen($country) == 3) {
-            $response = self::APIResponse('https://restcountries.eu/rest/v2/alpha?codes=' . $country . '&fields=name;alpha2Code;alpha3Code;flag');
-        } else {
-            $response = self::APIResponse('https://restcountries.eu/rest/v2/name/'. $country . '?fullText=true&fields=name;alpha2Code;alpha3Code;flag');
-        }
-
-        return $response[0]->alpha2Code;
-    }
-
-    /**
-     * @param $url
-     * @return mixed|string
-     */
-    static function APIResponse($url)
+    public static function getCountryFlag($country)
     {
-        $client = new GuzzleHttp\Client();
 
-        try {
-            $response = $client->request('GET', $url);
-
-            return json_decode($response->getBody()->getContents());
-        } catch (GuzzleHttp\Exception\ClientException $e) {
-            return "ClientException";
-        } catch (GuzzleHttp\Exception\GuzzleException $e) {
-            return "GuzzleException";
+        if (strpos($country, " ") !== false) {
+            $country = str_replace(" ", "-", $country);
         }
+
+        switch ($country) {
+            case("World"):
+                $country = "Unknown";
+                break;
+            case(null):
+                $country = "Unknown";
+                break;
+            case("Northern-Ireland"):
+                $country = "United-Kingdom";
+                break;
+        }
+
+        if(!file_exists("images/flags/shiny/16/" . $country . ".png")) {
+            error_log("Missing flag for: " . $country);
+            $country = "Unknown";
+        }
+
+        return $country;
     }
 }
