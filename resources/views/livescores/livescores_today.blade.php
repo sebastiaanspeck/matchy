@@ -6,8 +6,8 @@
 
         @if(isset($livescores))
             @if(count($livescores) >= 1 && gettype($livescores) == "array")
-                @if(count($livescores) == 100)
-                    <p style="color:red"> We only show the first 100 results. The data shown might now be complete. We try to fix this in a later version. </p>
+                @if(count($livescores) >= 100)
+                    <p style="color:red">We only show the first {{count($livescores)}} results. The data shown might now be complete. We try to fix this in a later version.</p>
                 @endif
                 @php $last_league_id = 0; @endphp
                 @foreach($livescores as $livescore)
@@ -74,13 +74,13 @@
                         <table class='table table-striped table-light table-sm' width='100%'>
                             <caption><a href="{{route('leaguesDetails', ['id' => $league->id])}}" style="font-weight: bold">{{$league->name}}</a></caption>
                             <thead>
-                            <tr>
-                                <th scope='col' width='35%'>Home team</th>
-                                <th scope='col' width='35%'>Away team</th>
-                                <th scope='col' width='10%'>Score</th>
-                                <th scope='col' width='17%'>Date and time</th>
-                                <th scope='col' width='3%'>Info</th>
-                            </tr>
+                                <tr>
+                                    <th scope='col' width='35%'>Home team</th>
+                                    <th scope='col' width='35%'>Away team</th>
+                                    <th scope='col' width='10%'>Score</th>
+                                    <th scope='col' width='17%'>Date and time</th>
+                                    <th scope='col' width='3%'>Info</th>
+                                </tr>
                             </thead>
                             <tbody>
                             <tr>
@@ -117,11 +117,8 @@
                                         @break
                                 @endswitch
 
-                                @if(in_array($livescore->time->status, array('LIVE', 'HT')))
-                                    <td scope='row'>{{date('Y-m-d H:i', strtotime($livescore->time->starting_at->date_time))}}<span style='color:#FF0000'>{{$livescore->time->status}}</span></td>
-                                @else
-                                    <td scope='row'>{{date('Y-m-d H:i', strtotime($livescore->time->starting_at->date_time))}}</td>
-                                @endif
+                                <td scope='row'>{{date('Y-m-d H:i', strtotime($livescore->time->starting_at->date_time))}}</td>
+
                                 <td scope='row'><a href="{{route('fixturesDetails', ['id' => $livescore->id])}}"><i class='fa fa-info-circle'></i></a></td>
                             </tr>
                     @endif
