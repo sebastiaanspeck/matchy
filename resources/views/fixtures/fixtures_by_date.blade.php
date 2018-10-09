@@ -129,7 +129,7 @@
                 @php $last_league_id = $fixture->league_id; @endphp
             @endforeach
         @else
-            <p>You made a invalid request.</p>
+            <p>No matches found for {{$date}}</p>
         @endif
     </div>
 @endsection
