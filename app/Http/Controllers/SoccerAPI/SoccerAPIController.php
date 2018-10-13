@@ -57,6 +57,8 @@ class SoccerAPIController extends BaseController
      */
     function leaguesDetails($id, Request $request)
     {
+        $date_format = self::getDateFormat();
+
         $soccerAPI = new SoccerAPI();
         $include_league = 'country,season';
         $include_season = 'upcoming.localTeam,upcoming.visitorTeam,upcoming.league,results:order(starting_at|desc),results.localTeam,results.visitorTeam,results.league';
@@ -93,8 +95,35 @@ class SoccerAPIController extends BaseController
 
         if (count($season) > 0) {
             $number_of_matches = $request->query('matches', 10);
-            $last_fixtures = self::addPagination($season->data->results->data, $number_of_matches);
-            $upcoming_fixtures = self::addPagination($season->data->upcoming->data, $number_of_matches);
+
+            $last_fixtures = $season->data->results->data;
+            usort($last_fixtures, function ($a, $b) {
+                if ($a->league_id == $b->league_id) {
+                    if ($a->time->starting_at->date_time == $b->time->starting_at->date_time) {
+                        return $b->time->minute <=> $a->time->minute;
+                    }
+
+                    return $b->time->starting_at->date_time <=> $a->time->starting_at->date_time;
+                }
+
+                return $a->league_id <=> $b->league_id;
+            });
+            $last_fixtures = self::addPagination($last_fixtures, $number_of_matches);
+
+
+            $upcoming_fixtures = $season->data->upcoming->data;
+            usort($upcoming_fixtures, function ($a, $b) {
+                if ($a->league_id == $b->league_id) {
+                    if ($a->time->starting_at->date_time == $b->time->starting_at->date_time) {
+                        return $b->time->minute <=> $a->time->minute;
+                    }
+
+                    return $a->time->starting_at->date_time <=> $b->time->starting_at->date_time;
+                }
+
+                return $a->league_id <=> $b->league_id;
+            });
+            $upcoming_fixtures = self::addPagination($upcoming_fixtures, $number_of_matches);
         } else {
             $last_fixtures = [];
             $upcoming_fixtures = [];
@@ -107,7 +136,8 @@ class SoccerAPIController extends BaseController
             'last_fixtures' => $last_fixtures,
             'upcoming_fixtures' => $upcoming_fixtures,
             'number_of_matches' => $number_of_matches,
-            'topscorers' => $topscorers
+            'topscorers' => $topscorers,
+            'date_format' => $date_format
         ]);
     }
 
@@ -118,6 +148,8 @@ class SoccerAPIController extends BaseController
      */
     function livescores($type, Request $request)
     {
+        $date_format = self::getDateFormat();
+
         $soccerAPI = new SoccerAPI();
         $include = 'league,localTeam,visitorTeam';
 
@@ -127,40 +159,43 @@ class SoccerAPIController extends BaseController
             $leagues = $request->query('leagues', '');
         }
 
-        if ($type == 'today') {
-            $livescores = $soccerAPI->livescores()->setInclude($include)->setLeagues($leagues)->today();
+        switch($type) {
+            case('today'):
+                $livescores = $soccerAPI->livescores()->setInclude($include)->setLeagues($leagues)->today();
 
-            usort($livescores, function ($a, $b) {
-                if ($a->league_id == $b->league_id) {
-                    if ($a->time->starting_at->date_time == $b->time->starting_at->date_time) {
-                        return $b->time->minute <=> $a->time->minute;
+                usort($livescores, function ($a, $b) {
+                    if ($a->league_id == $b->league_id) {
+                        if ($a->time->starting_at->date_time == $b->time->starting_at->date_time) {
+                            return $b->time->minute <=> $a->time->minute;
+                        }
+
+                        return $a->time->starting_at->date_time <=> $b->time->starting_at->date_time;
                     }
 
-                    return $a->time->starting_at->date_time <=> $b->time->starting_at->date_time;
-                }
+                    return $a->league_id <=> $b->league_id;
+                });
 
-                return $a->league_id <=> $b->league_id;
-            });
+                return view('livescores/livescores_today', ['livescores' => $livescores, 'date_format' => $date_format]);
+                break;
+            case('now'):
+                $livescores = $soccerAPI->livescores()->setInclude($include)->setLeagues($leagues)->now();
 
-            return view('livescores/livescores_today', ['livescores' => $livescores]);
-        } elseif ($type == 'now') {
-            $livescores = $soccerAPI->livescores()->setInclude($include)->setLeagues($leagues)->now();
+                usort($livescores, function ($a, $b) {
+                    if ($a->league_id == $b->league_id) {
+                        if ($a->time->starting_at->date_time == $b->time->starting_at->date_time) {
+                            return $b->time->minute <=> $a->time->minute;
+                        }
 
-            usort($livescores, function ($a, $b) {
-                if ($a->league_id == $b->league_id) {
-                    if ($a->time->starting_at->date_time == $b->time->starting_at->date_time) {
-                        return $b->time->minute <=> $a->time->minute;
+                        return $a->time->starting_at->date_time <=> $b->time->starting_at->date_time;
                     }
 
-                    return $a->time->starting_at->date_time <=> $b->time->starting_at->date_time;
-                }
+                    return $a->league_id <=> $b->league_id;
+                });
 
-                return $a->league_id <=> $b->league_id;
-            });
-
-            return view('livescores/livescores_now', ['livescores' => $livescores]);
-        } else {
-            return '';
+                return view('livescores/livescores_now', ['livescores' => $livescores, 'date_format' => $date_format]);
+                break;
+            default:
+                return '';
         }
     }
 
@@ -207,6 +242,8 @@ class SoccerAPIController extends BaseController
      */
     function fixturesByDate(Request $request)
     {
+        $date_format = self::getDateFormat();
+
         if ($request->has('day')) {
             if ($request->query('day') == 'yesterday') {
                 $date = Carbon::now()->subDays(1)->toDateString();
@@ -244,7 +281,7 @@ class SoccerAPIController extends BaseController
             return $a->league_id <=> $b->league_id;
         });
 
-        return view('fixtures/fixtures_by_date', ['fixtures' => $fixtures, 'date' => $date]);
+        return view('fixtures/fixtures_by_date', ['fixtures' => $fixtures, 'date' => $date, 'date_format' => $date_format]);
     }
 
     /**
@@ -253,12 +290,14 @@ class SoccerAPIController extends BaseController
      */
     function fixturesDetails($id)
     {
+        $date_format = self::getDateFormat();
+
         $soccerAPI = new SoccerAPI();
         $include = 'localTeam,visitorTeam,lineup.player,bench.player,sidelined.player,stats,comments,highlights,league,season,referee,events,venue,localCoach,visitorCoach';
 
         $fixture = $soccerAPI->fixtures()->setInclude($include)->byMatchId($id)->data;
 
-        return view('fixtures/fixtures_details', ['fixture' => $fixture]);
+        return view('fixtures/fixtures_details', ['fixture' => $fixture, 'date_format' => $date_format]);
     }
 
     /**
@@ -268,6 +307,8 @@ class SoccerAPIController extends BaseController
      */
     function teamsDetails($id, Request $request)
     {
+        $date_format = self::getDateFormat();
+
         $soccerAPI = new SoccerAPI();
         $include = 'squad,coach,latest.league,latest.localTeam,latest.visitorTeam,upcoming.league,upcoming.localTeam,upcoming.visitorTeam';
 
@@ -280,7 +321,8 @@ class SoccerAPIController extends BaseController
         return view('teams/teams_details', [
             'team' => $team,
             'last_fixtures' => $last_fixtures,
-            'upcoming_fixtures' => $upcoming_fixtures
+            'upcoming_fixtures' => $upcoming_fixtures,
+            'date_format' => $date_format
         ]);
     }
 
@@ -333,7 +375,6 @@ class SoccerAPIController extends BaseController
     {
         $d = DateTime::createFromFormat($format, $date);
 
-        // The Y ( 4 digits year ) returns TRUE for any integer with any number of digits so changing the comparison from == to === fixes the issue.
         return $d && $d->format($format) === $date;
     }
 
@@ -344,27 +385,45 @@ class SoccerAPIController extends BaseController
     public static function getCountryFlag($country)
     {
 
-        if (strpos($country, " ") !== false) {
-            $country = str_replace(" ", "-", $country);
+        if (strpos($country, ' ') !== false) {
+            $country = str_replace(' ', '-', $country);
         }
 
         switch ($country) {
-            case("World"):
-                $country = "Unknown";
+            case('World'):
+                $country = 'Unknown';
                 break;
             case(null):
-                $country = "Unknown";
+                $country = 'Unknown';
                 break;
-            case("Northern-Ireland"):
-                $country = "United-Kingdom";
+            case('Northern-Ireland'):
+                $country = 'United-Kingdom';
                 break;
         }
 
-        if(!file_exists("images/flags/shiny/16/" . $country . ".png")) {
-            error_log("Missing flag for: " . $country);
-            $country = "Unknown";
+        if(!file_exists('images/flags/shiny/16/' . $country . '.png')) {
+            error_log('Missing flag for: ' . $country);
+            $country = 'Unknown';
         }
 
         return $country;
+    }
+
+    function getDateFormat()
+    {
+        switch(config('app.locale')) {
+            case('nl'):
+                $date_format = 'd-m-Y';
+                break;
+            case('en'):
+                $date_format = 'Y-m-d';
+                break;
+            default:
+                $date_format = 'Y-m-d';
+                break;
+        }
+
+        return $date_format;
+
     }
 }
