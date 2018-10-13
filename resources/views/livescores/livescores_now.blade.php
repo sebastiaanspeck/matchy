@@ -6,14 +6,13 @@
 
 @section("content")
     <div class = "container">
-
-        <h1>Livescores in-play - {{date("Y-m-d")}} </h1>
-        <p>Last update: {{date("Y-m-d H:i:s")}} </p>
+        <h1>@lang("application.Livescores") - {{date($date_format)}} </h1>
+        <p>@lang("application.Last update"): {{date($date_format . " H:i:s")}} </p>
 
         @if(isset($livescores))
             @if(count($livescores) >= 1)
                 @if(count($livescores) >= 100)
-                    <p style="color:red">We only show the first {{count($livescores)}} results. The data shown might now be complete. We try to fix this in a later version.</p>
+                    <p style="color:red">@lang("application.msg_too_much_results", ["count" => count($livescores)])</p>
                 @endif
                 @php $last_league_id = 0; @endphp
                 @foreach($livescores as $livescore)
@@ -44,20 +43,20 @@
                                     <td scope="row">{{$livescore->time->minute}}</td>
                                 @endif
                             @else
-                                <td scope="row">{{date("Y-m-d H:i", strtotime($livescore->time->starting_at->date_time))}}</td>
+                                <td scope="row">{{date($date_format . " H:i", strtotime($livescore->time->starting_at->date_time))}}</td>
                             @endif
                             <td scope="row"><a href="{{route("fixturesDetails", ["id" => $livescore->id])}}"><i class="fa fa-info-circle"></i></a></td>
                         </tr>
                     @else
-                        <table class='table table-striped table-light table-sm' width='100%'>
-                            <caption><a href="{{route('leaguesDetails', ['id' => $league->id])}}" style="font-weight: bold">{{$league->name}}</a></caption>
+                        <table class="table table-striped table-light table-sm" width="100%">
+                            <caption><a href="{{route("leaguesDetails", ["id" => $league->id])}}" style="font-weight: bold">{{$league->name}}</a></caption>
                             <thead>
                                 <tr>
-                                    <th scope='col' width='35%'>Home team</th>
-                                    <th scope='col' width='35%'>Away team</th>
-                                    <th scope='col' width='10%'>Score</th>
-                                    <th scope='col' width='17%'>Date and time</th>
-                                    <th scope='col' width='3%'>Info</th>
+                                    <th scope="col" width="35%"></th>
+                                    <th scope="col" width="35%"></th>
+                                    <th scope="col" width="10%"></th>
+                                    <th scope="col" width="17%"></th>
+                                    <th scope="col" width="3%"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -79,7 +78,7 @@
                                         <td scope="row">{{$livescore->time->minute}}</td>
                                     @endif
                                 @else
-                                    <td scope="row">{{date("Y-m-d H:i", strtotime($livescore->time->starting_at->date_time))}}</td>
+                                    <td scope="row">{{date($date_format . " H:i", strtotime($livescore->time->starting_at->date_time))}}</td>
                                 @endif
                                 <td scope="row"><a href="{{route("fixturesDetails", ["id" => $livescore->id])}}"><i class="fa fa-info-circle"></i></a></td>
                             </tr>
@@ -89,7 +88,7 @@
                 </tbody>
             </table>
             @else
-                <p>No livescores live now.</p>
+                <p>@lang("application.msg_no_livescores_now")</p>
             @endif
         @endif
     </div>

@@ -2,14 +2,14 @@
 
 @section('content')
     <div class = "container">
-        <h1>Leagues</h1>
+        <h1>@lang('application.Leagues')</h1>
 
         @if(count($leagues) >= 1)
             <table class='table table-striped table-light table-sm' width='100%'>
                 <thead>
                     <tr>
-                        <th scope="col" width="50%">League name</th>
-                        <th scope="col" width="50%" colspan="2">Country</th>
+                        <th scope="col" width="50%">@lang('application.League name')</th>
+                        <th scope="col" width="50%">@lang('application.Country')</th>
                     </tr>
                 </thead>
                 <tbody>

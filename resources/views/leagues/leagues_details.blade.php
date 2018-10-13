@@ -12,22 +12,24 @@
 
         {{-- Nav tabs  --}}
         <ul class="nav nav-tabs" id="nav_tabs" role="tablist">
+            @if($last_fixtures->count() > 0)
             <li class="nav-item">
-                <a class="nav-link active" id="last_fixtures-tab" data-toggle="tab" href="#last_fixtures" role="tab" aria-controls="last_fixtures" aria-selected="true">Last {{ $last_fixtures->count() }} fixtures</a>
+                <a class="nav-link active" id="last_fixtures-tab" data-toggle="tab" href="#last_fixtures" role="tab" aria-controls="last_fixtures" aria-selected="true">@choice('application.last fixtures', $last_fixtures->count())</a>
             </li>
+            @endif
             @if($upcoming_fixtures->count() > 0)
                 <li class="nav-item">
-                    <a class="nav-link" id="upcoming_fixtures-tab" data-toggle="tab" href="#upcoming_fixtures" role="tab" aria-controls="upcoming_fixtures" aria-selected="false">Upcoming {{ $upcoming_fixtures->count() }} fixtures</a>
+                    <a class="nav-link" id="upcoming_fixtures-tab" data-toggle="tab" href="#upcoming_fixtures" role="tab" aria-controls="upcoming_fixtures" aria-selected="false">@choice('application.upcoming fixtures', $upcoming_fixtures->count())</a>
                 </li>
             @endif
             @if(count($standings_raw) > 0)
                 <li class="nav-item">
-                    <a class="nav-link" id="standings-tab" data-toggle="tab" href="#standings" role="tab" aria-controls="standings" aria-selected="false">Standings</a>
+                    <a class="nav-link" id="standings-tab" data-toggle="tab" href="#standings" role="tab" aria-controls="standings" aria-selected="false">@lang('application.Standings')</a>
                 </li>
             @endif
             @if(count($topscorers) > 0)
                 <li class="nav-item">
-                    <a class="nav-link" id="topscorers-tab" data-toggle="tab" href="#topscorers" role="tab" aria-controls="topscorers" aria-selected="false">Topscorers</a>
+                    <a class="nav-link" id="topscorers-tab" data-toggle="tab" href="#topscorers" role="tab" aria-controls="topscorers" aria-selected="false">@lang('application.Topscorers')</a>
                 </li>
             @endif
         </ul>
@@ -85,23 +87,23 @@
                                         <td scope="row">{{$last_fixture->scores->localteam_score}} - {{$last_fixture->scores->visitorteam_score}}</td>
                                     @break
                                 @endswitch
-
-                                @if($last_fixture->time->status == "LIVE")
-                                    <td scope="row">{{date("Y-m-d H:i", strtotime($last_fixture->time->starting_at->date_time))}}<span style="color:#FF0000"> LIVE</span></td>
-                                @else
-                                    <td scope="row">{{date("Y-m-d H:i", strtotime($last_fixture->time->starting_at->date_time))}}</td>
-                                @endif
+    
+                                <td scope="row">{{date($date_format . " H:i", strtotime($last_fixture->time->starting_at->date_time))}}
+                                    @if($last_fixture->time->status == "LIVE")
+                                        <span style="color:#FF0000">LIVE</span>
+                                    @endif
+                                </td>
                                 <td scope="row"><a href= {{route("fixturesDetails", ["id" => $last_fixture->id])}}><i class="fa fa-info-circle"></i></a></td>
                             </tr>
                         @else
                             <table class="table table-striped table-light table-sm" style="width:100%">
                                 <thead>
                                 <tr>
-                                    <th scope="col" width="32%">Home</th>
-                                    <th scope="col" width="32%">Away</th>
-                                    <th scope="col" width="11%">Score</th>
-                                    <th scope="col" width="17%">Date</th>
-                                    <th scope="col" width="5%">Info</th>
+                                    <th scope="col" width="32%"></th>
+                                    <th scope="col" width="32%"></th>
+                                    <th scope="col" width="11%"></th>
+                                    <th scope="col" width="17%"></th>
+                                    <th scope="col" width="5%"></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -140,11 +142,11 @@
                                         @endswitch
 
                                         {{-- show date_time, if LIVE -> show LIVE after date_time --}}
-                                        @if($last_fixture->time->status == "LIVE")
-                                            <td scope="row">{{date("Y-m-d H:i", strtotime($last_fixture->time->starting_at->date_time))}}<span style="color:#FF0000"> LIVE</span></td>
-                                        @else
-                                            <td scope="row">{{date("Y-m-d H:i", strtotime($last_fixture->time->starting_at->date_time))}}</td>
-                                        @endif
+                                        <td scope="row">{{date($date_format . " H:i", strtotime($last_fixture->time->starting_at->date_time))}}
+                                            @if($last_fixture->time->status == "LIVE")
+                                                <span style="color:#FF0000">LIVE</span>
+                                            @endif
+                                        </td>
                                         {{-- show button to view fixtures-details --}}
                                         <td scope="row"><a href="{{route("fixturesDetails", ["id" => $last_fixture->id])}}"><i class="fa fa-info-circle"></i></a></td>
                                     </tr>
@@ -169,23 +171,23 @@
                                 <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}">{{$homeTeam->name}}</a></td>
                                 <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}">{{$awayTeam->name}}</a></td>
                                 <td scope="row">{{$upcoming_fixture->scores->localteam_score}} - {{$upcoming_fixture->scores->visitorteam_score}}</td>
-
-                                @if($upcoming_fixture->time->status == "LIVE")
-                                    <td scope="row">{{date("Y-m-d H:i", strtotime($upcoming_fixture->time->starting_at->date_time))}}<span style="color:#FF0000"> LIVE</span></td>
-                                @else
-                                    <td scope="row">{{date("Y-m-d H:i", strtotime($upcoming_fixture->time->starting_at->date_time))}}</td>
-                                @endif
+    
+                                <td scope="row">{{date($date_format . " H:i", strtotime($upcoming_fixture->time->starting_at->date_time))}}
+                                    @if($upcoming_fixture->time->status == "LIVE")
+                                        <span style="color:#FF0000">LIVE</span>
+                                    @endif
+                                </td>
                                 <td scope="row"><a href= {{route("fixturesDetails", ["id" => $upcoming_fixture->id])}}><i class="fa fa-info-circle"></i></a></td>
                             </tr>
                         @else
                             <table class="table table-striped table-light table-sm" style="width:100%">
                                 <thead>
                                 <tr>
-                                    <th scope="col" width="32%">Home</th>
-                                    <th scope="col" width="32%">Away</th>
-                                    <th scope="col" width="11%">Score</th>
-                                    <th scope="col" width="17%">Date</th>
-                                    <th scope="col" width="5%">Info</th>
+                                    <th scope="col" width="32%"></th>
+                                    <th scope="col" width="32%"></th>
+                                    <th scope="col" width="11%"></th>
+                                    <th scope="col" width="17%"></th>
+                                    <th scope="col" width="5%"></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -193,12 +195,12 @@
                                     <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}">{{$homeTeam->name}}</a></td>
                                     <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}">{{$awayTeam->name}}</a></td>
                                     <td scope="row">{{$upcoming_fixture->scores->localteam_score}} - {{$upcoming_fixture->scores->visitorteam_score}}</td>
-
-                                    @if($upcoming_fixture->time->status == "LIVE")
-                                        <td scope="row">{{date("Y-m-d H:i", strtotime($upcoming_fixture->time->starting_at->date_time))}}<span style="color:#FF0000"> LIVE</span></td>
-                                    @else
-                                        <td scope="row">{{date("Y-m-d H:i", strtotime($upcoming_fixture->time->starting_at->date_time))}}</td>
-                                    @endif
+    
+                                    <td scope="row">{{date($date_format . " H:i", strtotime($upcoming_fixture->time->starting_at->date_time))}}
+                                        @if($upcoming_fixture->time->status == "LIVE")
+                                            <span style="color:#FF0000">LIVE</span>
+                                        @endif
+                                    </td>
                                     <td scope="row"><a href= {{route("fixturesDetails", ["id" => $upcoming_fixture->id])}}><i class="fa fa-info-circle"></i></a></td>
                                 </tr>
                         @endif
@@ -218,15 +220,15 @@
                             @endif
                             <thead>
                                 <tr>
-                                    <th scope="col" width="1%">No.</th>
-                                    <th scope="col" width="35%">Team name</th>
-                                    <th scope="col">Played</th>
-                                    <th scope="col">Won</th>
-                                    <th scope="col">Draw</th>
-                                    <th scope="col">Lost</th>
-                                    <th scope="col">Goals</th>
-                                    <th scope="col">Points</th>
-                                    <th scope="col" width="24%">Form</th>
+                                    <th scope="col" width="1%">@lang('application.No.')</th>
+                                    <th scope="col" width="35%">@lang('application.Team')</th>
+                                    <th scope="col">@lang('application.Played')</th>
+                                    <th scope="col">@lang('application.Won')</th>
+                                    <th scope="col">@lang('application.Draw')</th>
+                                    <th scope="col">@lang('application.Lost')</th>
+                                    <th scope="col" colspan="2">@lang('application.Goals')</th>
+                                    <th scope="col">@lang('application.Points')</th>
+                                    <th scope="col" width="24%">@lang('application.Form')</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -238,20 +240,21 @@
                                             <td scope="row">{{$team->overall->won}}</td>
                                             <td scope="row">{{$team->overall->draw}}</td>
                                             <td scope="row">{{$team->overall->lost}}</td>
-                                            <td scope="row">{{$team->overall->goals_scored}}:{{$team->overall->goals_against}} ({{$team->total->goal_difference}})</td>
+                                            <td scope="row">{{$team->overall->goals_scored}}:{{$team->overall->goals_against}}</td>
+                                            <td scope="row">({{$team->total->goal_difference}})</td>
                                             <td scope="row">{{$team->points}}</td>
                                             @php $recent_forms = str_split($team->recent_form); @endphp
                                             <td scope="row">
                                                 @foreach($recent_forms as $recent_form)
                                                     @switch($recent_form)
                                                         @case("W")
-                                                            <span class="result-icon result-icon-w">{{$recent_form}}</span>
+                                                            <span class="result-icon result-icon-w">@lang('application.' . $recent_form)</span>
                                                             @break
                                                         @case("D")
-                                                            <span class="result-icon result-icon-d">{{$recent_form}}</span>
+                                                            <span class="result-icon result-icon-d">@lang('application.' . $recent_form)</span>
                                                             @break
                                                         @case("L")
-                                                            <span class="result-icon result-icon-l">{{$recent_form}}</span>
+                                                            <span class="result-icon result-icon-l">@lang('application.' . $recent_form)</span>
                                                             @break
                                                     @endswitch
                                                 @endforeach
@@ -279,10 +282,10 @@
                     <table class="table table-light table-striped table-sm" style="width: 100%">
                         <thead>
                             <tr>
-                                <th scope="col" width="1%">No.</th>
-                                <th scope="col">Player name</th>
-                                <th scope="col">Team</th>
-                                <th scope="col">Goals</th>
+                                <th scope="col" width="1%">@lang('application.No.')</th>
+                                <th scope="col">@lang('application.Player')</th>
+                                <th scope="col">@lang('application.Team')</th>
+                                <th scope="col">@lang('application.Goals')</th>
                             </tr>
                         </thead>
                         <tbody>

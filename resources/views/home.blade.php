@@ -33,9 +33,9 @@
             <div class="title">{{ config('app.name') }}</div>
 
             <div class="links">
-                <a href="{{route('leagues')}}"> Leagues </a>
-                <a href="{{route('livescores', ['type' => 'today'])}}"> Today's fixtures </a>
-                <a href="{{route('livescores', ['type' => 'now'])}}"> Live now </a>
+                <a href="{{route('leagues')}}">@lang('application.leagues')</a>
+                <a href="{{route('livescores', ['type' => 'today'])}}">@lang('application.today')</a>
+                <a href="{{route('livescores', ['type' => 'now'])}}">@lang('application.live')</a>
             </div>
         </div>
     </div>

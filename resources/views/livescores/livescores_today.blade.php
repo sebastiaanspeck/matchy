@@ -2,12 +2,12 @@
 
 @section("content")
     <div class = "container">
-        <h1>Livescores - {{date("Y-m-d")}}</h1>
+        <h1>@lang("application.Livescores") - {{date($date_format)}} </h1>
 
         @if(isset($livescores))
             @if(count($livescores) >= 1 && gettype($livescores) == "array")
                 @if(count($livescores) >= 100)
-                    <p style="color:red">We only show the first {{count($livescores)}} results. The data shown might now be complete. We try to fix this in a later version.</p>
+                    <p style="color:red">@lang("application.msg_too_much_results", ["count" => count($livescores)])</p>
                 @endif
                 @php $last_league_id = 0; @endphp
                 @foreach($livescores as $livescore)
@@ -18,14 +18,14 @@
                         $league = $livescore->league->data;
                         $homeTeam = $livescore->localTeam->data;
                         $awayTeam = $livescore->visitorTeam->data;
-                        if($livescore->scores->localteam_score > $livescore->scores->visitorteam_score && in_array($livescore->time->status,  array('FT', 'AET', 'FT_PEN'))) {
+                        if($livescore->scores->localteam_score > $livescore->scores->visitorteam_score && in_array($livescore->time->status,  array("FT", "AET", "FT_PEN"))) {
                             $winningTeam = $homeTeam->name;
-                        } elseif ($livescore->scores->localteam_score == $livescore->scores->visitorteam_score && in_array($livescore->time->status,  array('FT', 'AET', 'FT_PEN'))) {
-                            $winningTeam = 'draw';
-                        } elseif ($livescore->scores->localteam_score < $livescore->scores->visitorteam_score && in_array($livescore->time->status,  array('FT', 'AET', 'FT_PEN'))) {
+                        } elseif ($livescore->scores->localteam_score == $livescore->scores->visitorteam_score && in_array($livescore->time->status,  array("FT", "AET", "FT_PEN"))) {
+                            $winningTeam = "draw";
+                        } elseif ($livescore->scores->localteam_score < $livescore->scores->visitorteam_score && in_array($livescore->time->status,  array("FT", "AET", "FT_PEN"))) {
                             $winningTeam = $awayTeam->name;
                         } else {
-                            $winningTeam = 'TBD';
+                            $winningTeam = "TBD";
                         }
                     @endphp
                     @if($livescore->league_id == $last_league_id)
@@ -62,24 +62,24 @@
                                     <td scope="row">{{$livescore->scores->localteam_score}} - {{$livescore->scores->visitorteam_score}}</td>
                                     @break
                             @endswitch
-
-                            @if($livescore->time->status == 'LIVE')
-                                <td scope='row'>{{date('Y-m-d H:i', strtotime($livescore->time->starting_at->date_time))}}<span style='color:#FF0000'>LIVE</span></td>
-                            @else
-                                <td scope='row'>{{date('Y-m-d H:i', strtotime($livescore->time->starting_at->date_time))}}</td>
+    
+                            <td scope="row">{{date($date_format . " H:i", strtotime($livescore->time->starting_at->date_time))}}
+                            @if($livescore->time->status == "LIVE")
+                                <span style="color:#FF0000">LIVE</span>
                             @endif
-                            <td scope='row'><a href="{{route('fixturesDetails', ['id' => $livescore->id])}}"><i class='fa fa-info-circle'></i></a></td>
+                            </td>
+                            <td scope="row"><a href="{{route("fixturesDetails", ["id" => $livescore->id])}}"><i class="fa fa-info-circle"></i></a></td>
                         </tr>
                     @else
-                        <table class='table table-striped table-light table-sm' width='100%'>
-                            <caption><a href="{{route('leaguesDetails', ['id' => $league->id])}}" style="font-weight: bold">{{$league->name}}</a></caption>
+                        <table class="table table-striped table-light table-sm" width="100%">
+                            <caption><a href="{{route("leaguesDetails", ["id" => $league->id])}}" style="font-weight: bold">{{$league->name}}</a></caption>
                             <thead>
                                 <tr>
-                                    <th scope='col' width='35%'>Home team</th>
-                                    <th scope='col' width='35%'>Away team</th>
-                                    <th scope='col' width='10%'>Score</th>
-                                    <th scope='col' width='17%'>Date and time</th>
-                                    <th scope='col' width='3%'>Info</th>
+                                    <th scope="col" width="35%"></th>
+                                    <th scope="col" width="35%"></th>
+                                    <th scope="col" width="10%"></th>
+                                    <th scope="col" width="17%"></th>
+                                    <th scope="col" width="3%"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -117,9 +117,9 @@
                                         @break
                                 @endswitch
 
-                                <td scope='row'>{{date('Y-m-d H:i', strtotime($livescore->time->starting_at->date_time))}}</td>
+                                <td scope="row">{{date($date_format . " H:i", strtotime($livescore->time->starting_at->date_time))}}</td>
 
-                                <td scope='row'><a href="{{route('fixturesDetails', ['id' => $livescore->id])}}"><i class='fa fa-info-circle'></i></a></td>
+                                <td scope="row"><a href="{{route("fixturesDetails", ["id" => $livescore->id])}}"><i class="fa fa-info-circle"></i></a></td>
                             </tr>
                     @endif
                     @php $last_league_id = $livescore->league_id; @endphp
@@ -127,7 +127,7 @@
                 </tbody>
             </table>
             @else
-                <p>No livescores for today.</p>
+                <p>@lang("application.msg_no_livescores_today")</p>
             @endif
         @endif
     </div>

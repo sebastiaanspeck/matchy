@@ -1,6 +1,6 @@
 @extends("layouts.default")
 
-@section('style')
+@section("style")
     .progress {
         margin-bottom: 0 !important;
     }
@@ -69,16 +69,16 @@
                     <span style="font-size: medium"> {{$fixture->time->status}} - {{$fixture->time->minute}}&apos; +{{$fixture->time->injury_time}} </span>
                 @endif
             @else
-                <span style="font-size: medium"> {{date("Y-m-d H:i", strtotime($fixture->time->starting_at->date_time))}} </span>
+                <span style="font-size: medium"> {{date($date_format . " H:i", strtotime($fixture->time->starting_at->date_time))}} </span>
             @endif
             <br>
 
             @if(isset($venue))
-                <span>Venue: {{$venue->name}} - {{$venue->city}} </span>
+                <span>@lang("application.Venue"): {{$venue->name}} - {{$venue->city}} </span>
                 <br>
             @endif
             @if(isset($referee))
-                <span>Referee: {{$referee->fullname}} </span>
+                <span>@lang("application.Referee"): {{$referee->fullname}} </span>
                 <br>
             @endif
         </div>
@@ -86,19 +86,19 @@
         {{-- Nav tabs --}}
         <ul class="nav nav-tabs" id="nav_tabs" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="events-tab" data-toggle="tab" href="#events" role="tab" aria-controls="events" aria-selected="true">Events</a>
+                <a class="nav-link active" id="events-tab" data-toggle="tab" href="#match_summary" role="tab" aria-controls="match_summary" aria-selected="true">@lang("application.Match Summary")</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="statistics-tab" data-toggle="tab" href="#statistics" role="tab" aria-controls="statistics" aria-selected="true">Statistics</a>
+                <a class="nav-link" id="statistics-tab" data-toggle="tab" href="#statistics" role="tab" aria-controls="statistics" aria-selected="true">@lang("application.Statistics")</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="lineups-tab" data-toggle="tab" href="#lineups" role="tab" aria-controls="lineups" aria-selected="true">Lineups</a>
+                <a class="nav-link" id="lineups-tab" data-toggle="tab" href="#lineups" role="tab" aria-controls="lineups" aria-selected="true">@lang("application.Lineups")</a>
             </li>
         </ul>
 
         {{-- Tab panes --}}
         <div class="tab-content" id="tab_content">
-            <div class="tab-pane fade show active" id="events" role="tabpanel" aria-labelledby="events-tab">
+            <div class="tab-pane fade show active" id="match_summary" role="tabpanel" aria-labelledby="match_summary-tab">
                 @if(count($events) > 0)
                     <table class="table table-sm table-borderless" align="center">
                         <tbody>
@@ -111,7 +111,7 @@
                                 @if($event->type == "substitution")
                                     <td scope="row" style="text-align:right" width="1%"> {{$event->minute}}&apos;</td>
                                     <td scope="row" style="text-align:center" width="1%"><img src="/images/events/{{$event->type}}.svg"></td>
-                                    <td scope="row" style="text-align:left" width="49%"> {{$event->player_name}} (in) {{$event->related_player_name}}  (out) </td>
+                                    <td scope="row" style="text-align:left" width="49%">{{$event->player_name}} <img src='/images/events/substitution-in.svg'> {{$event->related_player_name}} <img src='/images/events/substitution-out.svg'></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
@@ -128,7 +128,7 @@
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td scope="row" style="text-align:right" width="49%"> {{$event->player_name}}  (in)  {{$event->related_player_name}}  (out)</td>
+                                    <td scope="row" style="text-align:right" width="49%">{{$event->player_name}} <img src='/images/events/substitution-in.svg'> {{$event->related_player_name}} <img src='/images/events/substitution-out.svg'></td>
                                     <td scope="row" style="text-align:center" width="1%"><img src="/images/events/{{$event->type}}.svg"></td>
                                     <td scope="row" style="text-align:left" width="1%">{{$event->minute}}&apos;</td>
                                 @else
@@ -145,18 +145,18 @@
                         </tbody>
                     </table>
                 @else
-                    <span style="font-weight: bold">Events are not (yet) available for this fixture</span>
+                    <span style="font-weight: bold">@lang('application.Match Summary') @choice('application.msg_no_data', 1)</span>
                 @endif
             </div>
             <div class="tab-pane fade" id="statistics" role="tabpanel" aria-labelledby="statistics-tab">
                 @if(count($stats) > 0)
                     @php
-                        $stats_keys = array("team_id" => "team_id", "shots-total" => "Total shots", "shots-ongoal" => "Shots on goal", "shots-offgoal" => "Shots of goal", "shots-blocked" => "Blocked shots", "shots-insidebox" => "Shots inside box", "shots-outsidebox" => "Shots outside box",
-                        "passes-total" => "Total passes", "passes-accurate" => "Accurate passes", "passes-percentage" => "Passing percentage",
-                        "attacks-attacks" => "Total attacks", "attacks-dangerous_attacks" => "Dangerous attacks",
-                        "fouls" => "Fouls", "corners" => "Corners", "offsides" => "Offside", "possessiontime" => "Ball possession",
-                        "yellowcards" => "Yellow cards", "redcards" => "Red cards", "saves" => "Saves", "substitutions" => "Substitutions",
-                        "goal_kick" => "Goal kicks", "goal_attempts" => "Goal attempts", "free_kick" => "Free kicks", "throw_in" => "Throw-ins", "ball_safe" => "Ball safe");
+                        $stats_keys = array("team_id" => "team_id", "shots-total" => trans("application.Total shots"), "shots-ongoal" => trans("application.Shots on goal"), "shots-offgoal" => trans("application.Shots of goal"), "shots-blocked" => trans("application.Blocked shots"), "shots-insidebox" => trans("application.Shots inside box"), "shots-outsidebox" => trans("application.Shots outside box"),
+                        "passes-total" => trans("application.Total passes"), "passes-accurate" => trans("application.Accurate passes"), "passes-percentage" => trans("application.Passing percentage"),
+                        "attacks-attacks" => trans("application.Total attacks"), "attacks-dangerous_attacks" => trans("application.Dangerous attacks"),
+                        "fouls" => trans("application.Fouls"), "corners" => trans("application.Corners"), "offsides" => trans("application.Offside"), "possessiontime" => trans("application.Ball possession"),
+                        "yellowcards" => trans("application.Yellow cards"), "redcards" => trans("application.Red cards"), "saves" => trans("application.Saves"), "substitutions" => trans("application.Substitutions"),
+                        "goal_kick" => trans("application.Goal kicks"), "goal_attempts" => trans("application.Goal attempts"), "free_kick" => trans("application.Free kicks"), "throw_in" => trans("application.Throw-ins"), "ball_safe" => trans("application.Ball safe"));
                         $stats_array = array();
                         foreach($stats as $stat) {
                             foreach($stat as $key=>$value) {
@@ -241,60 +241,63 @@
                                     }
                                 @endphp
                                     <tr>
+                                        @if(in_array($label, array("Ball possession", "Passing percentage", "Balbezit")))
+                                            @php
+                                                $home_stat = $home_stat . "%";
+                                                $away_stat = $away_stat . "%";
+                                            @endphp
+                                        @endif
+                                        <td colspan="2" style="text-align: left">
+                                            <span>{{$home_stat}}</span>
+                                        </td>
                                         <td colspan="2" style="text-align: center">
                                             <span>{{$label}}</span>
                                         </td>
+                                        <td colspan="2" style="text-align: right">
+                                            <span>{{$away_stat}}</span>
+                                        </td>
                                     </tr>
                                     <tr>
-                                        <td style="width: 50%">
+                                        <td colspan="3" style="width: 50%">
                                             <div class="progress" style="direction: rtl; height:10px">
                                                 <div class="progress-bar {{$color_home}}" role="progressbar" style="width: {{$home_stat_percentage}}%;" aria-valuenow="{{$home_stat_percentage}}" aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
                                         </td>
-                                        <td style="width: 50%">
+                                        <td colspan="3" style="width: 50%">
                                             <div class="progress" style="direction: ltr; height:10px">
                                                 <div class="progress-bar {{$color_away}}" role="progressbar" style="width: {{$away_stat_percentage}}%;" aria-valuenow="{{$away_stat_percentage}}" aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
                                         </td>
                                     </tr>
                                     <tr>
-                                        @if(in_array($label, array("Ball possession", "Passing percentage")))
-                                            @php
-                                                $home_stat = $home_stat . "%";
-                                                $away_stat = $away_stat . "%";
-                                            @endphp
-                                        @endif
-                                        <td style="text-align: left">
-                                            <span>{{$home_stat}}</span>
-                                        </td>
-                                        <td style="text-align: right">
-                                            <span>{{$away_stat}}</span>
-                                        </td>
+                                    
                                     </tr>
                             @endif
                         @endforeach
                     </table>
                 @else
-                    <span style="font-weight: bold">Statistics are not (yet) available for this fixture</span>
+                    <span style="font-weight: bold">@lang('application.Statistics') @choice('application.msg_no_data', 2)</span>
                 @endif
             </div>
             <div class="tab-pane fade" id="lineups" role="tabpanel" aria-labelledby="lineups-tab">
                 @if(count($lineup) > 0 && count($bench) > 0)
                     <table class="table table-borderless table-sm">
+                        @if($fixture->formations->localteam_formation && $fixture->formations->visitorteam_formation)
                         <tr style="text-align: center">
                             <td colspan="3">
                                 <span>{{$fixture->formations->localteam_formation}}</span>
                             </td>
                             <td style="font-weight: bold">
-                                <span>Formation</span>
+                                <span>@lang('application.Formation')</span>
                             </td>
                             <td colspan="3">
                                 <span>{{$fixture->formations->visitorteam_formation}}</span>
                             </td>
                         </tr>
+                        @endif
                         <tr style="font-weight: bold; text-align: center; background: #D3D3D3">
                             <td colspan="7">
-                                <span>Starting lineups</span>
+                                <span>@lang('application.Starting lineups')</span>
                             </td>
                         </tr>
                         @for($index = 0; $index < count($lineup)/2; $index++)
@@ -317,7 +320,7 @@
                                         }
                                     }
                                     if($home_player->stats->cards->redcards != 0) {
-                                        for($redcards = 0; $redcards < $home_player->stats->cards->yellowcards; $redcards++) {
+                                        for($redcards = 0; $redcards < $home_player->stats->cards->redcards; $redcards++) {
                                             array_push($home_player_stats, "/images/events/redcard.svg");
                                         }
                                     }
@@ -333,7 +336,7 @@
                                         }
                                     }
                                     if($away_player->stats->cards->redcards != 0) {
-                                        for($redcards = 0; $redcards < $away_player->stats->cards->yellowcards; $redcards++) {
+                                        for($redcards = 0; $redcards < $away_player->stats->cards->redcards; $redcards++) {
                                             array_push($away_player_stats, "/images/events/redcard.svg");
                                         }
                                     }
@@ -376,7 +379,7 @@
                         @endfor
                         <tr style="font-weight: bold; text-align: center; background: #D3D3D3">
                             <td colspan="7">
-                                <span>Bench</span>
+                                <span>@lang('application.Substitutes')</span>
                             </td>
                         </tr>
                         @for($index = 0; $index < count($bench)/2; $index++)
@@ -399,7 +402,7 @@
                                         }
                                     }
                                     if($home_player->stats->cards->redcards != 0) {
-                                        for($redcards = 0; $redcards < $home_player->stats->cards->yellowcards; $redcards++) {
+                                        for($redcards = 0; $redcards < $home_player->stats->cards->redcards; $redcards++) {
                                             array_push($home_player_stats, "/images/events/redcard.svg");
                                         }
                                     }
@@ -415,7 +418,7 @@
                                         }
                                     }
                                     if($away_player->stats->cards->redcards != 0) {
-                                        for($redcards = 0; $redcards < $away_player->stats->cards->yellowcards; $redcards++) {
+                                        for($redcards = 0; $redcards < $away_player->stats->cards->redcards; $redcards++) {
                                             array_push($away_player_stats, "/images/events/redcard.svg");
                                         }
                                     }
@@ -459,7 +462,7 @@
                         @if(count($sidelined) > 0)
                             <tr style="font-weight: bold; text-align: center; background: #D3D3D3">
                                 <td colspan="7">
-                                    <span>Missing players</span>
+                                    <span>@lang('application.Missing players')</span>
                                 </td>
                             </tr>
                             @php
@@ -525,7 +528,7 @@
                         @if(isset($localCoach) || isset($visitorCoach))
                         <tr style="font-weight: bold; text-align: center; background: #D3D3D3">
                             <td colspan="7">
-                                <span>Coaches</span>
+                                <span>@lang('application.Coaches')</span>
                             </td>
                         </tr>
                         <tr>
@@ -544,7 +547,7 @@
                         @endif
                     </table>
                 @else
-                    <span style="font-weight: bold">Lineups are not (yet) available for this fixture</span>
+                    <span style="font-weight: bold">@lang('application.Lineups') @choice('application.msg_no_data', 2)</span>
                 @endif
             </div>
         </div>

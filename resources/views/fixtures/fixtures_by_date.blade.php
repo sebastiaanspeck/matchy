@@ -3,14 +3,12 @@
 @section("content")
     <div class = "container">
         @if(isset($date))
-            <h1>Fixtures - {{$date}}</h1>
-        @else
-            <h1>Fixtures - {{$fromDate}} - {{$toDate}}</h1>
+            <h1>@lang('application.Fixtures') - {{date($date_format, strtotime($date))}}</h1>
         @endif
 
         @if(count($fixtures) >= 1 && gettype($fixtures) == "array")
             @if(count($fixtures) >= 100)
-                <p style="color:red">We only show the first {{count($fixtures)}} results. The data shown might now be complete. We try to fix this in a later version.</p>
+                <p style="color:red">@lang("application.msg_too_much_results", ["count" => count($livescores)])</p>
             @endif
 
             @php $last_league_id = 0; @endphp
@@ -63,12 +61,12 @@
                                 <td scope="row">{{$fixture->scores->localteam_score}} - {{$fixture->scores->visitorteam_score}}</td>
                                 @break
                         @endswitch
-
-                        @if($fixture->time->status == "LIVE")
-                            <td scope="row">{{date("Y-m-d H:i", strtotime($fixture->time->starting_at->date_time))}}<span style="color:#FF0000">LIVE</span></td>
-                        @else
-                            <td scope="row">{{date("Y-m-d H:i", strtotime($fixture->time->starting_at->date_time))}}</td>
-                        @endif
+    
+                        <td scope="row">{{date($date_format . " H:i", strtotime($fixture->time->starting_at->date_time))}}
+                            @if($fixture->time->status == "LIVE")
+                                <span style="color:#FF0000">LIVE</span>
+                            @endif
+                        </td>
                         <td scope="row"><a href="{{route("fixturesDetails", ["id" => $fixture->id])}}"><i class="fa fa-info-circle"></i></a></td>
                     </tr>
                 @else
@@ -76,11 +74,11 @@
                         <caption><a href="{{route("leaguesDetails", ["id" => $league->id])}}" style="font-weight: bold">{{$league->name}}</a></caption>
                         <thead>
                         <tr>
-                            <th scope="col" width="35%">Home team</th>
-                            <th scope="col" width="35%">Away team</th>
-                            <th scope="col" width="10%">Score</th>
-                            <th scope="col" width="17%">Date and time</th>
-                            <th scope="col" width="3%">Info</th>
+                            <th scope="col" width="35%"></th>
+                            <th scope="col" width="35%"></th>
+                            <th scope="col" width="10%"></th>
+                            <th scope="col" width="17%"></th>
+                            <th scope="col" width="3%"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -117,19 +115,19 @@
                                 <td scope="row">{{$fixture->scores->localteam_score}} - {{$fixture->scores->visitorteam_score}}</td>
                                 @break
                             @endswitch
-
-                            @if(in_array($fixture->time->status, array("LIVE", "HT")))
-                                <td scope="row">{{date("Y-m-d H:i", strtotime($fixture->time->starting_at->date_time))}}<span style="color:#FF0000">{{$fixture->time->status}}</span></td>
-                            @else
-                                <td scope="row">{{date("Y-m-d H:i", strtotime($fixture->time->starting_at->date_time))}}</td>
+    
+                            <td scope="row">{{date($date_format . " H:i", strtotime($fixture->time->starting_at->date_time))}}
+                            @if($fixture->time->status == "LIVE")
+                                <span style="color:#FF0000">LIVE</span>
                             @endif
+                            </td>
                             <td scope="row"><a href="{{route("fixturesDetails", ["id" => $fixture->id])}}"><i class="fa fa-info-circle"></i></a></td>
                         </tr>
                 @endif
                 @php $last_league_id = $fixture->league_id; @endphp
             @endforeach
         @else
-            <p>No matches found for {{$date}}</p>
+            <p>@lang('application.msg_no_matches_found', ["date" => date($date_format, strtotime($date))])</p>
         @endif
     </div>
 @endsection
