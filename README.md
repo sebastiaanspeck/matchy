@@ -1,4 +1,4 @@
-# Laravel Sportmonks Soccer API
+# Laravel Sportmonks Website
 
 Laravel website that uses [Sportmonks](https://www.sportmonks.com/sports/soccer) (live)score API calls. 
 Documentation for the API can be found [here](https://www.sportmonks.com/sports/soccer)
