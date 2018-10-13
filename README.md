@@ -56,3 +56,5 @@ config/soccerapi.php
 config/soccerapi.php
 ```
 
+## Special thanks to
+[kirill-latish](https://github.com/kirill-latish/laravel-sportmonks-soccer)
