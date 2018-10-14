@@ -211,21 +211,7 @@ class SoccerAPIController extends BaseController
 
         if (count($livescores) >= 1) {
             foreach ($livescores as $livescore) {
-                if (in_array($livescore->time->status, [
-                    'NS',
-                    'FT',
-                    'FT_PEN',
-                    'CANCL',
-                    'POSTP',
-                    'INT',
-                    'ABAN',
-                    'SUSP',
-                    'AWARDED',
-                    'DELAYED',
-                    'TBA',
-                    'WO',
-                    'AU'
-                ])) {
+                if (in_array($livescore->time->status, ['NS', 'FT', 'FT_PEN', 'CANCL', 'POSTP', 'INT', 'ABAN', 'SUSP', 'AWARDED','DELAYED','TBA', 'WO', 'AU'])) {
                     continue;
                 } else {
                     $count++;
@@ -244,19 +230,7 @@ class SoccerAPIController extends BaseController
     {
         $date_format = self::getDateFormat();
 
-        if ($request->has('day')) {
-            if ($request->query('day') == 'yesterday') {
-                $date = Carbon::now()->subDays(1)->toDateString();
-            } elseif ($request->query('day') == 'tomorrow') {
-                $date = Carbon::now()->addDays(1)->toDateString();
-            } elseif ($request->query('day') == 'today') {
-                $date = Carbon::now()->toDateString();
-            }
-        } elseif ($request->has('date')) {
-            $date = $request->query('date');
-        } else {
-            $date = Carbon::now()->toDateString();
-        }
+        $date = self::getDateFromRequest($request);
 
         if ($request->query('leagues') == 'all') {
             $leagues = '';
@@ -425,5 +399,24 @@ class SoccerAPIController extends BaseController
 
         return $date_format;
 
+    }
+
+    function getDateFromRequest(Request $request)
+    {
+        if ($request->has('day')) {
+            if ($request->query('day') == 'yesterday') {
+                return Carbon::now()->subDays(1)->toDateString();
+            } elseif ($request->query('day') == 'tomorrow') {
+                return Carbon::now()->addDays(1)->toDateString();
+            } elseif ($request->query('day') == 'today') {
+                return Carbon::now()->toDateString();
+            }
+        } elseif ($request->has('date')) {
+            return $request->query('date');
+        } else {
+            return Carbon::now()->toDateString();
+        }
+        
+        return '';
     }
 }
