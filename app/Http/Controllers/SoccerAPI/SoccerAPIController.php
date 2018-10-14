@@ -74,16 +74,14 @@ class SoccerAPIController extends BaseController
 
         $season = $soccerAPI->seasons()->setInclude($include_season)->byId($league->current_season_id);
 
-        if (in_array($id, $excluded_leagues)) {
-            $topscorers = [];
-        } else {
+        $topscorers = [];
+
+        if (!in_array($id, $excluded_leagues)) {
             $topscorers_default = $soccerAPI->topscorers()->setInclude($include_topscorers)->bySeasonId($league->current_season_id)->goalscorers->data;
 
             /* cups don't work yet -> try: check with current_stage_id */
             if (count($topscorers_default) > 0) {
                 $topscorers = self::addPagination($topscorers_default, 10);
-            } else {
-                $topscorers = [];
                 /* $topscorers_aggregated = $soccerAPI->topscorers()->setInclude($include_topscorers_aggregated)->aggregatedBySeasonId($league->current_season_id)->aggregatedGoalscorers->data;
                  if(count($topscorers_aggregated) > 0) {
                      $topscorers = $topscorers_aggregated;
