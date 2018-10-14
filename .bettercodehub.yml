@@ -4,3 +4,4 @@ languages:
 exclude:
 - /resources/lang/.*
 - /config/.*
+- /bootstrap/*
