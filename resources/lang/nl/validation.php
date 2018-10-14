@@ -11,6 +11,8 @@ return [
     | the validator class. Some of these rules have multiple versions such
     | as the size rules. Feel free to tweak each of these messages.
     |
+    | source: 
+    | https://github.com/caouecs/Laravel-lang/blob/master/src/nl/validation.php
     */
 
     'accepted'             => ':attribute moet geaccepteerd zijn.',

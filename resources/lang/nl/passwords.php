@@ -11,6 +11,8 @@ return [
     | that are given by the password broker for a password update attempt
     | has failed, such as for an invalid token or invalid new password.
     |
+    | source:
+    | https://github.com/caouecs/Laravel-lang/blob/master/src/nl/passwords.php
     */
 
     'password' => 'Wachtwoord moet minimaal zes tekens lang zijn en de wachtwoorden moeten overeenkomen.',

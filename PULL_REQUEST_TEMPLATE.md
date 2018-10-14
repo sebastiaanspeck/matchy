@@ -2,24 +2,44 @@
 
 *Any change needs to be discussed before proceeding. Failure to do so may result in the rejection of the pull request.*
 
-Please provide enough information so that others can review your pull request:
+Please fill in all placeholders --> [Placeholder]
 
-<!-- You can skip this if you're fixing a typo or adding an app to the Showcase. -->
+# Pull Request [Topic]
 
-Explain the **details** for making this change. What existing problem does the pull request solve?
+<!-- 
+Write one or two sentences explaining what you have modified.
+-->
 
-<!-- Example: When "Adding a function to do X", explain why it is necessary to have a way to do X. -->
+### Please tell us , the type of Change you are submiting:
+Select one of the following: 
 
-**Test plan (required)**
+- [ ] Bug
+- [ ] Feature
+- [ ] Minor Change
 
-Demonstrate the code is solid. Example: The exact commands you ran and their output, screenshots / videos if the pull request changes UI.
+<!--
+    Example:
+    [X] Bug
+-->
 
-<!-- Make sure tests pass on both Travis and Circle CI. -->
+### Does it fix an existing issue? Please tell us which one
 
-**Code formatting**
+<!-- 
+    Example
+    Resolves #21
+    or 
+    Fixes #42
+--->
 
-<!-- See the simple style guide. -->
+### Description of what's been changed
 
-**Closing issues**
+<!--
+    Any details you want to share?
+ -->
 
-Put `closes #XXXX` in your comment to auto-close the issue that your PR fixes (if such).
+### Results of your tests (If applicable)
+
+<!--
+    If you add a new test, it would be really great if you can add a screen shot of the results. (not necessary, but, it would be nice)
+-->
+
