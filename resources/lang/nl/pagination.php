@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Pagination Language Lines
@@ -11,10 +10,8 @@ return [
     | the simple pagination links. You are free to change them to anything
     | you want to customize your views to better match your application.
     |
-    | source :
-    | https://github.com/caouecs/Laravel-lang/blob/master/src/nl/pagination.php
     */
 
-    'previous' => '« Vorige',
-    'next'     => 'Volgende »',
+    'previous' => '&laquo; Vorige',
+    'next'     => 'Volgende &raquo;',
 ];
