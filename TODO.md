@@ -1,6 +1,4 @@
 # TODO
-- [ ] Rewrite tables to grids
-- [ ] Check topscorers-data. Excluded for cups for now.
-- [ ] Add header to show the matday/round
-- [ ] Translate injuries
-- [ ] Translate countries
+- [ ] check topscorers-data. Excluded for cups for now.
+- [ ] add header to show the matday/round 
+- [X] transform blade.php-files from 'echo' to blade-format
