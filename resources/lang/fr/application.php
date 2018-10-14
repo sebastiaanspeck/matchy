@@ -38,9 +38,9 @@ return [
     'Goals'                     => 'Buts',
     'Points'                    => 'Points',
     'Form'                      => 'Forme',
-    'W'                         => 'W',
-    'D'                         => 'D',
-    'L'                         => 'L',
+    'W'                         => 'G',
+    'D'                         => 'N',
+    'L'                         => 'P',
 
     'live'                      => 'Direct',
     'livescores'                => 'scores en direct',
