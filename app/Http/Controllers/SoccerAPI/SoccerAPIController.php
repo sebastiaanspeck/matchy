@@ -51,11 +51,11 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param $id
+     * @param $league_id
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    function leaguesDetails($id, Request $request)
+    function leaguesDetails($league_id, Request $request)
     {
         $date_format = self::getDateFormat();
 
@@ -66,7 +66,7 @@ class SoccerAPIController extends BaseController
 
         /* $include_topscorers_aggregated = 'aggregatedGoalscorers.player,aggregatedGoalscorers.team'; */
 
-        $league = $soccerAPI->leagues()->setInclude($include_league)->byId($id)->data;
+        $league = $soccerAPI->leagues()->setInclude($include_league)->byId($league_id)->data;
 
         $excluded_leagues = [214, 1371, 24, 2, 5, 720, 1325, 1326, 307, 109, 390];
 
@@ -76,7 +76,7 @@ class SoccerAPIController extends BaseController
 
         $topscorers = [];
 
-        if (!in_array($id, $excluded_leagues)) {
+        if (!in_array($league_id, $excluded_leagues)) {
             $topscorers_default = $soccerAPI->topscorers()->setInclude($include_topscorers)->bySeasonId($league->current_season_id)->goalscorers->data;
 
             /* cups don't work yet -> try: check with current_stage_id */
@@ -257,34 +257,34 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param $id
+     * @param $fixture_id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    function fixturesDetails($id)
+    function fixturesDetails($fixture_id)
     {
         $date_format = self::getDateFormat();
 
         $soccerAPI = new SoccerAPI();
         $include = 'localTeam,visitorTeam,lineup.player,bench.player,sidelined.player,stats,comments,highlights,league,season,referee,events,venue,localCoach,visitorCoach';
 
-        $fixture = $soccerAPI->fixtures()->setInclude($include)->byMatchId($id)->data;
+        $fixture = $soccerAPI->fixtures()->setInclude($include)->byMatchId($fixture_id)->data;
 
         return view('fixtures/fixtures_details', ['fixture' => $fixture, 'date_format' => $date_format]);
     }
 
     /**
-     * @param $id
+     * @param $team_id
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    function teamsDetails($id, Request $request)
+    function teamsDetails($team_id, Request $request)
     {
         $date_format = self::getDateFormat();
 
         $soccerAPI = new SoccerAPI();
         $include = 'squad,coach,latest.league,latest.localTeam,latest.visitorTeam,upcoming.league,upcoming.localTeam,upcoming.visitorTeam';
 
-        $team = $soccerAPI->teams()->setInclude($include)->byId($id)->data;
+        $team = $soccerAPI->teams()->setInclude($include)->byId($team_id)->data;
 
         $number_of_matches = $request->query('matches', 10);
         $last_fixtures = self::addPagination($team->latest->data, $number_of_matches);
