@@ -3,3 +3,4 @@ languages:
 - php
 exclude:
 - /resources/lang/.*
+- /config/.*
