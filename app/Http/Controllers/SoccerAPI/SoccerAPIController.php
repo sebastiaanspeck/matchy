@@ -33,58 +33,58 @@ class SoccerAPIController extends BaseController
 
         $leagues = $soccerAPI->leagues()->setInclude($include)->all();
 
-        usort($leagues, function ($a, $b) {
-            if ($a->country->data->name == $b->country->data->name) {
-                return $a->id <=> $b->id;
+        usort($leagues, function ($item1, $item2) {
+            if ($item1->country->data->name == $item2->country->data->name) {
+                return $item1->id <=> $item2->id;
             }
 
-            return $a->country->data->name <=> $b->country->data->name;
+            return $item1->country->data->name <=> $item2->country->data->name;
         });
 
-        $paginated_data = self::addPagination($leagues, 20);
+        $paginatedData = self::addPagination($leagues, 20);
 
         $url = self::removePageParameter($request);
 
-        $paginated_data->setPath($url);
+        $paginatedData->setPath($url);
 
-        return view('leagues/leagues', ['leagues' => $paginated_data]);
+        return view('leagues/leagues', ['leagues' => $paginatedData]);
     }
 
     /**
-     * @param $league_id
+     * @param $leagueId
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    function leaguesDetails($league_id, Request $request)
+    function leaguesDetails($leagueId, Request $request)
     {
-        $date_format = self::getDateFormat();
+        $dateFormat = self::getDateFormat();
 
         $soccerAPI = new SoccerAPI();
-        $include_league = 'country,season';
-        $include_season = 'upcoming.localTeam,upcoming.visitorTeam,upcoming.league,results:order(starting_at|desc),results.localTeam,results.visitorTeam,results.league';
-        $include_topscorers = 'goalscorers.player,goalscorers.team';
+        $includeLeague = 'country,season';
+        $includeSeason = 'upcoming.localTeam,upcoming.visitorTeam,upcoming.league,results:order(starting_at|desc),results.localTeam,results.visitorTeam,results.league';
+        $includeTopscorers = 'goalscorers.player,goalscorers.team';
 
-        /* $include_topscorers_aggregated = 'aggregatedGoalscorers.player,aggregatedGoalscorers.team'; */
+        /* $includeTopscorersAggregated = 'aggregatedGoalscorers.player,aggregatedGoalscorers.team'; */
 
-        $league = $soccerAPI->leagues()->setInclude($include_league)->byId($league_id)->data;
+        $league = $soccerAPI->leagues()->setInclude($includeLeague)->byId($leagueId)->data;
 
-        $excluded_leagues = [214, 1371, 24, 2, 5, 720, 1325, 1326, 307, 109, 390];
+        $excludedLeagues = [214, 1371, 24, 2, 5, 720, 1325, 1326, 307, 109, 390];
 
-        $standings_raw = $soccerAPI->standings()->bySeasonId($league->current_season_id);
+        $standingsRaw = $soccerAPI->standings()->bySeasonId($league->current_season_id);
 
-        $season = $soccerAPI->seasons()->setInclude($include_season)->byId($league->current_season_id);
+        $season = $soccerAPI->seasons()->setInclude($includeSeason)->byId($league->current_season_id);
 
         $topscorers = [];
 
-        if (!in_array($league_id, $excluded_leagues)) {
-            $topscorers_default = $soccerAPI->topscorers()->setInclude($include_topscorers)->bySeasonId($league->current_season_id)->goalscorers->data;
+        if (!in_array($leagueId, $excludedLeagues)) {
+            $topscorersDefault = $soccerAPI->topscorers()->setInclude($includeTopscorers)->bySeasonId($league->current_season_id)->goalscorers->data;
 
             /* cups don't work yet -> try: check with current_stage_id */
-            if (count($topscorers_default) > 0) {
-                $topscorers = self::addPagination($topscorers_default, 10);
-                /* $topscorers_aggregated = $soccerAPI->topscorers()->setInclude($include_topscorers_aggregated)->aggregatedBySeasonId($league->current_season_id)->aggregatedGoalscorers->data;
-                 if(count($topscorers_aggregated) > 0) {
-                     $topscorers = $topscorers_aggregated;
+            if (count($topscorersDefault) > 0) {
+                $topscorers = self::addPagination($topscorersDefault, 10);
+                /* $topscorersAggregated = $soccerAPI->topscorers()->setInclude($includeTopscorersAggregated)->aggregatedBySeasonId($league->current_season_id)->aggregatedGoalscorers->data;
+                 if(count($topscorersAggregated) > 0) {
+                     $topscorers = $topscorersAggregated;
                  } else {
                      $topscorers = array();
                  }*/
@@ -92,50 +92,50 @@ class SoccerAPIController extends BaseController
         }
 
         if (count($season) > 0) {
-            $number_of_matches = $request->query('matches', 10);
+            $numberOfMatches = $request->query('matches', 10);
 
-            $last_fixtures = $season->data->results->data;
-            usort($last_fixtures, function ($a, $b) {
-                if ($a->league_id == $b->league_id) {
-                    if ($a->time->starting_at->date_time == $b->time->starting_at->date_time) {
-                        return $b->time->minute <=> $a->time->minute;
+            $lastFixtures = $season->data->results->data;
+            usort($lastFixtures, function ($item1, $item2) {
+                if ($item1->league_id == $item2->league_id) {
+                    if ($item1->time->starting_at->date_time == $item2->time->starting_at->date_time) {
+                        return $item2->time->minute <=> $item1->time->minute;
                     }
 
-                    return $b->time->starting_at->date_time <=> $a->time->starting_at->date_time;
+                    return $item2->time->starting_at->date_time <=> $item1->time->starting_at->date_time;
                 }
 
-                return $a->league_id <=> $b->league_id;
+                return $item1->league_id <=> $item2->league_id;
             });
-            $last_fixtures = self::addPagination($last_fixtures, $number_of_matches);
+            $lastFixtures = self::addPagination($lastFixtures, $numberOfMatches);
 
 
-            $upcoming_fixtures = $season->data->upcoming->data;
-            usort($upcoming_fixtures, function ($a, $b) {
-                if ($a->league_id == $b->league_id) {
-                    if ($a->time->starting_at->date_time == $b->time->starting_at->date_time) {
-                        return $b->time->minute <=> $a->time->minute;
+            $upcomingFixtures = $season->data->upcoming->data;
+            usort($upcomingFixtures, function ($item1, $item2) {
+                if ($item1->league_id == $item2->league_id) {
+                    if ($item1->time->starting_at->date_time == $item2->time->starting_at->date_time) {
+                        return $item2->time->minute <=> $item1->time->minute;
                     }
 
-                    return $a->time->starting_at->date_time <=> $b->time->starting_at->date_time;
+                    return $item1->time->starting_at->date_time <=> $item2->time->starting_at->date_time;
                 }
 
-                return $a->league_id <=> $b->league_id;
+                return $item1->league_id <=> $item2->league_id;
             });
-            $upcoming_fixtures = self::addPagination($upcoming_fixtures, $number_of_matches);
+            $upcomingFixtures = self::addPagination($upcomingFixtures, $numberOfMatches);
         } else {
-            $last_fixtures = [];
-            $upcoming_fixtures = [];
-            $number_of_matches = 10;
+            $lastFixtures = [];
+            $upcomingFixtures = [];
+            $numberOfMatches = 10;
         }
 
         return view('leagues/leagues_details', [
             'league' => $league,
-            'standings_raw' => $standings_raw,
-            'last_fixtures' => $last_fixtures,
-            'upcoming_fixtures' => $upcoming_fixtures,
-            'number_of_matches' => $number_of_matches,
+            'standings_raw' => $standingsRaw,
+            'last_fixtures' => $lastFixtures,
+            'upcoming_fixtures' => $upcomingFixtures,
+            'number_of_matches' => $numberOfMatches,
             'topscorers' => $topscorers,
-            'date_format' => $date_format
+            'date_format' => $dateFormat
         ]);
     }
 
@@ -146,7 +146,7 @@ class SoccerAPIController extends BaseController
      */
     function livescores($type, Request $request)
     {
-        $date_format = self::getDateFormat();
+        $dateFormat = self::getDateFormat();
 
         $soccerAPI = new SoccerAPI();
         $include = 'league,localTeam,visitorTeam';
@@ -161,36 +161,36 @@ class SoccerAPIController extends BaseController
             case('today'):
                 $livescores = $soccerAPI->livescores()->setInclude($include)->setLeagues($leagues)->today();
 
-                usort($livescores, function ($a, $b) {
-                    if ($a->league_id == $b->league_id) {
-                        if ($a->time->starting_at->date_time == $b->time->starting_at->date_time) {
-                            return $b->time->minute <=> $a->time->minute;
+                usort($livescores, function ($item1, $item2) {
+                    if ($item1->league_id == $item2->league_id) {
+                        if ($item1->time->starting_at->date_time == $item2->time->starting_at->date_time) {
+                            return $item2->time->minute <=> $item1->time->minute;
                         }
 
-                        return $a->time->starting_at->date_time <=> $b->time->starting_at->date_time;
+                        return $item1->time->starting_at->date_time <=> $item2->time->starting_at->date_time;
                     }
 
-                    return $a->league_id <=> $b->league_id;
+                    return $item1->league_id <=> $item2->league_id;
                 });
 
-                return view('livescores/livescores_today', ['livescores' => $livescores, 'date_format' => $date_format]);
+                return view('livescores/livescores_today', ['livescores' => $livescores, 'date_format' => $dateFormat]);
                 break;
             case('now'):
                 $livescores = $soccerAPI->livescores()->setInclude($include)->setLeagues($leagues)->now();
 
-                usort($livescores, function ($a, $b) {
-                    if ($a->league_id == $b->league_id) {
-                        if ($a->time->starting_at->date_time == $b->time->starting_at->date_time) {
-                            return $b->time->minute <=> $a->time->minute;
+                usort($livescores, function ($item1, $item2) {
+                    if ($item1->league_id == $item2->league_id) {
+                        if ($item1->time->starting_at->date_time == $item2->time->starting_at->date_time) {
+                            return $item2->time->minute <=> $item1->time->minute;
                         }
 
-                        return $a->time->starting_at->date_time <=> $b->time->starting_at->date_time;
+                        return $item1->time->starting_at->date_time <=> $item2->time->starting_at->date_time;
                     }
 
-                    return $a->league_id <=> $b->league_id;
+                    return $item1->league_id <=> $item2->league_id;
                 });
 
-                return view('livescores/livescores_now', ['livescores' => $livescores, 'date_format' => $date_format]);
+                return view('livescores/livescores_now', ['livescores' => $livescores, 'date_format' => $dateFormat]);
                 break;
             default:
                 return '';
@@ -226,7 +226,7 @@ class SoccerAPIController extends BaseController
      */
     function fixturesByDate(Request $request)
     {
-        $date_format = self::getDateFormat();
+        $dateFormat = self::getDateFormat();
 
         $date = self::getDateFromRequest($request);
 
@@ -241,79 +241,79 @@ class SoccerAPIController extends BaseController
         /** @var Carbon $date */
         $fixtures = $soccerAPI->fixtures()->setInclude($include)->setLeagues($leagues)->byDate($date);
 
-        usort($fixtures, function ($a, $b) {
-            if ($a->league_id == $b->league_id) {
-                if ($a->time->starting_at->date_time == $b->time->starting_at->date_time) {
-                    return $a->id <=> $b->id;
+        usort($fixtures, function ($item1, $item2) {
+            if ($item1->league_id == $item2->league_id) {
+                if ($item1->time->starting_at->date_time == $item2->time->starting_at->date_time) {
+                    return $item1->id <=> $item2->id;
                 }
 
-                return $a->time->starting_at->date_time <=> $b->time->starting_at->date_time;
+                return $item1->time->starting_at->date_time <=> $item2->time->starting_at->date_time;
             }
 
-            return $a->league_id <=> $b->league_id;
+            return $item1->league_id <=> $item2->league_id;
         });
 
-        return view('fixtures/fixtures_by_date', ['fixtures' => $fixtures, 'date' => $date, 'date_format' => $date_format]);
+        return view('fixtures/fixtures_by_date', ['fixtures' => $fixtures, 'date' => $date, 'date_format' => $dateFormat]);
     }
 
     /**
-     * @param $fixture_id
+     * @param $fixtureId
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    function fixturesDetails($fixture_id)
+    function fixturesDetails($fixtureId)
     {
-        $date_format = self::getDateFormat();
+        $dateFormat = self::getDateFormat();
 
         $soccerAPI = new SoccerAPI();
         $include = 'localTeam,visitorTeam,lineup.player,bench.player,sidelined.player,stats,comments,highlights,league,season,referee,events,venue,localCoach,visitorCoach';
 
-        $fixture = $soccerAPI->fixtures()->setInclude($include)->byMatchId($fixture_id)->data;
+        $fixture = $soccerAPI->fixtures()->setInclude($include)->byMatchId($fixtureId)->data;
 
-        return view('fixtures/fixtures_details', ['fixture' => $fixture, 'date_format' => $date_format]);
+        return view('fixtures/fixtures_details', ['fixture' => $fixture, 'date_format' => $dateFormat]);
     }
 
     /**
-     * @param $team_id
+     * @param $teamId
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    function teamsDetails($team_id, Request $request)
+    function teamsDetails($teamId, Request $request)
     {
-        $date_format = self::getDateFormat();
+        $dateFormat = self::getDateFormat();
 
         $soccerAPI = new SoccerAPI();
         $include = 'squad,coach,latest.league,latest.localTeam,latest.visitorTeam,upcoming.league,upcoming.localTeam,upcoming.visitorTeam';
 
-        $team = $soccerAPI->teams()->setInclude($include)->byId($team_id)->data;
+        $team = $soccerAPI->teams()->setInclude($include)->byId($teamId)->data;
 
-        $number_of_matches = $request->query('matches', 10);
-        $last_fixtures = self::addPagination($team->latest->data, $number_of_matches);
-        $upcoming_fixtures = self::addPagination($team->upcoming->data, $number_of_matches);
+        $numberOfMatches = $request->query('matches', 10);
+        $lastFixtures = self::addPagination($team->latest->data, $numberOfMatches);
+        $upcomingFixtures = self::addPagination($team->upcoming->data, $numberOfMatches);
 
         return view('teams/teams_details', [
             'team' => $team,
-            'last_fixtures' => $last_fixtures,
-            'upcoming_fixtures' => $upcoming_fixtures,
-            'date_format' => $date_format
+            'last_fixtures' => $lastFixtures,
+            'upcoming_fixtures' => $upcomingFixtures,
+            'date_format' => $dateFormat
         ]);
     }
 
     /**
      * @param $data
-     * @param $per_page
+     * @param $perPage
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    function addPagination($data, $per_page)
+    function addPagination($data, $perPage)
     {
-        $current_page = LengthAwarePaginator::resolveCurrentPage();
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
 
-        $data_collection = collect($data);
+        $dataCollection = collect($data);
 
-        $current_page_data = $data_collection->slice(($current_page * $per_page) - $per_page, $per_page)->all();
+        $currentPageData = $dataCollection->slice(($currentPage * $perPage) - $perPage, $perPage)->all();
 
-        $paginated_data = new LengthAwarePaginator($current_page_data, count($data_collection), $per_page);
+        $paginatedData = new LengthAwarePaginator($currentPageData, count($dataCollection), $perPage);
 
-        return $paginated_data;
+        return $paginatedData;
     }
 
     /**
@@ -345,7 +345,9 @@ class SoccerAPIController extends BaseController
      */
     function validateDate($date, $format = 'Y-m-d')
     {
-        $d = DateTime::createFromFormat($format, $date);
+        $dateTime = new DateTime();
+
+        $d = $dateTime::createFromFormat($format, $date);
 
         return $d && $d->format($format) === $date;
     }
@@ -385,17 +387,17 @@ class SoccerAPIController extends BaseController
     {
         switch(config('app.locale')) {
             case('nl'):
-                $date_format = 'd-m-Y';
+                $dateFormat = 'd-m-Y';
                 break;
             case('en'):
-                $date_format = 'Y-m-d';
+                $dateFormat = 'Y-m-d';
                 break;
             default:
-                $date_format = 'Y-m-d';
+                $dateFormat = 'Y-m-d';
                 break;
         }
 
-        return $date_format;
+        return $dateFormat;
 
     }
 
