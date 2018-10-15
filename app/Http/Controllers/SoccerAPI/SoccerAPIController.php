@@ -91,6 +91,10 @@ class SoccerAPIController extends BaseController
             }
         }
 
+        $lastFixtures = [];
+        $upcomingFixtures = [];
+        $numberOfMatches = 10;
+
         if (count($season) > 0) {
             $numberOfMatches = $request->query('matches', 10);
 
@@ -122,10 +126,6 @@ class SoccerAPIController extends BaseController
                 return $item1->league_id <=> $item2->league_id;
             });
             $upcomingFixtures = self::addPagination($upcomingFixtures, $numberOfMatches);
-        } else {
-            $lastFixtures = [];
-            $upcomingFixtures = [];
-            $numberOfMatches = 10;
         }
 
         return view('leagues/leagues_details', [
@@ -151,9 +151,9 @@ class SoccerAPIController extends BaseController
         $soccerAPI = new SoccerAPI();
         $include = 'league,localTeam,visitorTeam';
 
-        if ($request->query('leagues') == 'all') {
-            $leagues = '';
-        } else {
+        $leagues = '';
+
+        if (!$request->query('leagues') == 'all') {
             $leagues = $request->query('leagues', '');
         }
 
@@ -230,11 +230,12 @@ class SoccerAPIController extends BaseController
 
         $date = self::getDateFromRequest($request);
 
-        if ($request->query('leagues') == 'all') {
-            $leagues = '';
-        } else {
+        $leagues = '';
+
+        if (!$request->query('leagues') == 'all') {
             $leagues = $request->query('leagues', '');
         }
+
         $soccerAPI = new SoccerAPI();
         $include = 'league,localTeam,visitorTeam';
 
