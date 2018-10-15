@@ -48,7 +48,11 @@
             @switch($fixture->time->status)
                 @case("FT_PEN")
                     <span style="font-size: x-large"> {{$fixture->scores->localteam_score}} - {{$fixture->scores->visitorteam_score}} </span><br>
-                    <span> ({{$fixture->scores->localteam_pen_score}} - {{$fixture->scores->visitorteam_pen_score}}) penalties</span>
+                    <span>
+                    @if(isset($fixture->scores->localteam_pen_score) && isset($fixture->scores->visitorteam_pen_score))
+                        ({{$fixture->scores->localteam_pen_score}} - {{$fixture->scores->visitorteam_pen_score}}) penalties
+                    @endif
+                    Penalties</span>
                     @break
                 @case("AET")
                     <span style="font-size: x-large"> {{$fixture->scores->ft_score}} (ET) </span>
