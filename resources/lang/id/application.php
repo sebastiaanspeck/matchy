@@ -25,6 +25,7 @@ return [
     'todays\'s fixtures'        => 'todays\'s fixtures',
     'last fixtures'             => '{1} Laatste wedstrijd|[2,*] Upcoming :count fixtures',
     'upcoming fixtures'         => '{1} Upcoming fixture|[2,*] Upcoming :count fixtures',
+    'Matchday'                  => 'Matchday',
     'Standings'                 => 'Klasemen',
     'Topscorers'                => 'Top Skor',
     'Player'                    => 'Pemain',

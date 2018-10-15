@@ -25,6 +25,7 @@ return [
     'todays\'s fixtures'        => 'wedstrijden van vandaag',
     'last fixtures'             => '{1} Laatste wedstrijd|[2,*] Laatste :count wedstrijden',
     'upcoming fixtures'         => '{1} Volgende wedstrijd|[2,*] Volgende :count wedstrijden',
+    'Matchday'                  => 'Speelronde',
     'Standings'                 => 'Ranglijst',
     'Topscorers'                => 'Topscorers',
     'Player'                    => 'Speler',

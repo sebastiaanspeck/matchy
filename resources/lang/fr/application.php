@@ -25,6 +25,7 @@ return [
     'todays\'s fixtures'        => 'les fixtures d\'aujourd\'hui',
     'last fixtures'             => '{1} derniers fixture|[2,*] les Prochain :count fixtures',
     'upcoming fixtures'         => '{1} Prochain fixture|[2,*] Prochain :count fixtures',
+    'Matchday'                  => 'Matchday',
     'Standings'                 => 'Classement',
     'Topscorers'                => 'Meilleurs buteurs',
     'Player'                    => 'Joueur',

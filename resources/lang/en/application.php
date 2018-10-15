@@ -25,6 +25,7 @@ return [
     'todays\'s fixtures'        => 'todays\'s fixtures',
     'last fixtures'             => '{1} Last fixture|[2,*] Upcoming :count fixtures',
     'upcoming fixtures'         => '{1} Upcoming fixture|[2,*] Upcoming :count fixtures',
+    'Matchday'                  => 'Matchday',
     'Standings'                 => 'Standings',
     'Topscorers'                => 'Topscorers',
     'Player'                    => 'Player',
