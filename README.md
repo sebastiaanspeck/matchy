@@ -25,12 +25,16 @@ or
 $ composer update
 ```
 
-**3-** Add the service provider to your `app/config/app.php` file
+**3-** Add the service provider to your `config/app.php` file
+
+***This might be in the config/app.php already***
 ```php
 Sportmonks\SoccerAPI\SoccerAPIServiceProvider::class,
 ```
 
-**4-** Add the facade to your `app/config/app.php` file
+**4-** Add the facade to your `config/app.php` file
+
+***This might be in the config/app.php already***
 ```php
 'SoccerAPI' => Sportmonks\SoccerAPI\Facades\SoccerAPI::class,
 ```
