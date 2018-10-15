@@ -67,7 +67,13 @@
                         {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
                         @switch($fixture->time->status)
                             @case("FT_PEN")
-                                <td scope="row">{{$fixture->scores->localteam_score}} - {{$fixture->scores->visitorteam_score}} ({{$fixture->scores->localteam_pen_score}} - {{$fixture->scores->visitorteam_pen_score}})</td>
+                                <td scope="row">{{$fixture->scores->localteam_score}} - {{$fixture->scores->visitorteam_score}}
+                                    @if(is_null($fixture->scores->localteam_pen_score) || is_null($fixture->scores->visitorteam_pen_score))
+                                        (PEN)
+                                    @else
+                                         ({{$fixture->scores->localteam_pen_score}} - {{$fixture->scores->visitorteam_score}})
+                                    @endif
+                                </td>
                                 @break
                             @case("AET")
                                 <td scope="row">{{$fixture->scores->localteam_score}} - {{$fixture->scores->visitorteam_score}} (ET)</td>
@@ -121,8 +127,14 @@
                             {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
                             @switch($fixture->time->status)
                                 @case("FT_PEN")
-                                <td scope="row">{{$fixture->scores->localteam_score}} - {{$fixture->scores->visitorteam_score}} ({{$fixture->scores->localteam_pen_score}} - {{$fixture->scores->visitorteam_pen_score}})</td>
-                                @break
+                                    <td scope="row">{{$fixture->scores->localteam_score}} - {{$fixture->scores->visitorteam_score}}
+                                    @if(is_null($fixture->scores->localteam_pen_score) || is_null($fixture->scores->visitorteam_pen_score))
+                                         (PEN)
+                                    @else
+                                         ({{$fixture->scores->localteam_pen_score}} - {{$fixture->scores->visitorteam_score}})
+                                    @endif
+                                    </td>
+                                    @break
                                 @case("AET")
                                 <td scope="row">{{$fixture->scores->localteam_score}} - {{$fixture->scores->visitorteam_score}} (ET)</td>
                                 @break
