@@ -347,9 +347,9 @@ class SoccerAPIController extends BaseController
     {
         $dateTime = new DateTime();
 
-        $d = $dateTime::createFromFormat($format, $date);
+        $valid_date = $dateTime::createFromFormat($format, $date);
 
-        return $d && $d->format($format) === $date;
+        return $valid_date && $valid_date->format($format) === $date;
     }
 
     /**
