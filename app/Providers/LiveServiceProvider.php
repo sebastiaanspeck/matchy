@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use View;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use App\Http\Controllers\SoccerAPI\SoccerAPIController;
 
@@ -15,7 +15,7 @@ class LiveServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        View::composer('layouts/default', function($view){
+        View::composer('layouts/default', function ($view) {
 
             $soccerAPIController = new SoccerAPIController();
 
