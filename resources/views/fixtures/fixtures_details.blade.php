@@ -301,62 +301,65 @@
                             </td>
                         </tr>
                         @for($index = 0; $index < count($lineup)/2; $index++)
+                            @php
+                                $home_player = $lineup[$index];
+                                $away_player = $lineup[$index+count($lineup)/2];
+
+                                $home_player_stats = array();
+                                $away_player_stats = array();
+
+                                if($home_player->stats->goals->scored != 0) {
+                                    for($goals = 0; $goals < $home_player->stats->goals->scored; $goals++) {
+                                        array_push($home_player_stats, "/images/events/goal.svg");
+                                    }
+                                }
+                                if($home_player->stats->cards->yellowcards != 0) {
+                                    for($yellowcards = 0; $yellowcards < $home_player->stats->cards->yellowcards; $yellowcards++) {
+                                        array_push($home_player_stats, "/images/events/yellowcard.svg");
+                                    }
+                                }
+                                if($home_player->stats->cards->redcards != 0) {
+                                    for($redcards = 0; $redcards < $home_player->stats->cards->redcards; $redcards++) {
+                                        array_push($home_player_stats, "/images/events/redcard.svg");
+                                    }
+                                }
+
+                                if($away_player->stats->goals->scored != 0) {
+                                    for($goals = 0; $goals < $away_player->stats->goals->scored; $goals++) {
+                                        array_push($away_player_stats, "/images/events/goal.svg");
+                                    }
+                                }
+                                if($away_player->stats->cards->yellowcards != 0) {
+                                    for($yellowcards = 0; $yellowcards < $away_player->stats->cards->yellowcards; $yellowcards++) {
+                                        array_push($away_player_stats, "/images/events/yellowcard.svg");
+                                    }
+                                }
+                                if($away_player->stats->cards->redcards != 0) {
+                                    for($redcards = 0; $redcards < $away_player->stats->cards->redcards; $redcards++) {
+                                        array_push($away_player_stats, "/images/events/redcard.svg");
+                                    }
+                                }
+
+                                if(isset($home_player->player->data)) {
+                                    $home_player_nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($home_player->player->data->nationality);
+                                    $home_player_common_name = $home_player->player->data->common_name;
+                                } else {
+                                    $home_player_nationality = "Unknown";
+                                    $home_player_common_name = $home_player->player_name;
+                                }
+
+                                if(isset($away_player->player->data)) {
+                                    $away_player_nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($away_player->player->data->nationality);
+                                    $away_player_common_name = $away_player->player->data->common_name;
+                                } else {
+                                    $away_player_nationality = "Unknown";
+                                    $away_player_common_name = $away_player->player_name;
+                                }
+                            @endphp
                             <tr>
-                                @php
-                                    $home_player = $lineup[$index];
-                                    $away_player = $lineup[$index+count($lineup)/2];
-
-                                    $home_player_stats = array();
-                                    $away_player_stats = array();
-
-                                    if($home_player->stats->goals->scored != 0) {
-                                        for($goals = 0; $goals < $home_player->stats->goals->scored; $goals++) {
-                                            array_push($home_player_stats, "/images/events/goal.svg");
-                                        }
-                                    }
-                                    if($home_player->stats->cards->yellowcards != 0) {
-                                        for($yellowcards = 0; $yellowcards < $home_player->stats->cards->yellowcards; $yellowcards++) {
-                                            array_push($home_player_stats, "/images/events/yellowcard.svg");
-                                        }
-                                    }
-                                    if($home_player->stats->cards->redcards != 0) {
-                                        for($redcards = 0; $redcards < $home_player->stats->cards->redcards; $redcards++) {
-                                            array_push($home_player_stats, "/images/events/redcard.svg");
-                                        }
-                                    }
-
-                                    if($away_player->stats->goals->scored != 0) {
-                                        for($goals = 0; $goals < $away_player->stats->goals->scored; $goals++) {
-                                            array_push($away_player_stats, "/images/events/goal.svg");
-                                        }
-                                    }
-                                    if($away_player->stats->cards->yellowcards != 0) {
-                                        for($yellowcards = 0; $yellowcards < $away_player->stats->cards->yellowcards; $yellowcards++) {
-                                            array_push($away_player_stats, "/images/events/yellowcard.svg");
-                                        }
-                                    }
-                                    if($away_player->stats->cards->redcards != 0) {
-                                        for($redcards = 0; $redcards < $away_player->stats->cards->redcards; $redcards++) {
-                                            array_push($away_player_stats, "/images/events/redcard.svg");
-                                        }
-                                    }
-
-                                    if(isset($home_player->player->data->nationality)) {
-                                        $home_player->player->data->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($home_player->player->data->nationality);
-                                    } else {
-                                        $home_player->player->data->nationality = "Unknown";
-                                    }
-
-                                    if(isset($away_player->player->data->nationality)) {
-                                        $away_player->player->data->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($away_player->player->data->nationality);
-                                    } else {
-                                        $away_player->player->data->nationality = "Unknown";
-                                    }
-
-                                @endphp
-                                @if(isset($home_player))
+                                @if(isset($home_player) && isset($home_player->player))
                                     <td style="width:1%">{{$home_player->number}}</td>
-                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$home_player->player->data->nationality}}.png"></td>
+                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$home_player_nationality}}.png"></td>
                                     <td style="text-align: left">
                                         {{$home_player->player->data->common_name}}
                                         @foreach($home_player_stats as $stat)
@@ -364,17 +367,26 @@
                                         @endforeach
                                     </td>
                                 @else
-                                    <td></td><td></td><td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                 @endif
-                                <td style="width: 1%"></td>
-                                <td style="text-align: right">
-                                    @foreach($away_player_stats as $stat)
-                                        <img src="{{$stat}}">
-                                    @endforeach
-                                    {{$away_player->player->data->common_name}}
-                                </td>
-                                <td style="width:1%"><img src="/images/flags/shiny/16/{{$away_player->player->data->nationality}}.png"></td>
-                                <td style="width:1%">{{$away_player->number}}</td>
+                                @if(isset($away_player) && isset($away_player->player))
+                                    <td style="width: 1%"></td>
+                                    <td style="text-align: right">
+                                        @foreach($away_player_stats as $stat)
+                                            <img src="{{$stat}}">
+                                        @endforeach
+                                        {{$away_player->player->data->common_name}}
+                                    </td>
+                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$away_player_nationality}}.png"></td>
+                                    <td style="width:1%">{{$away_player->number}}</td>
+                                @else
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                @endif
                             </tr>
                         @endfor
                         <tr style="font-weight: bold; text-align: center; background: #D3D3D3">
@@ -383,78 +395,104 @@
                             </td>
                         </tr>
                         @for($index = 0; $index < count($bench)/2; $index++)
+                            @php
+                                $home_player = $bench[$index];
+                                $away_player = $bench[$index+count($bench)/2];
+
+                                $home_player_stats = array();
+                                $away_player_stats = array();
+                                
+                                if($home_player->stats->goals->scored != 0) {
+                                    for($goals = 0; $goals < $home_player->stats->goals->scored; $goals++) {
+                                        array_push($home_player_stats, "/images/events/goal.svg");
+                                    }
+                                }
+                                if($home_player->stats->cards->yellowcards != 0) {
+                                    for($yellowcards = 0; $yellowcards < $home_player->stats->cards->yellowcards; $yellowcards++) {
+                                        array_push($home_player_stats, "/images/events/yellowcard.svg");
+                                    }
+                                }
+                                if($home_player->stats->cards->redcards != 0) {
+                                    for($redcards = 0; $redcards < $home_player->stats->cards->redcards; $redcards++) {
+                                        array_push($home_player_stats, "/images/events/redcard.svg");
+                                    }
+                                }
+
+                                if($away_player->stats->goals->scored != 0) {
+                                    for($goals = 0; $goals < $away_player->stats->goals->scored; $goals++) {
+                                        array_push($away_player_stats, "/images/events/goal.svg");
+                                    }
+                                }
+                                if($away_player->stats->cards->yellowcards != 0) {
+                                    for($yellowcards = 0; $yellowcards < $away_player->stats->cards->yellowcards; $yellowcards++) {
+                                        array_push($away_player_stats, "/images/events/yellowcard.svg");
+                                    }
+                                }
+                                if($away_player->stats->cards->redcards != 0) {
+                                    for($redcards = 0; $redcards < $away_player->stats->cards->redcards; $redcards++) {
+                                        array_push($away_player_stats, "/images/events/redcard.svg");
+                                    }
+                                }
+                                if(isset($home_player->player->data)) {
+                                    $home_player_nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($home_player->player->data->nationality);
+                                    $home_player_common_name = $home_player->player->data->common_name;
+                                } else {
+                                    $home_player_nationality = "Unknown";
+                                    $home_player_common_name = $home_player->player_name;
+                                }
+
+                                if(isset($away_player->player->data)) {
+                                    $away_player_nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($away_player->player->data->nationality);
+                                    $away_player_common_name = $away_player->player->data->common_name;
+                                } else {
+                                    $away_player_nationality = "Unknown";
+                                    $away_player_common_name = $away_player->player_name;
+                                }
+                            @endphp
                             <tr>
-                                @php
-                                    $home_player = $bench[$index];
-                                    $away_player = $bench[$index+count($bench)/2];
-
-                                    $home_player_stats = array();
-                                    $away_player_stats = array();
-
-                                    if($home_player->stats->goals->scored != 0) {
-                                        for($goals = 0; $goals < $home_player->stats->goals->scored; $goals++) {
-                                            array_push($home_player_stats, "/images/events/goal.svg");
-                                        }
-                                    }
-                                    if($home_player->stats->cards->yellowcards != 0) {
-                                        for($yellowcards = 0; $yellowcards < $home_player->stats->cards->yellowcards; $yellowcards++) {
-                                            array_push($home_player_stats, "/images/events/yellowcard.svg");
-                                        }
-                                    }
-                                    if($home_player->stats->cards->redcards != 0) {
-                                        for($redcards = 0; $redcards < $home_player->stats->cards->redcards; $redcards++) {
-                                            array_push($home_player_stats, "/images/events/redcard.svg");
-                                        }
-                                    }
-
-                                    if($away_player->stats->goals->scored != 0) {
-                                        for($goals = 0; $goals < $away_player->stats->goals->scored; $goals++) {
-                                            array_push($away_player_stats, "/images/events/goal.svg");
-                                        }
-                                    }
-                                    if($away_player->stats->cards->yellowcards != 0) {
-                                        for($yellowcards = 0; $yellowcards < $away_player->stats->cards->yellowcards; $yellowcards++) {
-                                            array_push($away_player_stats, "/images/events/yellowcard.svg");
-                                        }
-                                    }
-                                    if($away_player->stats->cards->redcards != 0) {
-                                        for($redcards = 0; $redcards < $away_player->stats->cards->redcards; $redcards++) {
-                                            array_push($away_player_stats, "/images/events/redcard.svg");
-                                        }
-                                    }
-                                    if(isset($home_player->player->data->nationality)) {
-                                        $home_player->player->data->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($home_player->player->data->nationality);
-                                    } else {
-                                        $home_player->player->data->nationality = "Unknown";
-                                    }
-
-                                    if(isset($away_player->player->data->nationality)) {
-                                        $away_player->player->data->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($away_player->player->data->nationality);
-                                    } else {
-                                        $away_player->player->data->nationality = "Unknown";
-                                    }
-                                @endphp
-                                @if(isset($home_player))
+                                @if(isset($home_player) && isset($away_player))
                                     <td style="width:1%">{{$home_player->number}}</td>
-                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$home_player->player->data->nationality}}.png"></td>
+                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$home_player_nationality}}.png"></td>
                                     <td style="text-align: left; width:50%">
-                                        {{$home_player->player->data->common_name}}
+                                        {{$home_player_common_name}}
                                         @foreach($home_player_stats as $stat)
                                             <img src="{{$stat}}">
                                         @endforeach
                                     </td>
-                                @else
-                                    <td></td><td></td><td></td>
-                                @endif
-                                @if(isset($away_player))
                                     <td style="width: 1%"></td>
                                     <td style="text-align: right; width: 50%">
                                         @foreach($away_player_stats as $stat)
                                             <img src="{{$stat}}">
                                         @endforeach
-                                        {{$away_player->player->data->common_name}}
+                                        {{$away_player_common_name}}
                                     </td>
-                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$away_player->player->data->nationality}}.png"></td>
+                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$away_player_nationality}}.png"></td>
+                                    <td style="width:1%">{{$away_player->number}}</td>
+                                @elseif(isset($home_player) && !isset($away_player))
+                                    <td style="width:1%">{{$home_player->number}}</td>
+                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$home_player_nationality}}.png"></td>
+                                    <td style="text-align: left; width:50%">
+                                        {{$home_player_common_name}}
+                                        @foreach($home_player_stats as $stat)
+                                            <img src="{{$stat}}">
+                                        @endforeach
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                @elseif(!isset($home_player) && isset($away_player))
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td style="text-align: right; width: 50%">
+                                        @foreach($away_player_stats as $stat)
+                                            <img src="{{$stat}}">
+                                        @endforeach
+                                        {{$away_player_common_name}}
+                                    </td>
+                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$away_player_nationality}}.png"></td>
                                     <td style="width:1%">{{$away_player->number}}</td>
                                 @endif
                             </tr>
@@ -532,13 +570,27 @@
                             </td>
                         </tr>
                         <tr>
-                            @if(isset($localCoach))
+                            @if(isset($localCoach) && isset($visitorCoach))
                                 <td style="width: 1%"></td>
                                 <td style="width:1%"><img src="/images/flags/shiny/16/{{$localCoach->nationality}}.png"></td>
                                 <td style="text-align: left">{{$localCoach->common_name}}</td>
-                            @endif
-                            @if(isset($visitorCoach))
+                                <td></td>
+                                <td style="text-align: right">{{$visitorCoach->common_name}}</td>
+                                <td style="width:1%"><img src="/images/flags/shiny/16/{{$visitorCoach->nationality}}.png"></td>
                                 <td style="width: 1%"></td>
+                            @elseif(isset($localCoach) && !isset($visitorCoach))
+                                <td style="width: 1%"></td>
+                                <td style="width:1%"><img src="/images/flags/shiny/16/{{$localCoach->nationality}}.png"></td>
+                                <td style="text-align: left">{{$localCoach->common_name}}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            @elseif(!isset($localCoach) && isset($visitorCoach))
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                                 <td style="text-align: right">{{$visitorCoach->common_name}}</td>
                                 <td style="width:1%"><img src="/images/flags/shiny/16/{{$visitorCoach->nationality}}.png"></td>
                                 <td style="width: 1%"></td>
