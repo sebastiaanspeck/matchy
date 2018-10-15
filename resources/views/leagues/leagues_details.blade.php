@@ -89,18 +89,24 @@
                                         <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}">{{$awayTeam->name}}</a></td>
                                         @break
                                 @endswitch
-
+    
                                 {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
                                 @switch($last_fixture->time->status)
                                     @case("FT_PEN")
-                                        <td scope="row">{{$last_fixture->scores->localteam_score}} - {{$last_fixture->scores->visitorteam_score}} ({{$last_fixture->scores->localteam_pen_score}} - {{$last_fixture->scores->visitorteam_pen_score}})</td>
+                                        <td scope="row">{{$last_fixture->scores->localteam_score}} - {{$last_fixture->scores->visitorteam_score}}
+                                            @if(is_null($last_fixture->scores->localteam_pen_score) || is_null($last_fixture->scores->visitorteam_pen_score))
+                                                (PEN)
+                                            @else
+                                                 ({{$last_fixture->scores->localteam_pen_score}} - {{$last_fixture->scores->visitorteam_score}})
+                                            @endif
+                                        </td>
                                         @break
                                     @case("AET")
                                         <td scope="row">{{$last_fixture->scores->localteam_score}} - {{$last_fixture->scores->visitorteam_score}} (ET)</td>
                                         @break
                                     @default
                                         <td scope="row">{{$last_fixture->scores->localteam_score}} - {{$last_fixture->scores->visitorteam_score}}</td>
-                                    @break
+                                        @break
                                 @endswitch
     
                                 <td scope="row">{{date($date_format . " H:i", strtotime($last_fixture->time->starting_at->date_time))}}
