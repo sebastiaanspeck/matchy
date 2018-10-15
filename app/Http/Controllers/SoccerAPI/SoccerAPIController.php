@@ -216,7 +216,6 @@ class SoccerAPIController extends BaseController
         $soccerAPI = new SoccerAPI();
         $include = 'league,localTeam,visitorTeam,round,stage';
 
-        /** @var Carbon $date */
         $fixtures = $soccerAPI->fixtures()->setInclude($include)->setLeagues($leagues)->byDate($date);
 
         usort($fixtures, function ($item1, $item2) {
@@ -357,7 +356,6 @@ class SoccerAPIController extends BaseController
      */
     public static function getCountryFlag($country)
     {
-
         if (strpos($country, ' ') !== false) {
             $country = str_replace(' ', '-', $country);
         }
