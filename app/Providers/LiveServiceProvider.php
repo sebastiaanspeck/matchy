@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use View;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use App\Http\Controllers\SoccerAPI\SoccerAPIController;
 
