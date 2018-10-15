@@ -5,4 +5,5 @@ exclude:
 - /resources/lang/.*
 - /config/.*
 - /bootstrap/.*
+- /soccerapi/.*
 - .*/_ide_helper\.php
