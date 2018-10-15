@@ -17,12 +17,27 @@
                     $league = $fixture->league->data;
                     $homeTeam = $fixture->localTeam->data;
                     $awayTeam = $fixture->visitorTeam->data;
-                    if($fixture->scores->localteam_score > $fixture->scores->visitorteam_score && in_array($fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
-                        $winningTeam = $homeTeam->name;
-                    } elseif ($fixture->scores->localteam_score == $fixture->scores->visitorteam_score && in_array($fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
-                        $winningTeam = "draw";
-                    } elseif ($fixture->scores->localteam_score < $fixture->scores->visitorteam_score && in_array($fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
-                        $winningTeam = $awayTeam->name;
+                    if(in_array($fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
+                        switch($fixture->time->status) {
+                            case("FT_PEN"):
+                                if($fixture->scores->localteam_pen_score > $fixture->scores->visitorteam_pen_score) {
+                                    $winningTeam = $homeTeam->name;
+                                } elseif($fixture->scores->localteam_pen_score == $fixture->scores->visitorteam_pen_score) {
+                                    $winningTeam = "draw";
+                                } elseif($fixture->scores->localteam_pen_score < $fixture->scores->visitorteam_pen_score) {
+                                    $winningTeam = $awayTeam->name;
+                                }
+                                break;
+                            default:
+                                if($fixture->scores->localteam_score > $fixture->scores->visitorteam_score) {
+                                    $winningTeam = $homeTeam->name;
+                                } elseif($fixture->scores->localteam_score == $fixture->scores->visitorteam_score) {
+                                    $winningTeam = "draw";
+                                } elseif($fixture->scores->localteam_score < $fixture->scores->visitorteam_score) {
+                                    $winningTeam = $awayTeam->name;
+                                }
+                                break;
+                        }
                     } else {
                         $winningTeam = "TBD";
                     }
