@@ -11,9 +11,6 @@
                 @endif
                 @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; @endphp
                 @foreach($livescores as $livescore)
-                    @if(in_array($livescore->time->status, array("LIVE", "HT", "ET", "PEN_LIVE", "BREAK", "AU")))
-                        @continue
-                    @endif
                     @php
                         $league = $livescore->league->data;
                         $homeTeam = $livescore->localTeam->data;
@@ -75,9 +72,9 @@
                             @endswitch
     
                             <td scope="row">{{date($date_format . " H:i", strtotime($livescore->time->starting_at->date_time))}}
-                            @if($livescore->time->status == "LIVE")
-                                <span style="color:#FF0000">LIVE</span>
-                            @endif
+                                @if($livescore->time->status == "LIVE")
+                                    <span style="color:#FF0000">LIVE</span>
+                                @endif
                             </td>
                             <td scope="row"><a href="{{route("fixturesDetails", ["id" => $livescore->id])}}"><i class="fa fa-info-circle"></i></a></td>
                         </tr>
@@ -137,8 +134,12 @@
                                         <td scope="row">{{$livescore->scores->localteam_score}} - {{$livescore->scores->visitorteam_score}}</td>
                                         @break
                                 @endswitch
-
-                                <td scope="row">{{date($date_format . " H:i", strtotime($livescore->time->starting_at->date_time))}}</td>
+    
+                                <td scope="row">{{date($date_format . " H:i", strtotime($livescore->time->starting_at->date_time))}}
+                                    @if($livescore->time->status == "LIVE")
+                                        <span style="color:#FF0000">LIVE</span>
+                                    @endif
+                                </td>
 
                                 <td scope="row"><a href="{{route("fixturesDetails", ["id" => $livescore->id])}}"><i class="fa fa-info-circle"></i></a></td>
                             </tr>
