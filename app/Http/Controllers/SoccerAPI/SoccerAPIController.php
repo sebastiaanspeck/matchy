@@ -151,15 +151,9 @@ class SoccerAPIController extends BaseController
         $soccerAPI = new SoccerAPI();
         $include = 'league,localTeam,visitorTeam';
 
-        if ($request->query('leagues') == 'all') {
-            $leagues = '';
-        } else {
-            $leagues = $request->query('leagues', '');
-        }
-
         switch($type) {
             case('today'):
-                $livescores = $soccerAPI->livescores()->setInclude($include)->setLeagues($leagues)->today();
+                $livescores = $soccerAPI->livescores()->setInclude($include)->today();
 
                 usort($livescores, function ($a, $b) {
                     if ($a->league_id == $b->league_id) {
@@ -176,7 +170,7 @@ class SoccerAPIController extends BaseController
                 return view('livescores/livescores_today', ['livescores' => $livescores, 'date_format' => $date_format]);
                 break;
             case('now'):
-                $livescores = $soccerAPI->livescores()->setInclude($include)->setLeagues($leagues)->now();
+                $livescores = $soccerAPI->livescores()->setInclude($include)->now();
 
                 usort($livescores, function ($a, $b) {
                     if ($a->league_id == $b->league_id) {
@@ -230,16 +224,11 @@ class SoccerAPIController extends BaseController
 
         $date = self::getDateFromRequest($request);
 
-        if ($request->query('leagues') == 'all') {
-            $leagues = '';
-        } else {
-            $leagues = $request->query('leagues', '');
-        }
         $soccerAPI = new SoccerAPI();
         $include = 'league,localTeam,visitorTeam';
 
         /** @var Carbon $date */
-        $fixtures = $soccerAPI->fixtures()->setInclude($include)->setLeagues($leagues)->byDate($date);
+        $fixtures = $soccerAPI->fixtures()->setInclude($include)->byDate($date);
 
         usort($fixtures, function ($a, $b) {
             if ($a->league_id == $b->league_id) {
@@ -414,7 +403,7 @@ class SoccerAPIController extends BaseController
         } else {
             return Carbon::now()->toDateString();
         }
-        
+
         return '';
     }
 }
