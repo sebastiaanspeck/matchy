@@ -8,13 +8,9 @@ Documentation for the API can be found [here](https://www.sportmonks.com/sports/
 
 ## Installation
 
-**1-** Require the laravel-sportmonks-soccer-package via Composer in your `composer.json`.
-```json
-{
-  "require": {
-    "kirill-latish/laravel-sportmonks-soccer": "^2.0"
-  }
-}
+**1-** Require the laravel-sportmonks-soccer-package via Composer.
+```bash
+$ composer require kirill-latish/laravel-sportmonks-soccer
 ```
 
 **2-** Run Composer to install or update the new requirement.
