@@ -53,7 +53,13 @@ $ php artisan vendor:publish --provider="Sportmonks\SoccerAPI\SoccerAPIServicePr
 config/soccerapi.php
 ```
 
-**7-** Review the configuration file and add your timezone (preferably through config file: `'timezone' => config('app.timezone')` )
+**7-** Review the configuration file and change the `'without_data' => 'false' to `true`:
+
+```
+config/soccerapi.php
+```
+
+**8-** Review the configuration file and add your timezone (preferably through config file: `'timezone' => config('app.timezone')` )
 
 ```
 config/soccerapi.php
