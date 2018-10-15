@@ -15,7 +15,7 @@ class LiveServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        View::composer('layouts/default', function($view){
+        View::composer('layouts/default', function ($view) {
 
             $soccerAPIController = new SoccerAPIController();
 
