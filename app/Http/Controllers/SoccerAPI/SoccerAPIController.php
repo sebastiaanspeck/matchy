@@ -157,8 +157,8 @@ class SoccerAPIController extends BaseController
             $leagues = $request->query('leagues', '');
         }
 
-        switch($type) {
-            case('today'):
+        switch ($type) {
+            case ('today'):
                 $livescores = $soccerAPI->livescores()->setInclude($include)->setLeagues($leagues)->today();
 
                 usort($livescores, function ($item1, $item2) {
@@ -175,7 +175,7 @@ class SoccerAPIController extends BaseController
 
                 return view('livescores/livescores_today', ['livescores' => $livescores, 'date_format' => $dateFormat]);
                 break;
-            case('now'):
+            case ('now'):
                 $livescores = $soccerAPI->livescores()->setInclude($include)->setLeagues($leagues)->now();
 
                 usort($livescores, function ($item1, $item2) {
@@ -288,7 +288,8 @@ class SoccerAPIController extends BaseController
         if (count($livescores) >= 1) {
             foreach ($livescores as $livescore) {
                 if (!in_array($livescore->time->status, ['NS', 'FT', 'FT_PEN', 'CANCL', 'POSTP', 'INT', 'ABAN', 'SUSP', 'AWARDED','DELAYED','TBA', 'WO', 'AU'])) {
-                    $count++;;
+                    $count++;
+                    ;
                 }
             }
         }
@@ -324,7 +325,6 @@ class SoccerAPIController extends BaseController
         $url = parse_url($request->fullUrl());
 
         if (isset($url['query'])) {
-
             parse_str($url['query'], $get);
             unset($get['page']);
 
@@ -361,18 +361,18 @@ class SoccerAPIController extends BaseController
         }
 
         switch ($country) {
-            case('World'):
+            case ('World'):
                 $country = 'Unknown';
                 break;
-            case(null):
+            case (null):
                 $country = 'Unknown';
                 break;
-            case('Northern-Ireland'):
+            case ('Northern-Ireland'):
                 $country = 'United-Kingdom';
                 break;
         }
 
-        if(!file_exists('images/flags/shiny/16/' . $country . '.png')) {
+        if (!file_exists('images/flags/shiny/16/' . $country . '.png')) {
             error_log('Missing flag for: ' . $country);
             $country = 'Unknown';
         }
@@ -382,11 +382,11 @@ class SoccerAPIController extends BaseController
 
     function getDateFormat()
     {
-        switch(config('app.locale')) {
-            case('nl'):
+        switch (config('app.locale')) {
+            case ('nl'):
                 $dateFormat = 'd-m-Y';
                 break;
-            case('en'):
+            case ('en'):
                 $dateFormat = 'Y-m-d';
                 break;
             default:
@@ -395,7 +395,6 @@ class SoccerAPIController extends BaseController
         }
 
         return $dateFormat;
-
     }
 
     function getDateFromRequest(Request $request)
