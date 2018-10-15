@@ -15,6 +15,9 @@ return [
     '2nd Round Qualifying'          => '2e Ronde Kwalificatie',
     '2nd Round Qualifying Replays'  => '2e Ronde Kwalificatie Replays',
 
+    '8th Finals'                    => '8e Finales',
     '16th Finals'                   => '16e Finales',
+
+    'Play-offs'                     => 'Play-offs',
 
 ];
