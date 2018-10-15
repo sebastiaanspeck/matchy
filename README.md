@@ -51,7 +51,7 @@ config/soccerapi.php
 config/soccerapi.php
 ```
 
-**7--** Copy the file `SoccerAPIClient.php` from `soccerapi-source` to `vendor/kirill-latish/laravel-sportmonks-soccer/src-Sportmonks/SoccerAPI` and overwrite the existing `SoccerAPIClient.php`
+**7--** Copy the file [SoccerAPIClient.php](https://github.com/sebastiaanspeck/sportmonks/blob/master/soccerapi/SoccerAPIClient.php) from `soccerapi-source` to `vendor/kirill-latish/laravel-sportmonks-soccer/src-Sportmonks/SoccerAPI` and overwrite the existing `SoccerAPIClient.php`
 
 ## Special thanks to
 [kirill-latish](https://github.com/kirill-latish/laravel-sportmonks-soccer)
