@@ -38,7 +38,7 @@
         <div class="tab-content" id="tab_content">
             <div class="tab-pane fade show active" id="last_fixtures" role="tabpanel" aria-labelledby="last_fixtures-tab">
                 @if($last_fixtures->count() > 0)
-                    @php $last_league_id = 0; @endphp
+                    @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; @endphp
                     @foreach($last_fixtures as $last_fixture)
                         @php
                             $homeTeam = $last_fixture->localTeam->data;
@@ -69,6 +69,17 @@
                             }
                         @endphp
                         @if($last_fixture->league_id == $last_league_id)
+                            @if(isset($last_fixture->round))
+                                @if($last_round_id != $last_fixture->round->data->name)
+                                    <tr>
+                                        <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('application.Matchday') {{$last_fixture->round->data->name}}</td>
+                                    </tr>
+                                @endif
+                            @elseif($last_stage_id != $last_fixture->stage->data->name)
+                                <tr>
+                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">{{$last_fixture->stage->data->name}}</td>
+                                </tr>
+                            @endif
                             <tr>
                                 {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
                                 @switch($winningTeam)
@@ -128,6 +139,17 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                    @if(isset($last_fixture->round))
+                                        @if($last_round_id != $last_fixture->round->data->name)
+                                        <tr>
+                                            <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('application.Matchday') {{$last_fixture->round->data->name}}</td>
+                                        </tr>
+                                        @endif
+                                    @elseif($last_stage_id != $last_fixture->stage->data->name)
+                                        <tr>
+                                            <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">{{$last_fixture->stage->data->name}}</td>
+                                        </tr>
+                                    @endif
                                     <tr>
                                         {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
                                         @switch($winningTeam)
@@ -172,7 +194,7 @@
                                         <td scope="row"><a href="{{route("fixturesDetails", ["id" => $last_fixture->id])}}"><i class="fa fa-info-circle"></i></a></td>
                                     </tr>
                         @endif
-                        @php $last_league_id = $last_fixture->league_id; @endphp
+                        @php $last_league_id = $last_fixture->league_id; if(isset($last_fixture->round)) {$last_round_id = $last_fixture->round->data->name;} $last_stage_id = $last_fixture->stage->data->name; @endphp
                     @endforeach
                     </tbody>
                     </table>
@@ -180,7 +202,7 @@
             </div>
             <div class="tab-pane fade" id="upcoming_fixtures" role="tabpanel" aria-labelledby="upcoming_fixtures-tab">
                 @if($upcoming_fixtures->count() > 0)
-                    @php $last_league_id = 0; @endphp
+                    @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; @endphp
                     @foreach($upcoming_fixtures as $upcoming_fixture)
                         @php
                             $league = $upcoming_fixture->league->data;
@@ -188,6 +210,17 @@
                             $awayTeam = $upcoming_fixture->visitorTeam->data;
                         @endphp
                         @if($upcoming_fixture->league_id == $last_league_id)
+                            @if(isset($upcoming_fixture->round))
+                                @if($last_round_id != $upcoming_fixture->round->data->name)
+                                    <tr>
+                                        <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('application.Matchday') {{$upcoming_fixture->round->data->name}}</td>
+                                    </tr>
+                                @endif
+                            @elseif($last_stage_id != $upcoming_fixture->stage->data->name)
+                                <tr>
+                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">{{$upcoming_fixture->stage->data->name}}</td>
+                                </tr>
+                            @endif
                             <tr>
                                 <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}">{{$homeTeam->name}}</a></td>
                                 <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}">{{$awayTeam->name}}</a></td>
@@ -202,6 +235,17 @@
                             </tr>
                         @else
                             <table class="table table-striped table-light table-sm" style="width:100%">
+                                @if(isset($upcoming_fixture->round))
+                                    @if($last_round_id != $upcoming_fixture->round->data->name)
+                                        <tr>
+                                            <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('application.Matchday') {{$upcoming_fixture->round->data->name}}</td>
+                                        </tr>
+                                    @endif
+                                @elseif($last_stage_id != $upcoming_fixture->stage->data->name)
+                                    <tr>
+                                        <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">{{$upcoming_fixture->stage->data->name}}</td>
+                                    </tr>
+                                @endif
                                 <thead>
                                 <tr>
                                     <th scope="col" width="32%"></th>
@@ -225,7 +269,7 @@
                                     <td scope="row"><a href= {{route("fixturesDetails", ["id" => $upcoming_fixture->id])}}><i class="fa fa-info-circle"></i></a></td>
                                 </tr>
                         @endif
-                        @php $last_league_id = $upcoming_fixture->league_id; @endphp
+                        @php $last_league_id = $upcoming_fixture->league_id; if(isset($upcoming_fixture->round)) {$last_round_id = $upcoming_fixture->round->data->name;} $last_stage_id = $upcoming_fixture->stage->data->name; @endphp
                     @endforeach
                     </tbody>
                     </table>

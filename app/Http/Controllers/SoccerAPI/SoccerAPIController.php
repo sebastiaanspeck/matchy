@@ -61,7 +61,7 @@ class SoccerAPIController extends BaseController
 
         $soccerAPI = new SoccerAPI();
         $includeLeague = 'country,season';
-        $includeSeason = 'upcoming.localTeam,upcoming.visitorTeam,upcoming.league,results:order(starting_at|desc),results.localTeam,results.visitorTeam,results.league';
+        $includeSeason = 'upcoming.localTeam,upcoming.visitorTeam,upcoming.league,upcoming.stage,upcoming.round,results:order(starting_at|desc),results.localTeam,results.visitorTeam,results.league,results.round,results.stage';
         $includeTopscorers = 'goalscorers.player,goalscorers.team';
 
         /* $includeTopscorersAggregated = 'aggregatedGoalscorers.player,aggregatedGoalscorers.team'; */
@@ -149,7 +149,7 @@ class SoccerAPIController extends BaseController
         $dateFormat = self::getDateFormat();
 
         $soccerAPI = new SoccerAPI();
-        $include = 'league,localTeam,visitorTeam';
+        $include = 'league,localTeam,visitorTeam,round,stage';
 
         $leagues = '';
 
@@ -237,7 +237,7 @@ class SoccerAPIController extends BaseController
         }
 
         $soccerAPI = new SoccerAPI();
-        $include = 'league,localTeam,visitorTeam';
+        $include = 'league,localTeam,visitorTeam,round,stage';
 
         /** @var Carbon $date */
         $fixtures = $soccerAPI->fixtures()->setInclude($include)->setLeagues($leagues)->byDate($date);
@@ -283,7 +283,7 @@ class SoccerAPIController extends BaseController
         $dateFormat = self::getDateFormat();
 
         $soccerAPI = new SoccerAPI();
-        $include = 'squad,coach,latest.league,latest.localTeam,latest.visitorTeam,upcoming.league,upcoming.localTeam,upcoming.visitorTeam';
+        $include = 'squad,coach,latest.league,latest.localTeam,latest.visitorTeam,latest.round,latest.stage,upcoming.league,upcoming.localTeam,upcoming.visitorTeam,upcoming.round,upcoming.stage';
 
         $team = $soccerAPI->teams()->setInclude($include)->byId($teamId)->data;
 

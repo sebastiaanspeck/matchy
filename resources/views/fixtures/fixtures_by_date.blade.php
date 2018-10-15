@@ -11,7 +11,7 @@
                 <p style="color:red">@lang("application.msg_too_much_results", ["count" => count($livescores)])</p>
             @endif
 
-            @php $last_league_id = 0; @endphp
+            @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; @endphp
             @foreach($fixtures as $fixture)
                 @php
                     $league = $fixture->league->data;
@@ -43,6 +43,17 @@
                     }
                 @endphp
                 @if($fixture->league_id == $last_league_id)
+                    @if(isset($fixture->round))
+                        @if($last_round_id != $fixture->round->data->name)
+                            <tr>
+                                <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('application.Matchday') {{$fixture->round->data->name}}</td>
+                            </tr>
+                        @endif
+                    @elseif($last_stage_id != $fixture->stage->data->name)
+                        <tr>
+                            <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('cup_rounds.' . $fixture->stage->data->name)</td>
+                        </tr>
+                    @endif
                     <tr>
                         {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
                         @switch($winningTeam)
@@ -92,7 +103,17 @@
                     </tr>
                 @else
                     <table class="table table-striped table-light table-sm" width="100%">
-                        <caption><a href="{{route("leaguesDetails", ["id" => $league->id])}}" style="font-weight: bold">{{$league->name}}</a></caption>
+                        @if(isset($fixture->round))
+                            @if($last_round_id != $fixture->round->data->name)
+                                <tr>
+                                    <td style="font-weight: bold; text-align: center; background-color: #a8a8a8;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}" style="font-weight: bold">{{$league->name}}</a> - @lang('application.Matchday') {{$fixture->round->data->name}}</td>
+                                </tr>
+                            @endif
+                        @elseif($last_stage_id != $fixture->stage->data->name)
+                            <tr>
+                                <td style="font-weight: bold; text-align: center; background-color: #a8a8a8;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}" style="font-weight: bold">{{$league->name}}</a> - @lang('cup_rounds.' . $fixture->stage->data->name)</td>
+                            </tr>
+                        @endif
                         <thead>
                         <tr>
                             <th scope="col" width="35%"></th>
@@ -151,7 +172,7 @@
                             <td scope="row"><a href="{{route("fixturesDetails", ["id" => $fixture->id])}}"><i class="fa fa-info-circle"></i></a></td>
                         </tr>
                 @endif
-                @php $last_league_id = $fixture->league_id; @endphp
+                @php $last_league_id = $fixture->league_id; if(isset($fixture->round)) {$last_round_id = $fixture->round->data->name;} $last_stage_id = $fixture->stage->data->name; @endphp
             @endforeach
         @else
             <p>@lang('application.msg_no_matches_found', ["date" => date($date_format, strtotime($date))])</p>

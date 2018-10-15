@@ -14,7 +14,7 @@
                 @if(count($livescores) >= 100)
                     <p style="color:red">@lang("application.msg_too_much_results", ["count" => count($livescores)])</p>
                 @endif
-                @php $last_league_id = 0; @endphp
+                @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; @endphp
                 @foreach($livescores as $livescore)
                     @if(in_array($livescore->time->status, array("NS", "FT", "FT_PEN", "AET", "CANCL", "POSTP", "INT", "ABAN", "SUSP", "AWARDED", "DELAYED", "TBA", "WO", "AU")))
                         @continue
@@ -25,6 +25,17 @@
                         $awayTeam = $livescore->visitorTeam->data;
                     @endphp
                     @if($livescore->league_id == $last_league_id)
+                        @if(isset($livescore->round))
+                            @if($last_round_id != $livescore->round->data->name)
+                                <tr>
+                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('application.Matchday') {{$livescore->round->data->name}}</td>
+                                </tr>
+                            @endif
+                        @elseif($last_stage_id != $livescore->stage->data->name)
+                            <tr>
+                                <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('cup_rounds.' . $livescore->stage->data->name)</td>
+                            </tr>
+                        @endif
                         <tr>
                             <td scope="row">{{$homeTeam->name}}</td>
                             <td scope="row">{{$awayTeam->name}}</td>
@@ -49,7 +60,17 @@
                         </tr>
                     @else
                         <table class="table table-striped table-light table-sm" width="100%">
-                            <caption><a href="{{route("leaguesDetails", ["id" => $league->id])}}" style="font-weight: bold">{{$league->name}}</a></caption>
+                            @if(isset($livescore->round))
+                                @if($last_round_id != $livescore->round->data->name)
+                                    <tr>
+                                        <td style="font-weight: bold; text-align: center; background-color: #a8a8a8;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}" style="font-weight: bold">{{$league->name}}</a> - @lang('application.Matchday') {{$livescore->round->data->name}}</td>
+                                    </tr>
+                                @endif
+                            @elseif($last_stage_id != $livescore->stage->data->name)
+                                <tr>
+                                    <td style="font-weight: bold; text-align: center; background-color: #a8a8a8;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}" style="font-weight: bold">{{$league->name}}</a> - @lang('cup_rounds.' . $livescore->stage->data->name)</td>
+                                </tr>
+                            @endif
                             <thead>
                                 <tr>
                                     <th scope="col" width="35%"></th>
@@ -83,7 +104,7 @@
                                 <td scope="row"><a href="{{route("fixturesDetails", ["id" => $livescore->id])}}"><i class="fa fa-info-circle"></i></a></td>
                             </tr>
                     @endif
-                    @php $last_league_id = $livescore->league_id; @endphp
+                    @php $last_league_id = $livescore->league_id; if(isset($livescore->round)) {$last_round_id = $livescore->round->data->name;} $last_stage_id = $livescore->stage->data->name; @endphp
                 @endforeach
                 </tbody>
             </table>
