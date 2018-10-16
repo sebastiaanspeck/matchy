@@ -67,8 +67,8 @@
                             @if(isset($livescore->round))
                                 @if($last_round_id !== $livescore->round->data->name)
                                     <tr>
-                                        <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
-                                            <a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{$league->name}}</a>
+                                        <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">
+                                            <a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('competitions.' . $league->name)</a>
                                             @if($livescore->stage->data->name !== 'Regular Season')
                                                 @lang('cup_rounds.' . $livescore->stage->data->name) -
                                             @endif
@@ -77,7 +77,7 @@
                                 @endif
                             @elseif($last_stage_id !== $livescore->stage->data->name)
                                 <tr>
-                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{$league->name}}</a> - @lang('cup_rounds.' . $livescore->stage->data->name)</td>
+                                    <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('competitions.' . $league->name)</a> - @lang('cup_rounds.' . $livescore->stage->data->name)</td>
                                 </tr>
                             @endif
                             <thead>
