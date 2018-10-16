@@ -220,7 +220,6 @@
                     @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; @endphp
                     @foreach($upcoming_fixtures as $upcoming_fixture)
                         @php
-                            $league = $upcoming_fixture->league->data;
                             $homeTeam = $upcoming_fixture->localTeam->data;
                             $awayTeam = $upcoming_fixture->visitorTeam->data;
                             
