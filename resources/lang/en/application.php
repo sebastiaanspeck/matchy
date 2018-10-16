@@ -61,7 +61,7 @@ return [
     'Coaches'                   => 'Coaches',
 
     'Total shots'               => 'Total shots',
-    'Shots on goal'             => 'Schots on goal',
+    'Shots on goal'             => 'Shots on goal',
     'Shots of goal'             => 'Shots of goal',
     'Blocked shots'             => 'Blocked shots',
     'Shots inside box'          => 'Shots inside box',
