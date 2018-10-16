@@ -18,6 +18,6 @@ return [
     '8th Finals'                    => 'Ottavi di finale',
     '16th Finals'                   => 'Sedicesimi di finale',
 
-    'Play-offs'                     => 'Play-offs',
+    'Play-offs'                     => 'Play-off',
 
 ];
