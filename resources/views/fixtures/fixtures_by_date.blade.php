@@ -50,7 +50,7 @@
                                     @if($fixture->stage->data->name !== 'Regular Season')
                                         @lang('cup_stages.' . $fixture->stage->data->name) -
                                     @endif
-                                    @lang('application.Matchday') {{$fixture->round->data->name}}</td>
+                                    @lang('application.Matchday') - {{$fixture->round->data->name}}</td>
                             </tr>
                         @endif
                     @elseif($last_stage_id !== $fixture->stage->data->name)
@@ -111,7 +111,7 @@
                             @if($last_round_id !== $fixture->round->data->name)
                                 <tr>
                                     <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">
-                                        <a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('competitions.' . $league->name)</a>
+                                        <a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('competitions.' . $league->name)</a> -
                                         @if($fixture->stage->data->name !== 'Regular Season')
                                             @lang('cup_stages.' . $fixture->stage->data->name) -
                                         @endif

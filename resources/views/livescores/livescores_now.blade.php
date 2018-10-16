@@ -68,7 +68,7 @@
                                 @if($last_round_id !== $livescore->round->data->name)
                                     <tr>
                                         <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">
-                                            <a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('competitions.' . $league->name)</a>
+                                            <a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('competitions.' . $league->name)</a> -
                                             @if($livescore->stage->data->name !== 'Regular Season')
                                                 @lang('cup_stages.' . $livescore->stage->data->name) -
                                             @endif
