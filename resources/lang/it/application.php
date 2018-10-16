@@ -40,8 +40,8 @@ return [
     'Points'                    => 'Punti',
     'Form'                      => 'Forma',
     'W'                         => 'V',
-    'D'                         => 'P',
-    'L'                         => 'L',
+    'D'                         => 'N',
+    'L'                         => 'P',
 
     'live'                      => 'In diretta',
     'livescores'                => 'punti in diretta',
