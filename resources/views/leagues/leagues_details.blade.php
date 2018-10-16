@@ -43,6 +43,13 @@
                         @php
                             $homeTeam = $last_fixture->localTeam->data;
                             $awayTeam = $last_fixture->visitorTeam->data;
+                            
+                            if($homeTeam->national_team == true) {
+                                $homeTeam->name = trans('countries.' . $homeTeam->name);
+                            }
+                            if($awayTeam->national_team == true) {
+                                $awayTeam->name = trans('countries.' . $awayTeam->name);
+                            }
                             if(in_array($last_fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
                                 switch($last_fixture->time->status) {
                                     case("FT_PEN"):
@@ -213,9 +220,15 @@
                     @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; @endphp
                     @foreach($upcoming_fixtures as $upcoming_fixture)
                         @php
-                            $league = $upcoming_fixture->league->data;
                             $homeTeam = $upcoming_fixture->localTeam->data;
                             $awayTeam = $upcoming_fixture->visitorTeam->data;
+                            
+                            if($homeTeam->national_team == true) {
+                                $homeTeam->name = trans('countries.' . $homeTeam->name);
+                            }
+                            if($awayTeam->national_team == true) {
+                                $awayTeam->name = trans('countries.' . $awayTeam->name);
+                            }
                         @endphp
                         @if($upcoming_fixture->league_id == $last_league_id)
                             @if(isset($upcoming_fixture->round))
@@ -320,6 +333,7 @@
                             </thead>
                             <tbody>
                                     @foreach($standing as $team)
+                                        @php if(Lang::has('countries.' . $team->team_name)) { $team->team_name = trans('countries.' . $team->team_name);} @endphp
                                         <tr>
                                             <td scope="row">{{$team->position}}</td>
                                             <td scope="row"><a href ="{{route("teamsDetails", ["id" => $team->team_id])}}">{{$team->team_name}}</a></td>

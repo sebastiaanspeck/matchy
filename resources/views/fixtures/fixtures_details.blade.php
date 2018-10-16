@@ -13,6 +13,14 @@
             $homeTeam = $fixture->localTeam->data;
             $homeTeamId = $homeTeam->id;
             $awayTeam = $fixture->visitorTeam->data;
+            
+            if($homeTeam->national_team == true) {
+                $homeTeam->name = trans('countries.' . $homeTeam->name);
+            }
+            if($awayTeam->national_team == true) {
+                $awayTeam->name = trans('countries.' . $awayTeam->name);
+            }
+            
             $events = $fixture->events->data;
 
             $lineup = $fixture->lineup->data;

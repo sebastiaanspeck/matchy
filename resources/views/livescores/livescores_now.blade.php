@@ -23,6 +23,13 @@
                         $league = $livescore->league->data;
                         $homeTeam = $livescore->localTeam->data;
                         $awayTeam = $livescore->visitorTeam->data;
+                        
+                        if($homeTeam->national_team == true) {
+                            $homeTeam->name = trans('countries.' . $homeTeam->name);
+                        }
+                        if($awayTeam->national_team == true) {
+                            $awayTeam->name = trans('countries.' . $awayTeam->name);
+                        }
                     @endphp
                     @if($livescore->league_id == $last_league_id)
                         @if(isset($livescore->round))

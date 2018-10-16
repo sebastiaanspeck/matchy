@@ -15,7 +15,7 @@ return [
     'Australia'                     => 'Australien',
     'Austria'                       => 'Österreich',
     'Belarus'                       => 'Weißrussland',
-    'Belgium'			    => 'Belgien',
+    'Belgium'			                  => 'Belgien',
     'Brazil'                        => 'Brasilien',
     'Bosnia and Herzegovina'        => 'Bosnien und Herzegowina',
     'Bulgaria'                      => 'Bulgarien',
