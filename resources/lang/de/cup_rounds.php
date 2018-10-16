@@ -11,13 +11,13 @@ return [
     |
     */
 
-    '1st Round'                     => '1st Round',
-    '2nd Round Qualifying'          => '2nd Round Qualifying',
-    '2nd Round Qualifying Replays'  => '2nd Round Qualifying Replays',
+    '1st Round'                     => 'Erste Runde',
+    '2nd Round Qualifying'          => 'Zweite Runde Qualifizierung',
+    '2nd Round Qualifying Replays'  => 'Zweite Runde Qualifizierung Wiederholungsspiel',
 
-    '8th Finals'                    => '8th Finals',
-    '16th Finals'                   => '16th Finals',
+    '8th Finals'                    => 'Achtelfinale',
+    '16th Finals'                   => 'Sechzehntelfinale',
 
-    'Play-offs'                     => 'Play-offs',
+    'Play-offs'                     => 'Finale',
 
 ];
