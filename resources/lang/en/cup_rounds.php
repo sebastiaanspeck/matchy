@@ -15,6 +15,7 @@ return [
     '2nd Round Qualifying'          => '2nd Round Qualifying',
     '2nd Round Qualifying Replays'  => '2nd Round Qualifying Replays',
     '3rd Round'                     => '3rd Round',
+    'Qualifying Round'              => 'Qualifying Round',
 
     'Group Stage'                   => 'Group Stage',
     '16th Finals'                   => '16th Finals',

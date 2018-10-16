@@ -15,6 +15,7 @@ return [
     '2nd Round Qualifying'          => '2e Ronde Kwalificatie',
     '2nd Round Qualifying Replays'  => '2e Ronde Kwalificatie Replays',
     '3rd Round'                     => '3e Ronde',
+    'Qualifying Round'              => 'Kwalificatie',
 
     'Group Stage'                   => 'Groepsfase',
     '16th Finals'                   => '16e Finales',
