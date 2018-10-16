@@ -27,7 +27,7 @@ return [
     'upcoming fixtures'         => '{1} Volgende wedstrijd|[2,*] Volgende :count wedstrijden',
     'Matchday'                  => 'Speelronde',
     'Standings'                 => 'Ranglijst',
-    'Topscorers'                => 'Topscorers',
+    'Top Scorers'               => 'Topscorers',
     'Player'                    => 'Speler',
 
     'No.'                       => 'Nr.',

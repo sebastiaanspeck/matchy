@@ -27,7 +27,7 @@ return [
     'upcoming fixtures'         => '{1} Upcoming fixture|[2,*] Upcoming :count fixtures',
     'Matchday'                  => 'Matchday',
     'Standings'                 => 'Klasemen',
-    'Topscorers'                => 'Top Skor',
+    'Top Scorers'               => 'Top Skor',
     'Player'                    => 'Pemain',
 
     'No.'                       => 'No.',

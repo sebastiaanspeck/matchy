@@ -27,7 +27,7 @@ return [
     'upcoming fixtures'         => '{1} Prochain fixture|[2,*] Prochain :count fixtures',
     'Matchday'                  => 'Matchday',
     'Standings'                 => 'Classement',
-    'Topscorers'                => 'Meilleurs buteurs',
+    'Top Scorers'               => 'Meilleurs Buteurs',
     'Player'                    => 'Joueur',
 
     'No.'                       => 'No.',

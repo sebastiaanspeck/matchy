@@ -27,7 +27,7 @@ return [
     'upcoming fixtures'         => '{1} Prossima partite|[2,*] Prossime :count partite',
     'Matchday'                  => 'Giornata',
     'Standings'                 => 'Posizionamenti',
-    'Topscorers'                => 'Capocannonieri',
+    'Top Scorers'               => 'Capocannonieri',
     'Player'                    => 'Giocatore',
 
     'No.'                       => 'No.',

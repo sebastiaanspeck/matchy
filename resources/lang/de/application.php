@@ -27,7 +27,7 @@ return [
     'upcoming fixtures'         => '{1} Nächstes Spiel|[2,*] :count Anstehende Spiele',
     'Matchday'                  => 'Spieltag',
     'Standings'                 => 'Tabelle',
-    'Topscorers'                => 'Topschützen',
+    'Top Scorers'               => 'Topschützen',
     'Player'                    => 'Spieler',
 
     'No.'                       => 'No.',

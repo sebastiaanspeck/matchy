@@ -27,7 +27,7 @@ return [
     'upcoming fixtures'         => '{1} Partido pasado|[2,*] Próximos :count partidos',
     'Matchday'                  => 'Jornada',
     'Standings'                 => 'Posiciones',
-    'Topscorers'                => 'Goleadores',
+    'Top Scorers'               => 'Goleadores',
     'Player'                    => 'Jugador',
 
     'No.'                       => 'No.',
