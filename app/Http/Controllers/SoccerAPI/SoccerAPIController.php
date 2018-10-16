@@ -33,6 +33,16 @@ class SoccerAPIController extends BaseController
 
         $leagues = $soccerAPI->leagues()->setInclude($include)->all();
 
+        $currentYear = Carbon::now()->year;
+        $nextYear = Carbon::now()->addYear()->year;
+        $season = $currentYear . "/" . $nextYear;
+
+        foreach($leagues as $key => $league) {
+            if(!in_array($league->season->data->name, array($season, $currentYear))) {
+                unset($leagues[$key]);
+            }
+        }
+
         usort($leagues, function ($item1, $item2) {
             if ($item1->country->data->name == $item2->country->data->name) {
                 return $item1->id <=> $item2->id;
