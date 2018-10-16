@@ -47,7 +47,6 @@ class SoccerAPIController extends BaseController
             if ($item1->country->data->name == $item2->country->data->name) {
                 return $item1->id <=> $item2->id;
             }
-
             return $item1->country->data->name <=> $item2->country->data->name;
         });
 
