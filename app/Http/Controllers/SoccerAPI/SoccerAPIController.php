@@ -289,7 +289,6 @@ class SoccerAPIController extends BaseController
             foreach ($livescores as $livescore) {
                 if (!in_array($livescore->time->status, ['NS', 'FT', 'FT_PEN', 'CANCL', 'POSTP', 'INT', 'ABAN', 'SUSP', 'AWARDED','DELAYED','TBA', 'WO', 'AU'])) {
                     $count++;
-                    ;
                 }
             }
         }
