@@ -48,14 +48,14 @@
                             <tr>
                                 <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
                                     @if($fixture->stage->data->name !== 'Regular Season')
-                                        @lang('cup_rounds.' . $fixture->stage->data->name) -
+                                        @lang('cup_stages.' . $fixture->stage->data->name) -
                                     @endif
                                     @lang('application.Matchday') {{$fixture->round->data->name}}</td>
                             </tr>
                         @endif
                     @elseif($last_stage_id !== $fixture->stage->data->name)
                         <tr>
-                            <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('cup_rounds.' . $fixture->stage->data->name)</td>
+                            <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('cup_stages.' . $fixture->stage->data->name)</td>
                         </tr>
                     @endif
                     <tr>
@@ -113,14 +113,14 @@
                                     <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">
                                         <a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('competitions.' . $league->name)</a>
                                         @if($fixture->stage->data->name !== 'Regular Season')
-                                            @lang('cup_rounds.' . $fixture->stage->data->name) -
+                                            @lang('cup_stages.' . $fixture->stage->data->name) -
                                         @endif
                                         @lang('application.Matchday') {{$fixture->round->data->name}}</td>
                                 </tr>
                             @endif
                         @elseif($last_stage_id !== $fixture->stage->data->name)
                             <tr>
-                                <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('competitions.' . $league->name)</a> - @lang('cup_rounds.' . $fixture->stage->data->name)</td>
+                                <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('competitions.' . $league->name)</a> - @lang('cup_stages.' . $fixture->stage->data->name)</td>
                             </tr>
                         @endif
                         <thead>

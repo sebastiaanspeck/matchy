@@ -74,14 +74,14 @@
                                     <tr>
                                         <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
                                             @if($last_fixture->stage->data->name !== 'Regular Season')
-                                                @lang('cup_rounds.' . $last_fixture->stage->data->name) -
+                                                @lang('cup_stages.' . $last_fixture->stage->data->name) -
                                             @endif
                                             @lang('application.Matchday') {{$last_fixture->round->data->name}}</td>
                                     </tr>
                                 @endif
                             @elseif($last_stage_id !== $last_fixture->stage->data->name)
                                 <tr>
-                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('cup_rounds.' . $last_fixture->stage->data->name)</td>
+                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('cup_stages.' . $last_fixture->stage->data->name)</td>
                                 </tr>
                             @endif
                             <tr>
@@ -148,14 +148,14 @@
                                             <tr>
                                                 <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">
                                                     @if($last_fixture->stage->data->name !== 'Regular Season')
-                                                        @lang('cup_rounds.' . $last_fixture->stage->data->name) -
+                                                        @lang('cup_stages.' . $last_fixture->stage->data->name) -
                                                     @endif
                                                     @lang('application.Matchday') {{$last_fixture->round->data->name}}</td>
                                             </tr>
                                         @endif
                                     @elseif($last_stage_id !== $last_fixture->stage->data->name)
                                         <tr>
-                                            <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">@lang('cup_rounds.' . $last_fixture->stage->data->name)</td>
+                                            <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">@lang('cup_stages.' . $last_fixture->stage->data->name)</td>
                                         </tr>
                                     @endif
                                     <tr>
@@ -223,14 +223,14 @@
                                     <tr>
                                         <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
                                             @if($upcoming_fixture->stage->data->name !== 'Regular Season')
-                                                @lang('cup_rounds.' . $upcoming_fixture->stage->data->name) -
+                                                @lang('cup_stages.' . $upcoming_fixture->stage->data->name) -
                                             @endif
                                             @lang('application.Matchday') {{$upcoming_fixture->round->data->name}}</td>
                                     </tr>
                                 @endif
                             @elseif($last_stage_id !== $upcoming_fixture->stage->data->name)
                                 <tr>
-                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('cup_rounds.' . $upcoming_fixture->stage->data->name)</td>
+                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('cup_stages.' . $upcoming_fixture->stage->data->name)</td>
                                 </tr>
                             @endif
                             <tr>
@@ -252,14 +252,14 @@
                                         <tr>
                                             <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">
                                                 @if($upcoming_fixture->stage->data->name !== 'Regular Season')
-                                                    @lang('cup_rounds.' . $upcoming_fixture->stage->data->name) -
+                                                    @lang('cup_stages.' . $upcoming_fixture->stage->data->name) -
                                                 @endif
                                                 @lang('application.Matchday') {{$upcoming_fixture->round->data->name}}</td>
                                         </tr>
                                     @endif
                                 @elseif($last_stage_id !== $upcoming_fixture->stage->data->name)
                                     <tr>
-                                        <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">@lang('cup_rounds.' . $upcoming_fixture->stage->data->name)</td>
+                                        <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">@lang('cup_stages.' . $upcoming_fixture->stage->data->name)</td>
                                     </tr>
                                 @endif
                                 <thead>
@@ -297,7 +297,13 @@
                         @php $standing = $standings->standings->data; @endphp
                         <table class="table table-light table-sm" style="width:100%">
                             @if(count($standings_raw) > 1)
-                                <caption>{{$standings->name}}</caption>
+                                <caption>
+                                @if(strpos($standings->name, 'Group') !== false)
+                                    {{str_replace('Group', trans('application.Group'), $standings->name)}}
+                                @else
+                                    {{$standings->name}}
+                                @endif
+                                </caption>
                             @endif
                             <thead>
                                 <tr>
