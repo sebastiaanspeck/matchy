@@ -77,7 +77,7 @@
     
                             <td scope="row">{{date($date_format . " H:i", strtotime($livescore->time->starting_at->date_time))}}
                                 @if($livescore->time->status == "LIVE")
-                                    <span style="color:#FF0000">LIVE</span>
+                                    <span style="color:#ff0000">LIVE</span>
                                 @endif
                             </td>
                             <td scope="row"><a href="{{route("fixturesDetails", ["id" => $livescore->id])}}"><i class="fa fa-info-circle"></i></a></td>
@@ -146,7 +146,7 @@
     
                                 <td scope="row">{{date($date_format . " H:i", strtotime($livescore->time->starting_at->date_time))}}
                                     @if($livescore->time->status == "LIVE")
-                                        <span style="color:#FF0000">LIVE</span>
+                                        <span style="color:#ff0000">LIVE</span>
                                     @endif
                                 </td>
 

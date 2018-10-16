@@ -58,12 +58,12 @@
         }
 
         .lost-team:link {
-            color: #FF0000;
+            color: #ff0000;
             background-color: transparent;
             text-decoration:none;
         }
         .lost-team:visited {
-            color: #FF0000;
+            color: #ff0000;
             background-color: transparent;
             text-decoration:none;
         }

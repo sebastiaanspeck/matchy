@@ -99,7 +99,7 @@
     
                                 <td scope="row">{{date($date_format . " H:i", strtotime($last_fixture->time->starting_at->date_time))}}
                                     @if($last_fixture->time->status == "LIVE")
-                                        <span style="color:#FF0000">LIVE</span>
+                                        <span style="color:#ff0000">LIVE</span>
                                     @endif
                                 </td>
                                 <td scope="row"><a href= {{route("fixturesDetails", ["id" => $last_fixture->id])}}><i class="fa fa-info-circle"></i></a></td>
@@ -169,7 +169,7 @@
                                     {{-- show date_time, if LIVE -> show LIVE after date_time --}}
                                     <td scope="row">{{date($date_format . " H:i", strtotime($last_fixture->time->starting_at->date_time))}}
                                         @if($last_fixture->time->status == "LIVE")
-                                            <span style="color:#FF0000">LIVE</span>
+                                            <span style="color:#ff0000">LIVE</span>
                                         @endif
                                     </td>
                                     {{-- show button to view fixtures-details --}}
@@ -253,7 +253,7 @@
     
                                 <td scope="row">{{date($date_format . " H:i", strtotime($upcoming_fixture->time->starting_at->date_time))}}
                                     @if($upcoming_fixture->time->status == "LIVE")
-                                        <span style="color:#FF0000">LIVE</span>
+                                        <span style="color:#ff0000">LIVE</span>
                                 @endif
                                 <td scope="row"><a href= {{route("fixturesDetails", ["id" => $upcoming_fixture->id])}}><i class="fa fa-info-circle"></i></a></td>
                             </tr>
@@ -322,7 +322,7 @@
     
                                     <td scope="row">{{date($date_format . " H:i", strtotime($upcoming_fixture->time->starting_at->date_time))}}
                                         @if($upcoming_fixture->time->status == "LIVE")
-                                            <span style="color:#FF0000">LIVE</span>
+                                            <span style="color:#ff0000">LIVE</span>
                                     @endif
                                     <td scope="row"><a href="{{route("fixturesDetails", ["id" => $upcoming_fixture->id])}}"><i class="fa fa-info-circle"></i></a></td>
                                 </tr>
