@@ -25,6 +25,7 @@
 ## Custom files
 - application.php -> strings which are used throughout the application.
 - cup_stages.php -> strings which are used to show the cup-stages
+- injuries.php -> strings which are used to show the reason why a player is sidelined
 
 ## Default files
 
