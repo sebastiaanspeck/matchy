@@ -31,12 +31,12 @@
 
 
         <div id="heading" style="text-align: center">
-            <h1><a href=" {{route("leaguesDetails", ["id" => $league->id])}} "> {{$league->name}} </a></h1>
+            <h1><a href=" {{route("leaguesDetails", ["id" => $league->id])}} "> @lang('competitions.' . $league->name) </a></h1>
                 <table style="width:100%">
                     <tr>
-                        <td width="49%"><img src= {{$homeTeam->logo_path}} ></td>
+                        <td width="49%"><img style="max-height: 200px; max-width: 200px" src={{$homeTeam->logo_path}}></td>
                         <td width="2%"><h1> - </h1></td>
-                        <td width="49%"><img src= {{$awayTeam->logo_path}} ></td>
+                        <td width="49%"><img style="max-height: 200px; max-width: 200px" src={{$awayTeam->logo_path}}></td>
                     </tr>
                     <tr>
                         <td width="49%" style="vertical-align: top"><h5><a href =" {{route("teamsDetails", ["id" => $homeTeam->id])}} "> {{$homeTeam->name}} </a></h5></td>

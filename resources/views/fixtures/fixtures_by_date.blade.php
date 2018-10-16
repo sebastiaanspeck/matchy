@@ -8,7 +8,7 @@
 
         @if(count($fixtures) >= 1 && gettype($fixtures) == "array")
             @if(count($fixtures) >= 100)
-                <p style="color:red">@lang("application.msg_too_much_results", ["count" => count($livescores)])</p>
+                <p style="color:red">@lang("application.msg_too_much_results", ["count" => count($fixtures)])</p>
             @endif
 
             @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; @endphp
@@ -44,12 +44,16 @@
                 @endphp
                 @if($fixture->league_id == $last_league_id)
                     @if(isset($fixture->round))
-                        @if($last_round_id != $fixture->round->data->name)
+                        @if($last_round_id !== $fixture->round->data->name)
                             <tr>
-                                <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('application.Matchday') {{$fixture->round->data->name}}</td>
+                                <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
+                                    @if($fixture->stage->data->name !== 'Regular Season')
+                                        @lang('cup_rounds.' . $fixture->stage->data->name) -
+                                    @endif
+                                    @lang('application.Matchday') {{$fixture->round->data->name}}</td>
                             </tr>
                         @endif
-                    @elseif($last_stage_id != $fixture->stage->data->name)
+                    @elseif($last_stage_id !== $fixture->stage->data->name)
                         <tr>
                             <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('cup_rounds.' . $fixture->stage->data->name)</td>
                         </tr>
@@ -104,14 +108,19 @@
                 @else
                     <table class="table table-striped table-light table-sm" width="100%">
                         @if(isset($fixture->round))
-                            @if($last_round_id != $fixture->round->data->name)
+                            @if($last_round_id !== $fixture->round->data->name)
                                 <tr>
-                                    <td style="font-weight: bold; text-align: center; background-color: #a8a8a8;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}" style="font-weight: bold">{{$league->name}}</a> - @lang('application.Matchday') {{$fixture->round->data->name}}</td>
+                                    <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">
+                                        <a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('competitions.' . $league->name)</a>
+                                        @if($fixture->stage->data->name !== 'Regular Season')
+                                            @lang('cup_rounds.' . $fixture->stage->data->name) -
+                                        @endif
+                                        @lang('application.Matchday') {{$fixture->round->data->name}}</td>
                                 </tr>
                             @endif
-                        @elseif($last_stage_id != $fixture->stage->data->name)
+                        @elseif($last_stage_id !== $fixture->stage->data->name)
                             <tr>
-                                <td style="font-weight: bold; text-align: center; background-color: #a8a8a8;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}" style="font-weight: bold">{{$league->name}}</a> - @lang('cup_rounds.' . $fixture->stage->data->name)</td>
+                                <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('competitions.' . $league->name)</a> - @lang('cup_rounds.' . $fixture->stage->data->name)</td>
                             </tr>
                         @endif
                         <thead>
