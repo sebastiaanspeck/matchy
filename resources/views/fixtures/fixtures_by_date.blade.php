@@ -8,7 +8,7 @@
 
         @if(count($fixtures) >= 1 && gettype($fixtures) == "array")
             @if(count($fixtures) >= 100)
-                <p style="color:red">@lang("application.msg_too_much_results", ["count" => count($livescores)])</p>
+                <p style="color:red">@lang("application.msg_too_much_results", ["count" => count($fixtures)])</p>
             @endif
 
             @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; @endphp
