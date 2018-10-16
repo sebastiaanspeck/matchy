@@ -5,7 +5,7 @@
         <div id="heading" style="text-align: center">
             <table width="100%">
                 <tr>
-                    <td><img src="{{$team->logo_path}}"></td>
+                    <td><img src="{{$team->logo_path}}" style="max-height: 200px; max-width: 200px"></td>
                 </tr>
                 <tr>
                     <td style="vertical-align: top"><h3>{{$team->name}}</h3></td>
