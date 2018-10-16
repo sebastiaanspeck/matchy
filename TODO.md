@@ -1,6 +1,5 @@
 # TODO
-- [ ] Rewrite tables to grids
 - [ ] Check topscorers-data. Excluded for cups for now.
-- [ ] Add header to show the matday/round
+- [ ] Hide leagues that are irrelevant right now (like id:1371 etc.)
 - [ ] Translate injuries
 - [ ] Translate countries
