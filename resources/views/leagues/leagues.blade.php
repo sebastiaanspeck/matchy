@@ -5,6 +5,11 @@
         <h1>@lang('application.Leagues')</h1>
 
         @if(count($leagues) >= 1)
+            @php
+                $currentYear = \Carbon\Carbon::now()->year;
+                $nextYear = \Carbon\Carbon::now()->addYear()->year;
+                $season = $currentYear . "/" . $nextYear;
+            @endphp
             <table class='table table-striped table-light table-sm' width='100%'>
                 <thead>
                     <tr>
@@ -14,6 +19,9 @@
                 </thead>
                 <tbody>
                     @foreach($leagues as $league)
+                        @if(!in_array($league->season->data->name, array($season, $currentYear)))
+                            @continue
+                        @endif
                         @php $country = $league->country->data; @endphp
                         <tr>
                             <td scope="row" width="25%"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('competitions.' . $league->name)</a></td>
