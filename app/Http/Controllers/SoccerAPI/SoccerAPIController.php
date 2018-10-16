@@ -409,10 +409,8 @@ class SoccerAPIController extends BaseController
             }
         } elseif ($request->has('date')) {
             return $request->query('date');
-        } else {
-            return Carbon::now()->toDateString();
         }
         
-        return '';
+        return Carbon::now()->toDateString();
     }
 }
