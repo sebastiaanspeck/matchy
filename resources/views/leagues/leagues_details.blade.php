@@ -146,7 +146,7 @@
                                     @if(isset($last_fixture->round))
                                         @if($last_round_id !== $last_fixture->round->data->name)
                                             <tr>
-                                                <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">
+                                                <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
                                                     @if($last_fixture->stage->data->name !== 'Regular Season')
                                                         @lang('cup_stages.' . $last_fixture->stage->data->name) -
                                                     @endif
@@ -155,7 +155,7 @@
                                         @endif
                                     @elseif($last_stage_id !== $last_fixture->stage->data->name)
                                         <tr>
-                                            <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">@lang('cup_stages.' . $last_fixture->stage->data->name)</td>
+                                            <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('cup_stages.' . $last_fixture->stage->data->name)</td>
                                         </tr>
                                     @endif
                                     <tr>
@@ -250,7 +250,7 @@
                                 @if(isset($upcoming_fixture->round))
                                     @if($last_round_id !== $upcoming_fixture->round->data->name)
                                         <tr>
-                                            <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">
+                                            <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
                                                 @if($upcoming_fixture->stage->data->name !== 'Regular Season')
                                                     @lang('cup_stages.' . $upcoming_fixture->stage->data->name) -
                                                 @endif
@@ -259,7 +259,7 @@
                                     @endif
                                 @elseif($last_stage_id !== $upcoming_fixture->stage->data->name)
                                     <tr>
-                                        <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">@lang('cup_stages.' . $upcoming_fixture->stage->data->name)</td>
+                                        <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('cup_stages.' . $upcoming_fixture->stage->data->name)</td>
                                     </tr>
                                 @endif
                                 <thead>
