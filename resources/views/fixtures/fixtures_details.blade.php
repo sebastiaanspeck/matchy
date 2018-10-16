@@ -543,16 +543,19 @@
                                     <tr>
                                         <td></td>
                                         <td style="width: 1%"><img src="/images/flags/shiny/16/{{$home_sidelined_player->nationality}}.png"></td>
-                                        <td style="text-align: left">{{$home_sidelined_player->common_name}} <span style="color: #A9A9A9">({{$home_sidelined_player->reason}})</span></td>
+                                        <td style="text-align: left">{{$home_sidelined_player->common_name}} <span style="color: #A9A9A9">(@lang('injuries.' . $home_sidelined_player->reason))</span></td>
                                         <td></td>
-                                        <td style="text-align: right">{{$away_sidelined_player->common_name}} <span style="color: #A9A9A9">({{$away_sidelined_player->reason}})</span></td>
+                                        <td style="text-align: right">{{$away_sidelined_player->common_name}} <span style="color: #A9A9A9">(@lang('injuries.' . $away_sidelined_player->reason))</span></td>
                                         <td style="width: 1%"><img src="/images/flags/shiny/16/{{$away_sidelined_player->nationality}}.png"></td>
                                     </tr>
                                 @elseif(isset($home_sidelined_player) && !isset($away_sidelined_player))
                                     <tr>
                                         <td></td>
                                         <td style="width: 1%"><img src="/images/flags/shiny/16/{{$home_sidelined_player->nationality}}.png"></td>
-                                        <td style="text-align: left">{{$home_sidelined_player->common_name}} <span style="color: #A9A9A9">({{$home_sidelined_player->reason}})</span></td>
+                                        <td style="text-align: left">{{$home_sidelined_player->common_name}} <span style="color: #A9A9A9">(@lang('injuries.' . $home_sidelined_player->reason))</span></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                     </tr>
                                 @elseif(!isset($home_sidelined_player) && isset($away_sidelined_player))
                                     <tr>
@@ -560,7 +563,7 @@
                                         <td></td>
                                         <td></td>
                                         <td></td>
-                                        <td style="text-align: right">{{$away_sidelined_player->common_name}} <span style="color: #A9A9A9">({{$away_sidelined_player->reason}})</span></td>
+                                        <td style="text-align: right">{{$away_sidelined_player->common_name}} <span style="color: #A9A9A9">(@lang('injuries.' . $away_sidelined_player->reason))</span></td>
                                         <td style="width: 1%"><img src="/images/flags/shiny/16/{{$away_sidelined_player->nationality}}.png"></td>
                                     </tr>
                                 @endif
