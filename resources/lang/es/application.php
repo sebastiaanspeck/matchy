@@ -42,6 +42,7 @@ return [
     'W'                         => 'G',
     'D'                         => 'E',
     'L'                         => 'P',
+    'Group'                     => 'Group',
 
     'live'                      => 'En vivo',
     'livescores'                => 'puntuaciones en vivo',

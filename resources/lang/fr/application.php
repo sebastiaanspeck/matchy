@@ -42,6 +42,7 @@ return [
     'W'                         => 'G',
     'D'                         => 'N',
     'L'                         => 'P',
+    'Group'                     => 'Group',
 
     'live'                      => 'Direct',
     'livescores'                => 'scores en direct',

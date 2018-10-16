@@ -42,6 +42,7 @@ return [
     'W'                         => 'W',
     'D'                         => 'D',
     'L'                         => 'L',
+    'Group'                     => 'Group',
 
     'live'                      => 'live',
     'livescores'                => 'livescores',
@@ -100,3 +101,4 @@ return [
     'msg_no_data'               => 'is not (yet) available for this fixture|are not (yet) available for this fixture',
 
 ];
+

@@ -42,6 +42,7 @@ return [
     'W'                         => 'M',
     'D'                         => 'S',
     'L'                         => 'K',
+    'Group'                     => 'Group',
 
     'live'                      => 'langsung',
     'livescores'                => 'livescores',

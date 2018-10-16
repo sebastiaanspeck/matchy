@@ -42,6 +42,7 @@ return [
     'W'                         => 'G',
     'D'                         => 'U',
     'L'                         => 'V',
+    'Group'                     => 'Group',
 
     'live'                      => 'live',
     'livescores'                => 'aktueller Stand',
