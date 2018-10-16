@@ -39,9 +39,9 @@ return [
     'Goals'                     => 'Gol',
     'Points'                    => 'Point',
     'Form'                      => 'Form',
-    'W'                         => 'W',
-    'D'                         => 'D',
-    'L'                         => 'L',
+    'W'                         => 'M',
+    'D'                         => 'S',
+    'L'                         => 'K',
 
     'live'                      => 'langsung',
     'livescores'                => 'livescores',

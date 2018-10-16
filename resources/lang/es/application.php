@@ -39,9 +39,9 @@ return [
     'Goals'                     => 'Goles',
     'Points'                    => 'Puntos',
     'Form'                      => 'Forma',
-    'W'                         => 'W',
-    'D'                         => 'D',
-    'L'                         => 'L',
+    'W'                         => 'G',
+    'D'                         => 'E',
+    'L'                         => 'P',
 
     'live'                      => 'En vivo',
     'livescores'                => 'puntuaciones en vivo',
