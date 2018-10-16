@@ -77,7 +77,7 @@ class SoccerAPIController extends BaseController
 
         $league = $soccerAPI->leagues()->setInclude($includeLeague)->byId($leagueId)->data;
 
-        $excludedLeagues = [2, 5, 732, 1326];
+        $excludedLeagues = [2, 5, 732];
 
         $standingsRaw = $soccerAPI->standings()->bySeasonId($league->current_season_id);
 
