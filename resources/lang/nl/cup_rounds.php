@@ -16,8 +16,14 @@ return [
     '2nd Round Qualifying Replays'  => '2e Ronde Kwalificatie Replays',
     '3rd Round'                     => '3e Ronde',
 
-    '8th Finals'                    => '8e Finales',
+    'Group Stage'                   => 'Groepsfase',
     '16th Finals'                   => '16e Finales',
+    '8th Finals'                    => '8ste Finales',
+    'Quarter-finals'                => 'Kwartfinale',
+    'Semi-final'                    => 'Halve finale',
+    'Semi-finals'                   => 'Halve finales',
+    '3rd Place Final'               => '3de Plaats',
+    'Final'                         => 'Finale',
 
     'Play-offs'                     => 'Play-offs',
 
