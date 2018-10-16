@@ -12,9 +12,12 @@ return [
     */
 
     '1st Round'                     => '1e Ronde',
+    '2nd Round'                     => '2e Ronde',
     '2nd Round Qualifying'          => '2e Ronde Kwalificatie',
     '2nd Round Qualifying Replays'  => '2e Ronde Kwalificatie Replays',
     '3rd Round'                     => '3e Ronde',
+    '4th Round'                     => '4e Ronde',
+    '5th Round'                     => '5e Ronde',
     'Qualifying Round'              => 'Kwalificatie',
 
     'Group Stage'                   => 'Groepsfase',
