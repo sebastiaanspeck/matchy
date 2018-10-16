@@ -87,6 +87,15 @@ class SoccerAPIController extends BaseController
 
         if($league->coverage->topscorer_goals && !in_array($leagueId, $excludedLeagues)) {
             $topscorers = $soccerAPI->topscorers()->setInclude($includeTopscorers)->bySeasonId($league->current_season_id)->goalscorers->data;
+
+            foreach($topscorers as $key => $topscorer) {
+                if($topscorer->stage_id != $league->current_stage_id) {
+                    unset($topscorers[$key]);
+                }
+            }
+
+            $topscorers = self::addPagination($topscorers, 10);
+
         }
 
         $lastFixtures = [];
