@@ -18,3 +18,17 @@
 5. Run `php artisan trans:publish [2-lettered country code] --force`
 5. Update the translation-files.
 6. Commit and open a PR.
+
+# Files
+**Make sure you have the following files in the folder.**
+
+## Custom files
+- application.php -> strings which are used throughout the application.
+- cup_stages.php -> strings which are used to show the cup-stages
+
+## Default files
+
+- auth.php
+- pagination.php
+- passwords.php
+- validation.php
