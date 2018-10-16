@@ -29,7 +29,7 @@
             @endif
             @if(count($topscorers) > 0)
                 <li class="nav-item">
-                    <a class="nav-link" id="topscorers-tab" data-toggle="tab" href="#topscorers" role="tab" aria-controls="topscorers" aria-selected="false">@lang('application.Topscorers')</a>
+                    <a class="nav-link" id="topscorers-tab" data-toggle="tab" href="#topscorers" role="tab" aria-controls="topscorers" aria-selected="false">@lang('application.Top Scorers')</a>
                 </li>
             @endif
         </ul>
