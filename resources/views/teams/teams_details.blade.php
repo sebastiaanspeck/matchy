@@ -37,6 +37,14 @@
                             $league = $last_fixture->league->data;
                             $homeTeam = $last_fixture->localTeam->data;
                             $awayTeam = $last_fixture->visitorTeam->data;
+                            
+                            if($homeTeam->national_team == true) {
+                                $homeTeam->name = trans('countries.' . $homeTeam->name);
+                            }
+                            if($awayTeam->national_team == true) {
+                                $awayTeam->name = trans('countries.' . $awayTeam->name);
+                            }
+                            
                             if($last_fixture->scores->localteam_score > $last_fixture->scores->visitorteam_score && in_array($last_fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
                                 $winningTeam = $homeTeam->name;
                             } elseif ($last_fixture->scores->localteam_score == $last_fixture->scores->visitorteam_score && in_array($last_fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
