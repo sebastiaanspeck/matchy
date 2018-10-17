@@ -39,7 +39,7 @@
 
 
         <div id="heading" style="text-align: center">
-            <h1><a href=" {{route("leaguesDetails", ["id" => $league->id])}} "> @lang('competitions.' . $league->name) </a></h1>
+            <h1><a href=" {{route("leaguesDetails", ["id" => $league->id])}} "> @lang('leagues.' . $league->name) </a></h1>
                 <table style="width:100%">
                     <tr>
                         <td width="49%"><img style="max-height: 200px; max-width: 200px" src={{$homeTeam->logo_path}}></td>

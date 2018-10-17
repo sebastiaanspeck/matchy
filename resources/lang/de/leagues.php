@@ -4,10 +4,10 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Cup Rounds Language Lines
+    | Leagues Language Lines
     |--------------------------------------------------------------------------
     |
-    | The following language lines are used for labels for the competitions.
+    | The following language lines are used for labels for the leagues.
     |
     */
 

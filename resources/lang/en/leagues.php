@@ -4,10 +4,10 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Cup Rounds Language Lines
+    | Leagues Language Lines
     |--------------------------------------------------------------------------
     |
-    | The following language lines are used for labels for the competitions.
+    | The following language lines are used for labels for the leagues.
     |
     */
 
@@ -23,7 +23,7 @@ return [
     'Play-offs 1/2'                 => 'Play-offs 1/2',
     'Play-offs 2/3'                 => 'Play-offs 2/3',
     'Pro League'                    => 'Pro League',
-    'Belgian Cup'                   => 'Belgische Beker',
+    'Belgian Cup'                   => 'Belgian Cup',
     'Ligue 1'                       => 'Ligue 1',
     'Coupe de France'               => 'Coupe de France',
     'Serie A'                       => 'Serie A',
@@ -31,10 +31,10 @@ return [
     'Primeira Liga'                 => 'Primeira Liga',
     'La Liga'                       => 'La Liga',
     'Copa Del Rey'                  => 'Copa Del Rey',
-    'WC Qualification Europe'       => 'WK Kwalificatie Europa',
-    'World Cup'                     => 'WK',
-    'Euro Qualification'            => 'EK Kwalificatie',
-    'European Championship'         => 'EK',
+    'WC Qualification Europe'       => 'WC Qualification Europe',
+    'World Cup'                     => 'World Cup',
+    'Euro Qualification'            => 'Euro Qualification',
+    'European Championship'         => 'European Championship',
     'Eredivisie Playoffs'           => 'Eredivisie Playoffs',
     'UEFA Europa League Play-offs'  => 'UEFA Europa League Play-offs',
 

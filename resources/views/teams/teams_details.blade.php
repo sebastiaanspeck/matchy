@@ -127,7 +127,7 @@
                                     @endif
                                 @elseif($last_stage_id !== $last_fixture->stage->data->name)
                                     <tr>
-                                        <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('competitions.' . $league->name)</a> - @lang('cup_stages.' . $last_fixture->stage->data->name)</td>
+                                        <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('leagues.' . $league->name)</a> - @lang('cup_stages.' . $last_fixture->stage->data->name)</td>
                                     </tr>
                                 @endif
                                 <thead>
@@ -280,7 +280,7 @@
                                     @endif
                                 @elseif($last_stage_id !== $upcoming_fixture->stage->data->name)
                                     <tr>
-                                        <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('competitions.' . $league->name)</a> - @lang('cup_stages.' . $upcoming_fixture->stage->data->name)</td>
+                                        <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('leagues.' . $league->name)</a> - @lang('cup_stages.' . $upcoming_fixture->stage->data->name)</td>
                                     </tr>
                                 @endif
                                 <thead>

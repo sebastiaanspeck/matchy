@@ -105,7 +105,7 @@
                                 @endif
                             @elseif($last_stage_id !== $livescore->stage->data->name)
                                 <tr>
-                                    <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('competitions.' . $league->name)</a> - @lang('cup_stages.' . $livescore->stage->data->name)</td>
+                                    <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('leagues.' . $league->name)</a> - @lang('cup_stages.' . $livescore->stage->data->name)</td>
                                 </tr>
                             @endif
                             <thead>

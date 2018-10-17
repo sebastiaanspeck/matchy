@@ -5,7 +5,7 @@
         <div id="heading" style="text-align: center">
             <table width="100%">
                 <tr>
-                    <td><h1>@lang('competitions.' . $league->name) - {{$league->season->data->name}}</h1></td>
+                    <td><h1>@lang('leagues.' . $league->name) - {{$league->season->data->name}}</h1></td>
                 </tr>
             </table>
         </div>

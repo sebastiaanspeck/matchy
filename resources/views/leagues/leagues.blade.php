@@ -16,7 +16,7 @@
                     @foreach($leagues as $league)
                         @php $country = $league->country->data; @endphp
                         <tr>
-                            <td scope="row" width="25%"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('competitions.' . $league->name)</a></td>
+                            <td scope="row" width="25%"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('leagues.' . $league->name)</a></td>
                             @php $country->flag = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($country->name); @endphp
                             <td scope="row" width="50%"><img src="/images/flags/shiny/16/{{$country->flag}}.png">&nbsp;&nbsp;@lang('countries.' . $country->name)</td>
                         </tr>
