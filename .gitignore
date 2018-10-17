@@ -27,5 +27,3 @@ config/soccerapi.php
 
 # Mac file
 .DS_Store
-
-config/app.php
