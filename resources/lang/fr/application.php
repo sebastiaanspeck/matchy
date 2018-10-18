@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Application Language Lines
@@ -99,5 +98,4 @@ return [
     'msg_no_livescores_today'   => 'Pas scores en direct pour aujourd\'hui.',
     'msg_no_matches_found'      => 'Aucune matches trouvée pour :date.',
     'msg_no_data'               => 'n\'est pas (encore) disponible pour cette fixture|ne sont pas (encore) disponibles pour cette fixture',
-
 ];

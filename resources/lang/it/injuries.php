@@ -18,7 +18,7 @@ return [
     'Hip/Thigh Injury'          => 'Infortunio ad Anca/Coscia',
     'Suspended'                 => 'Sospeso',
     'Thigh Muscle Strain'       => 'Stiramento Muscolare alla Coscia',
-    'MCL Knee Ligament Injury'  => 'Infortunio al Legamento Collaterale Mediale', #Not sure about this
+    'MCL Knee Ligament Injury'  => 'Infortunio al Legamento Collaterale Mediale',
     'Groin Strain'              => 'Stiramento dell\'Inguine',
     'Knock'                     => 'Colpo',
     'Ankle Ligaments'           => 'Legamenti dell\'Anca',
@@ -36,7 +36,7 @@ return [
     'Concussion'                => 'Concussione',
     'Virus'                     => 'Virus',
     'Head Injury'               => 'Infortunio alla Testa',
-    'ACL Knee Ligament Injury'  => 'Infortunio al Legamento Crociato Anteriore', #Not sure about this
+    'ACL Knee Ligament Injury'  => 'Infortunio al Legamento Crociato Anteriore',
     'Shoulder Injury'           => 'Infortunio alla Spalla',
     'Chest Injury'              => 'Infortunio al Petto',
     'Rib Injury'                => 'Infortunio alle Costole',
@@ -55,7 +55,7 @@ return [
     'Appendicitis'              => 'Appendicite',
     'Broken Arm'                => 'Braccio Rotto',
     'Eye Injury'                => 'Infortunio all\'Occhio',
-    'Hip Labrum Tear'           => 'Lacerazione del Labbro del Bacino', #Not sure about this
+    'Hip Labrum Tear'           => 'Lacerazione del Labbro del Bacino',
     'Patella Fracture'          => 'Frattura della Rotula',
     'LCL Knee Ligament Injury'  => 'Infortunio al Legamento Collaterale Laterale',
     'Viral Meningitis'          => 'Meningite Virale',
@@ -85,7 +85,7 @@ return [
     'Heart Condition'           => 'Malattia Cardiaca',
     'Broken Jaw'                => 'Infortunio alla Mandibola',
     'Achilles tendon rupture'   => 'Rottura del Tendine d\'Achille',
-    'PCL Knee Ligament Injury'  => 'Infortunio al Legamento Crociato Posteriore', #Not sure about this
+    'PCL Knee Ligament Injury'  => 'Infortunio al Legamento Crociato Posteriore',
     'Overtired'                 => 'Affaticamento',
     'Pneumonia'                 => 'Polmonite',
     'Oesophagitis'              => 'Esofagite',

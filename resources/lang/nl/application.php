@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Application Language Lines
@@ -99,5 +98,4 @@ return [
     'msg_no_livescores_today'   => 'Geen wedstrijden voor vandaag.',
     'msg_no_matches_found'      => 'Geen wedstrijden voor :date gevonden.',
     'msg_no_data'               => 'is (nog) niet beschikbaar voor deze wedstrijd|zijn (nog) niet beschikbaar voor deze wedstrijd',
-
 ];

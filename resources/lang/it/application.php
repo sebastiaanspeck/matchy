@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Application Language Lines
@@ -99,5 +98,4 @@ return [
     'msg_no_livescores_today'   => 'Nessun punteggio in diretta per oggi.',
     'msg_no_matches_found'      => 'Nessuna partita trovata per :date.',
     'msg_no_data'               => 'non è (ancora) disponibile per questa partita| non sono (ancora) disponibili per questa partita',
-
 ];

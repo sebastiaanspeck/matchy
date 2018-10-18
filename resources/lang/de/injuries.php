@@ -1,13 +1,13 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Injuries Language Lines
     |--------------------------------------------------------------------------
     |
-    | The following language lines are used for the injured players.
+    | The following language lines are used for the reasosn why players are
+    | missing.
     |
     */
 
@@ -97,5 +97,4 @@ return [
     'Sprained Finger'           => 'Sprained Finger',
     'Plantaris Injury'          => 'Plantaris Injury',
     'Jumpers Knee'              => 'Jumpers Knee',
-
 ];
