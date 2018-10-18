@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Injuries Language Lines
@@ -97,5 +96,4 @@ return [
     'Sprained Finger'           => 'Dito Slogato',
     'Plantaris Injury'          => 'Infortunio Plantare',
     'Jumpers Knee'              => 'Peritendite Rotulea',
-
 ];
