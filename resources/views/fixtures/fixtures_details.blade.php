@@ -369,35 +369,44 @@
                                 }
                             @endphp
                             <tr>
-                                @if(isset($home_player) && isset($home_player->player))
+                                @if(isset($home_player) && isset($away_player))
                                     <td style="width:1%">{{$home_player->number}}</td>
                                     <td style="width:1%"><img src="/images/flags/shiny/16/{{$home_player_nationality}}.png"></td>
                                     <td style="text-align: left">
-                                        {{$home_player->player->data->common_name}}
+                                        {{$home_player_common_name}}
                                         @foreach($home_player_stats as $stat)
                                             <img src="{{$stat}}">
                                         @endforeach
                                     </td>
-                                @else
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                @endif
-                                @if(isset($away_player) && isset($away_player->player))
                                     <td style="width: 1%"></td>
                                     <td style="text-align: right">
                                         @foreach($away_player_stats as $stat)
                                             <img src="{{$stat}}">
                                         @endforeach
-                                        {{$away_player->player->data->common_name}}
+                                        {{$away_player_common_name}}
                                     </td>
                                     <td style="width:1%"><img src="/images/flags/shiny/16/{{$away_player_nationality}}.png"></td>
                                     <td style="width:1%">{{$away_player->number}}</td>
-                                @else
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                @elseif(isset($home_player) && !isset($away_player))
+                                    <td style="width:1%">{{$home_player->number}}</td>
+                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$home_player_nationality}}.png"></td>
+                                    <td style="text-align: left">
+                                        {{$home_player_common_name}}
+                                        @foreach($home_player_stats as $stat)
+                                            <img src="{{$stat}}">
+                                        @endforeach
+                                    </td>
+                                @elseif(!isset($home_player) && isset($away_player))
+                                    <td colspan="4"></td>
+                                    <td style="width: 1%"></td>
+                                    <td style="text-align: right">
+                                        @foreach($away_player_stats as $stat)
+                                            <img src="{{$stat}}">
+                                        @endforeach
+                                        {{$away_player_common_name}}
+                                    </td>
+                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$away_player_nationality}}.png"></td>
+                                    <td style="width:1%">{{$away_player->number}}</td>
                                 @endif
                             </tr>
                         @endfor
