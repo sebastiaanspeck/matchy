@@ -11,24 +11,24 @@ return [
     |
     */
 
-    '1st Round'                     => '1st Round',
-    '2nd Round'                     => '2nd Round',
-    '2nd Round Qualifying'          => '2nd Round Qualifying',
-    '2nd Round Qualifying Replays'  => '2nd Round Qualifying Replays',
-    '3rd Round'                     => '3rd Round',
-    '4th Round'                     => '4th Round',
-    '5th Round'                     => '5th Round',
-    'Qualifying Round'              => 'Qualifying Round',
+    '1st Round'                     => '1er Tour',
+    '2nd Round'                     => '2nd Tour',
+    '2nd Round Qualifying'          => '2nd Tour Qualificatif',
+    '2nd Round Qualifying Replays'  => '2nd Tour Qualificatif - Match à rejouer',
+    '3rd Round'                     => '3rd Tour',
+    '4th Round'                     => '4th Tour',
+    '5th Round'                     => '5th Tour',
+    'Qualifying Round'              => 'Tour Qualificatif',
 
-    'Group Stage'                   => 'Group Stage',
-    '16th Finals'                   => '16th Finals',
-    '8th Finals'                    => '8th Finals',
-    'Quarter-finals'                => 'Quarter-finals',
-    'Semi-final'                    => 'Semi-final',
-    'Semi-finals'                   => 'Semi-finals',
-    '3rd Place Final'               => '3rd Place Final',
-    'Final'                         => 'Final',
+    'Group Stage'                   => 'Phase de Groupes',
+    '16th Finals'                   => '16éme de finale',
+    '8th Finals'                    => '8éme de finale',
+    'Quarter-finals'                => 'Quart de finale',
+    'Semi-final'                    => 'Demi-finale',
+    'Semi-finals'                   => 'Demi-finales',
+    '3rd Place Final'               => 'Finale pour la 3éme place',
+    'Final'                         => 'Finale',
 
-    'Play-offs'                     => 'Play-offs',
+    'Play-offs'                     => 'Barrages',
 
 ];
