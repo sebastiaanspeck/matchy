@@ -1,13 +1,12 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
-    | Cup Rounds Language Lines
+    | Cup Stages Language Lines
     |--------------------------------------------------------------------------
     |
-    | The following language lines are used for labels for the cups.
+    | The following language lines are used for labels for the cup stages.
     |
     */
 
@@ -30,5 +29,4 @@ return [
     'Final'                         => 'Final',
 
     'Play-offs'                     => 'Eliminatorias',
-
 ];

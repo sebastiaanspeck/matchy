@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Application Language Lines
@@ -60,6 +59,7 @@ return [
     'Substitutes'               => 'Substitutes',
     'Missing players'           => 'Missing players',
     'Coaches'                   => 'Coaches',
+    'penalties'                 => 'penalties',
 
     'Total shots'               => 'Total shots',
     'Shots on goal'             => 'Shots on goal',
@@ -99,6 +99,4 @@ return [
     'msg_no_livescores_today'   => 'No livescores for today.',
     'msg_no_matches_found'      => 'No matches found for :date.',
     'msg_no_data'               => 'is not (yet) available for this fixture|are not (yet) available for this fixture',
-
 ];
-

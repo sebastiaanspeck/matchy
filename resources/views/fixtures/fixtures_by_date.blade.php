@@ -94,7 +94,7 @@
                                     @if(is_null($fixture->scores->localteam_pen_score) || is_null($fixture->scores->visitorteam_pen_score))
                                         (PEN)
                                     @else
-                                         ({{$fixture->scores->localteam_pen_score}} - {{$fixture->scores->visitorteam_score}})
+                                         ({{$fixture->scores->localteam_pen_score}} - {{$fixture->scores->visitorteam_pen_score}})
                                     @endif
                                 </td>
                                 @break
@@ -169,7 +169,7 @@
                                     @if(is_null($fixture->scores->localteam_pen_score) || is_null($fixture->scores->visitorteam_pen_score))
                                          (PEN)
                                     @else
-                                         ({{$fixture->scores->localteam_pen_score}} - {{$fixture->scores->visitorteam_score}})
+                                         ({{$fixture->scores->localteam_pen_score}} - {{$fixture->scores->visitorteam_pen_score}})
                                     @endif
                                     </td>
                                     @break

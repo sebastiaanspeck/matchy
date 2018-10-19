@@ -84,13 +84,9 @@ class SoccerAPIClient {
 
     protected function callData($url)
     {
-
         return $this->call($url, true);
     }
 
-    /**
-     * @param $include - string or array of relations to include with the query
-     */
     public function setInclude($include)
     {
         if(is_array($include) && !empty($include))
@@ -103,9 +99,6 @@ class SoccerAPIClient {
         return $this;
     }
 
-	/**
-	 * @param $leagues - string or array of leagues to return only specific leagues with the query
-	 */
 	public function setLeagues($leagues)
 	{
 		if(is_array($leagues) && !empty($leagues))
@@ -118,9 +111,6 @@ class SoccerAPIClient {
 		return $this;
 	}
 
-    /**
-     * @param $perPage - int of per_page limit data in request
-     */
     public function setPerPage($perPage)
     {
         $this->perPage = $perPage;
@@ -128,9 +118,6 @@ class SoccerAPIClient {
         return $this;
     }
 
-    /**
-     * @param $page - int of requested page
-     */
     public function setPage($page)
     {
         $this->page = $page;
