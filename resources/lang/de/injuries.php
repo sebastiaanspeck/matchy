@@ -14,12 +14,6 @@ return [
     'Unknown'                   => 'Unbekannt',
     'Ankle/Foot Injury'         => 'Knöchelverletzung',
     'Facial Injury'             => 'Gesichtsverletzung',
-    /*
-     * Note: I'm not sure, which tendon you mean, as the word is ambiguos.
-     * Tendon in the knee: "Kreuzbandriss" (pretty common injury in the knee, a rupture of the Ligamenta cruciata genus)
-     * Tendon at the back of the foot: "Achillessehne" (the achilles tendon, rupturing that would render a person unable to walk)
-     * Injury of tendons in general: Sehnenzerrung
-     */
     'Hamstring'                 => 'Sehnenzerrung',
     'Calf/Shin Injury'          => 'Schienbeinverletzung',
     'Hip/Thigh Injury'          => 'Hüftverletzung',
@@ -27,9 +21,6 @@ return [
     'Thigh Muscle Strain'       => 'Oberschenkelmuskelzerrung',
     'MCL Knee Ligament Injury'  => 'Verletzung am Außenband (Knie)',
     'Groin Strain'              => 'Leistenzerrung',
-    /*
-     * Note: How does a player get the condition "Knock"? Again, the literal translation is likely to be wrong.
-     */
     'Knock'                     => 'Schlag',
     'Ankle Ligaments'           => 'Knöchelbänder',
     'Back Injury'               => 'Rückenverletzung',
