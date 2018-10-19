@@ -10,7 +10,7 @@ return [
     |
     */
 
-    '1st Round'                     => 'Putaran Pertama,
+    '1st Round'                     => 'Putaran Pertama',
     '2nd Round'                     => 'Putaran Kedua',
     '2nd Round Qualifying'          => 'Penyisihan Putaran Kedua',
     '2nd Round Qualifying Replays'  => 'Siaran Ulang Penyisihan Putaran Kedua',
