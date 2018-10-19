@@ -23,10 +23,7 @@ return [
     'Hamstring'                 => 'Sehnenzerrung',
     'Calf/Shin Injury'          => 'Schienbeinverletzung',
     'Hip/Thigh Injury'          => 'Hüftverletzung',
-    /*
-     * Note: I'm not sure what medical condition "suspended" describes. The literal translation is most likely wrong.
-     */
-    'Suspended'                 => 'Schwebend',
+    'Suspended'                 => 'Gesperrt',
     'Thigh Muscle Strain'       => 'Oberschenkelmuskelzerrung',
     'MCL Knee Ligament Injury'  => 'Verletzung am Außenband (Knie)',
     'Groin Strain'              => 'Leistenzerrung',
@@ -63,11 +60,6 @@ return [
     'Achilles tendonitis'       => 'Achillessehnenentzündung',
     'Metatarsal Fracture'       => 'Mittelfußknochenbruch',
     'Heel Injury'               => 'Fersenverletzung',
-    /*
-     * Note: I hope this is correct, an image of such wound is seen at the link below.
-     * Warning: bloody wound
-     * http://img.bulawayo24.com/articles/Rooney-Cut-Leg.jpg
-     */
     'Gashed Leg'                => 'Fleischwunde am Bein',
     'Broken Hand'               => 'Gebrochene Hand',
     'Appendicitis'              => 'Blinddarmentzündung',
