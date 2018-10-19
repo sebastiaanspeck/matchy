@@ -369,9 +369,9 @@
                                 }
                                 
                                 if($away_player_nationality == "Unknown") {
-                                    error_log("Missing nationality for " . $away_player->player_id);
+                                    \Illuminate\Support\Facades\Log::alert("Missing nationality for " . $away_player->player_id);
                                 } elseif($home_player_nationality == "Unknown"){
-                                    error_log("Missing nationality for " . $home_player->player_id);
+                                    \Illuminate\Support\Facades\Log::alert("Missing nationality for " . $home_player->player_id);
                                 }
                             @endphp
                             <tr>
@@ -477,9 +477,9 @@
                                 }
                                 
                                 if($away_player_nationality == "Unknown") {
-                                    error_log("Missing nationality for " . $away_player->player_id);
+                                    \Illuminate\Support\Facades\Log::alert("Missing nationality for " . $away_player->player_id);
                                 } elseif($home_player_nationality == "Unknown"){
-                                    error_log("Missing nationality for " . $home_player->player_id);
+                                    \Illuminate\Support\Facades\Log::alert("Missing nationality for " . $home_player->player_id);
                                 }
                             @endphp
                             <tr>

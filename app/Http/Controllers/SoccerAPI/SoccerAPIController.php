@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Carbon\Carbon;
 use DateTime;
+use Log;
 
 class SoccerAPIController extends BaseController
 {
@@ -379,7 +380,7 @@ class SoccerAPIController extends BaseController
         }
 
         if (!file_exists('images/flags/shiny/16/' . $country . '.png')) {
-            error_log('Missing flag for: ' . $country);
+            Log::alert('Missing flag for: ' . $country);
             $country = 'Unknown';
         }
 
