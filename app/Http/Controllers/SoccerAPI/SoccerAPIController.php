@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Carbon\Carbon;
 use DateTime;
+use App\CustomSoccerApi;
 
 class SoccerAPIController extends BaseController
 {
@@ -60,11 +61,11 @@ class SoccerAPIController extends BaseController
         $dateFormat = self::getDateFormat();
 
         $soccerAPI = new SoccerAPI();
+        $customSoccerAPI = new CustomSoccerApi();
         $includeLeague = 'country,season';
         $includeSeason = 'upcoming.localTeam,upcoming.visitorTeam,upcoming.league,upcoming.stage,upcoming.round,results:order(starting_at|desc),results.localTeam,results.visitorTeam,results.league,results.round,results.stage';
         $includeTopscorers = 'goalscorers.player,goalscorers.team';
-
-        /* $includeTopscorersAggregated = 'aggregatedGoalscorers.player,aggregatedGoalscorers.team'; */
+        $includeTopscorersAggregated = 'aggregatedGoalscorers.player,aggregatedGoalscorers.team';
 
         $league = $soccerAPI->leagues()->setInclude($includeLeague)->byId($leagueId)->data;
 
@@ -80,14 +81,15 @@ class SoccerAPIController extends BaseController
             $topscorersDefault = $soccerAPI->topscorers()->setInclude($includeTopscorers)->bySeasonId($league->current_season_id)->goalscorers->data;
 
             /* cups don't work yet -> try: check with current_stage_id */
+            
             if (count($topscorersDefault) > 0) {
                 $topscorers = self::addPagination($topscorersDefault, 10);
-                /* $topscorersAggregated = $soccerAPI->topscorers()->setInclude($includeTopscorersAggregated)->aggregatedBySeasonId($league->current_season_id)->aggregatedGoalscorers->data;
-                 if(count($topscorersAggregated) > 0) {
-                     $topscorers = $topscorersAggregated;
-                 } else {
-                     $topscorers = array();
-                 }*/
+                $topscorersAggregated = $customSoccerAPI->topscorers()->setInclude($includeTopscorersAggregated)->aggregatedBySeasonId($league->current_season_id)->aggregatedGoalscorers->data;
+                if(count($topscorersAggregated) > 0) {
+                    $topscorers = $topscorersAggregated;
+                } else {
+                    $topscorers = array();
+                }
             }
         }
 
