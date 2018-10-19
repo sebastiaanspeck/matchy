@@ -367,6 +367,12 @@
                                     $away_player_nationality = "Unknown";
                                     $away_player_common_name = $away_player->player_name;
                                 }
+                                
+                                if($away_player_nationality == "Unknown") {
+                                    error_log("Missing nationality for " . $away_player->player_id);
+                                } elseif($home_player_nationality == "Unknown"){
+                                    error_log("Missing nationality for " . $home_player->player_id);
+                                }
                             @endphp
                             <tr>
                                 @if(isset($home_player) && isset($away_player))
@@ -468,6 +474,12 @@
                                 } else {
                                     $away_player_nationality = "Unknown";
                                     $away_player_common_name = $away_player->player_name;
+                                }
+                                
+                                if($away_player_nationality == "Unknown") {
+                                    error_log("Missing nationality for " . $away_player->player_id);
+                                } elseif($home_player_nationality == "Unknown"){
+                                    error_log("Missing nationality for " . $home_player->player_id);
                                 }
                             @endphp
                             <tr>
