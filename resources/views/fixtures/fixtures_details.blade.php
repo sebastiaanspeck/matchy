@@ -58,9 +58,9 @@
                     <span style="font-size: x-large"> {{$fixture->scores->localteam_score}} - {{$fixture->scores->visitorteam_score}} </span><br>
                     <span>
                     @if(isset($fixture->scores->localteam_pen_score) && isset($fixture->scores->visitorteam_pen_score))
-                        ({{$fixture->scores->localteam_pen_score}} - {{$fixture->scores->visitorteam_pen_score}}) penalties
+                        ({{$fixture->scores->localteam_pen_score}} - {{$fixture->scores->visitorteam_pen_score}}) @lang('application.penalties')
                     @endif
-                    Penalties</span>
+                    </span>
                     @break
                 @case("AET")
                     <span style="font-size: x-large"> {{$fixture->scores->ft_score}} (ET) </span>

@@ -59,6 +59,7 @@ return [
     'Substitutes'               => 'Wisselspelers',
     'Missing players'           => 'Ontbrekende spelers',
     'Coaches'                   => 'Coaches',
+    'penalties'                 => 'penalties',
 
     'Total shots'               => 'Totale schoten',
     'Shots on goal'             => 'Schoten op doel',

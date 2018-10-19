@@ -59,6 +59,7 @@ return [
     'Substitutes'               => 'Substitutes',
     'Missing players'           => 'Missing players',
     'Coaches'                   => 'Coaches',
+    'penalties'                 => 'penalties',
 
     'Total shots'               => 'Total shots',
     'Shots on goal'             => 'Shots on goal',
