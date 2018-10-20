@@ -5,7 +5,7 @@
         <div id="heading" style="text-align: center">
             <table width="100%">
                 <tr>
-                    <td><h1>@lang('leagues.' . $league->name) - {{$league->season->data->name}}</h1></td>
+                    <td><h1>@lang("leagues." . $league->name) - {{$league->season->data->name}}</h1></td>
                 </tr>
             </table>
         </div>
@@ -14,22 +14,22 @@
         <ul class="nav nav-tabs" id="nav_tabs" role="tablist">
             @if($last_fixtures->count() > 0)
             <li class="nav-item">
-                <a class="nav-link active" id="last_fixtures-tab" data-toggle="tab" href="#last_fixtures" role="tab" aria-controls="last_fixtures" aria-selected="true">@choice('application.last fixtures', $last_fixtures->count())</a>
+                <a class="nav-link active" id="last_fixtures-tab" data-toggle="tab" href="#last_fixtures" role="tab" aria-controls="last_fixtures" aria-selected="true">@choice("application.last fixtures", $last_fixtures->count())</a>
             </li>
             @endif
             @if($upcoming_fixtures->count() > 0)
                 <li class="nav-item">
-                    <a class="nav-link" id="upcoming_fixtures-tab" data-toggle="tab" href="#upcoming_fixtures" role="tab" aria-controls="upcoming_fixtures" aria-selected="false">@choice('application.upcoming fixtures', $upcoming_fixtures->count())</a>
+                    <a class="nav-link" id="upcoming_fixtures-tab" data-toggle="tab" href="#upcoming_fixtures" role="tab" aria-controls="upcoming_fixtures" aria-selected="false">@choice("application.upcoming fixtures", $upcoming_fixtures->count())</a>
                 </li>
             @endif
             @if(count($standings_raw) > 0)
                 <li class="nav-item">
-                    <a class="nav-link" id="standings-tab" data-toggle="tab" href="#standings" role="tab" aria-controls="standings" aria-selected="false">@lang('application.Standings')</a>
+                    <a class="nav-link" id="standings-tab" data-toggle="tab" href="#standings" role="tab" aria-controls="standings" aria-selected="false">@lang("application.Standings")</a>
                 </li>
             @endif
             @if(count($topscorers) > 0)
                 <li class="nav-item">
-                    <a class="nav-link" id="topscorers-tab" data-toggle="tab" href="#topscorers" role="tab" aria-controls="topscorers" aria-selected="false">@lang('application.Top Scorers')</a>
+                    <a class="nav-link" id="topscorers-tab" data-toggle="tab" href="#topscorers" role="tab" aria-controls="topscorers" aria-selected="false">@lang("application.Top Scorers")</a>
                 </li>
             @endif
         </ul>
@@ -45,16 +45,16 @@
                             $awayTeam = $last_fixture->visitorTeam->data;
                             
                             if($homeTeam->national_team == true) {
-                                $homeTeam->name = trans('countries.' . $homeTeam->name);
+                                $homeTeam->name = trans("countries." . $homeTeam->name);
                             }
                             if($awayTeam->national_team == true) {
-                                $awayTeam->name = trans('countries.' . $awayTeam->name);
+                                $awayTeam->name = trans("countries." . $awayTeam->name);
                             }
                             
-                            if(strpos($homeTeam->name, 'countries') !== false) {
-                                Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $homeTeam->name) . ' in ' . app()->getLocale() . '/countries.php');
-                            } elseif(strpos($awayTeam->name, 'countries') !== false) {
-                                Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $awayTeam->name) . ' in ' . app()->getLocale() . '/countries.php');
+                            if(strpos($homeTeam->name, "countries") !== false) {
+                                Log::warning("Missing translation-string for: " . str_replace("countries.", "", $homeTeam->name) . " in " . app()->getLocale() . "/countries.php");
+                            } elseif(strpos($awayTeam->name, "countries") !== false) {
+                                Log::warning("Missing translation-string for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
                             }
                             
                             if(in_array($last_fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
@@ -87,15 +87,15 @@
                                 @if($last_round_id !== $last_fixture->round->data->name)
                                     <tr>
                                         <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
-                                            @if($last_fixture->stage->data->name !== 'Regular Season')
-                                                @lang('cup_stages.' . $last_fixture->stage->data->name) -
+                                            @if($last_fixture->stage->data->name !== "Regular Season")
+                                                @lang("cup_stages." . $last_fixture->stage->data->name) -
                                             @endif
-                                            @lang('application.Matchday') {{$last_fixture->round->data->name}}</td>
+                                            @lang("application.Matchday") {{$last_fixture->round->data->name}}</td>
                                     </tr>
                                 @endif
                             @elseif($last_stage_id !== $last_fixture->stage->data->name)
                                 <tr>
-                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('cup_stages.' . $last_fixture->stage->data->name)</td>
+                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang("cup_stages." . $last_fixture->stage->data->name)</td>
                                 </tr>
                             @endif
                             <tr>
@@ -161,15 +161,15 @@
                                         @if($last_round_id !== $last_fixture->round->data->name)
                                             <tr>
                                                 <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
-                                                    @if($last_fixture->stage->data->name !== 'Regular Season')
-                                                        @lang('cup_stages.' . $last_fixture->stage->data->name) -
+                                                    @if($last_fixture->stage->data->name !== "Regular Season")
+                                                        @lang("cup_stages." . $last_fixture->stage->data->name) -
                                                     @endif
-                                                    @lang('application.Matchday') {{$last_fixture->round->data->name}}</td>
+                                                    @lang("application.Matchday") {{$last_fixture->round->data->name}}</td>
                                             </tr>
                                         @endif
                                     @elseif($last_stage_id !== $last_fixture->stage->data->name)
                                         <tr>
-                                            <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('cup_stages.' . $last_fixture->stage->data->name)</td>
+                                            <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang("cup_stages." . $last_fixture->stage->data->name)</td>
                                         </tr>
                                     @endif
                                     <tr>
@@ -231,16 +231,16 @@
                             $awayTeam = $upcoming_fixture->visitorTeam->data;
                             
                             if($homeTeam->national_team == true) {
-                                $homeTeam->name = trans('countries.' . $homeTeam->name);
+                                $homeTeam->name = trans("countries." . $homeTeam->name);
                             }
                             if($awayTeam->national_team == true) {
-                                $awayTeam->name = trans('countries.' . $awayTeam->name);
+                                $awayTeam->name = trans("countries." . $awayTeam->name);
                             }
                             
-                            if(strpos($homeTeam->name, 'countries') !== false) {
-                                Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $homeTeam->name) . ' in ' . app()->getLocale() . '/countries.php');
-                            } elseif(strpos($awayTeam->name, 'countries') !== false) {
-                                Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $awayTeam->name) . ' in ' . app()->getLocale() . '/countries.php');
+                            if(strpos($homeTeam->name, "countries") !== false) {
+                                Log::warning("Missing translation-string for: " . str_replace("countries.", "", $homeTeam->name) . " in " . app()->getLocale() . "/countries.php");
+                            } elseif(strpos($awayTeam->name, "countries") !== false) {
+                                Log::warning("Missing translation-string for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
                             }
                         @endphp
                         @if($upcoming_fixture->league_id == $last_league_id)
@@ -248,15 +248,15 @@
                                 @if($last_round_id !== $upcoming_fixture->round->data->name)
                                     <tr>
                                         <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
-                                            @if($upcoming_fixture->stage->data->name !== 'Regular Season')
-                                                @lang('cup_stages.' . $upcoming_fixture->stage->data->name) -
+                                            @if($upcoming_fixture->stage->data->name !== "Regular Season")
+                                                @lang("cup_stages." . $upcoming_fixture->stage->data->name) -
                                             @endif
-                                            @lang('application.Matchday') {{$upcoming_fixture->round->data->name}}</td>
+                                            @lang("application.Matchday") {{$upcoming_fixture->round->data->name}}</td>
                                     </tr>
                                 @endif
                             @elseif($last_stage_id !== $upcoming_fixture->stage->data->name)
                                 <tr>
-                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('cup_stages.' . $upcoming_fixture->stage->data->name)</td>
+                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang("cup_stages." . $upcoming_fixture->stage->data->name)</td>
                                 </tr>
                             @endif
                             <tr>
@@ -277,15 +277,15 @@
                                     @if($last_round_id !== $upcoming_fixture->round->data->name)
                                         <tr>
                                             <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
-                                                @if($upcoming_fixture->stage->data->name !== 'Regular Season')
-                                                    @lang('cup_stages.' . $upcoming_fixture->stage->data->name) -
+                                                @if($upcoming_fixture->stage->data->name !== "Regular Season")
+                                                    @lang("cup_stages." . $upcoming_fixture->stage->data->name) -
                                                 @endif
-                                                @lang('application.Matchday') {{$upcoming_fixture->round->data->name}}</td>
+                                                @lang("application.Matchday") {{$upcoming_fixture->round->data->name}}</td>
                                         </tr>
                                     @endif
                                 @elseif($last_stage_id !== $upcoming_fixture->stage->data->name)
                                     <tr>
-                                        <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('cup_stages.' . $upcoming_fixture->stage->data->name)</td>
+                                        <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang("cup_stages." . $upcoming_fixture->stage->data->name)</td>
                                     </tr>
                                 @endif
                                 <thead>
@@ -324,8 +324,8 @@
                         <table class="table table-light table-sm" style="width:100%">
                             @if(count($standings_raw) > 1)
                                 <caption>
-                                @if(strpos($standings->name, 'Group') !== false)
-                                    {{str_replace('Group', trans('application.Group'), $standings->name)}}
+                                @if(strpos($standings->name, "Group") !== false)
+                                    {{str_replace("Group", trans("application.Group"), $standings->name)}}
                                 @else
                                     {{$standings->name}}
                                 @endif
@@ -333,26 +333,26 @@
                             @endif
                             <thead>
                                 <tr>
-                                    <th scope="col" width="1%">@lang('application.No.')</th>
-                                    <th scope="col" width="35%">@lang('application.Team')</th>
-                                    <th scope="col">@lang('application.Played')</th>
-                                    <th scope="col">@lang('application.Won')</th>
-                                    <th scope="col">@lang('application.Draw')</th>
-                                    <th scope="col">@lang('application.Lost')</th>
-                                    <th scope="col" colspan="2">@lang('application.Goals')</th>
-                                    <th scope="col">@lang('application.Points')</th>
-                                    <th scope="col" width="24%">@lang('application.Form')</th>
+                                    <th scope="col" width="1%">@lang("application.No.")</th>
+                                    <th scope="col" width="35%">@lang("application.Team")</th>
+                                    <th scope="col">@lang("application.Played")</th>
+                                    <th scope="col">@lang("application.Won")</th>
+                                    <th scope="col">@lang("application.Draw")</th>
+                                    <th scope="col">@lang("application.Lost")</th>
+                                    <th scope="col" colspan="2">@lang("application.Goals")</th>
+                                    <th scope="col">@lang("application.Points")</th>
+                                    <th scope="col" width="24%">@lang("application.Form")</th>
                                 </tr>
                             </thead>
                             <tbody>
                                     @foreach($standing as $team)
                                         @php
                                             if($team->team->data->national_team == true) {
-                                                $team->team_name = trans('countries.' . $team->team_name);
+                                                $team->team_name = trans("countries." . $team->team_name);
                                             }
                                             
-                                            if(strpos($team->team_name, 'countries') !== false) {
-                                                Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $team->team_name) . ' in ' . app()->getLocale() . '/countries.php');
+                                            if(strpos($team->team_name, "countries") !== false) {
+                                                Log::warning("Missing translation-string for: " . str_replace("countries.", "", $team->team_name) . " in " . app()->getLocale() . "/countries.php");
                                             }
                                         @endphp
                                         <tr>
@@ -370,13 +370,13 @@
                                                 @foreach($recent_forms as $recent_form)
                                                     @switch($recent_form)
                                                         @case("W")
-                                                            <span class="result-icon result-icon-w">@lang('application.' . $recent_form)</span>
+                                                            <span class="result-icon result-icon-w">@lang("application." . $recent_form)</span>
                                                             @break
                                                         @case("D")
-                                                            <span class="result-icon result-icon-d">@lang('application.' . $recent_form)</span>
+                                                            <span class="result-icon result-icon-d">@lang("application." . $recent_form)</span>
                                                             @break
                                                         @case("L")
-                                                            <span class="result-icon result-icon-l">@lang('application.' . $recent_form)</span>
+                                                            <span class="result-icon result-icon-l">@lang("application." . $recent_form)</span>
                                                             @break
                                                     @endswitch
                                                 @endforeach
@@ -404,10 +404,10 @@
                     <table class="table table-light table-striped table-sm" style="width: 100%">
                         <thead>
                             <tr>
-                                <th scope="col" width="1%">@lang('application.No.')</th>
-                                <th scope="col">@lang('application.Player')</th>
-                                <th scope="col">@lang('application.Team')</th>
-                                <th scope="col">@lang('application.Goals')</th>
+                                <th scope="col" width="1%">@lang("application.No.")</th>
+                                <th scope="col">@lang("application.Player")</th>
+                                <th scope="col">@lang("application.Team")</th>
+                                <th scope="col">@lang("application.Goals")</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -425,11 +425,11 @@
                                         }
                                         
                                         if($team->national_team == true) {
-                                            $team->name = trans('countries.' . $team->name);
+                                            $team->name = trans("countries." . $team->name);
                                         }
                                         
-                                        if(strpos($team->name, 'countries') !== false) {
-                                            Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $team->name) . ' in ' . app()->getLocale() . '/countries.php');
+                                        if(strpos($team->name, "countries") !== false) {
+                                            Log::warning("Missing translation-string for: " . str_replace("countries.", "", $team->name) . " in " . app()->getLocale() . "/countries.php");
                                         }
                                     @endphp
                                     <td scope="row"><img src="/images/flags/shiny/16/{{$player->nationality}}.png">&nbsp;&nbsp;{{$player->common_name}}</td>

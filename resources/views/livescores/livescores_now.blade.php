@@ -25,16 +25,16 @@
                         $awayTeam = $livescore->visitorTeam->data;
                         
                         if($homeTeam->national_team == true) {
-                            $homeTeam->name = trans('countries.' . $homeTeam->name);
+                            $homeTeam->name = trans("countries." . $homeTeam->name);
                         }
                         if($awayTeam->national_team == true) {
-                            $awayTeam->name = trans('countries.' . $awayTeam->name);
+                            $awayTeam->name = trans("countries." . $awayTeam->name);
                         }
                         
-                        if(strpos($homeTeam->name, 'countries') !== false) {
-                            Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $homeTeam->name) . ' in ' . app()->getLocale() . '/countries.php');
-                        } elseif(strpos($awayTeam->name, 'countries') !== false) {
-                            Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $awayTeam->name) . ' in ' . app()->getLocale() . '/countries.php');
+                        if(strpos($homeTeam->name, "countries") !== false) {
+                            Log::warning("Missing translation-string for: " . str_replace("countries.", "", $homeTeam->name) . " in " . app()->getLocale() . "/countries.php");
+                        } elseif(strpos($awayTeam->name, "countries") !== false) {
+                            Log::warning("Missing translation-string for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
                         }
                     @endphp
                     @if($livescore->league_id == $last_league_id)
@@ -42,15 +42,15 @@
                             @if($last_round_id !== $livescore->round->data->name)
                                 <tr>
                                     <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
-                                        @if($livescore->stage->data->name !== 'Regular Season')
-                                            @lang('cup_stages.' . $livescore->stage->data->name) -
+                                        @if($livescore->stage->data->name !== "Regular Season")
+                                            @lang("cup_stages." . $livescore->stage->data->name) -
                                         @endif
-                                        @lang('application.Matchday') {{$livescore->round->data->name}}</td>
+                                        @lang("application.Matchday") {{$livescore->round->data->name}}</td>
                                 </tr>
                             @endif
                         @elseif($last_stage_id !== $livescore->stage->data->name)
                             <tr>
-                                <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('cup_stages.' . $livescore->stage->data->name)</td>
+                                <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang("cup_stages." . $livescore->stage->data->name)</td>
                             </tr>
                         @endif
                         <tr>
@@ -81,16 +81,16 @@
                                 @if($last_round_id !== $livescore->round->data->name)
                                     <tr>
                                         <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">
-                                            <a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('leagues.' . $league->name)</a> -
-                                            @if($livescore->stage->data->name !== 'Regular Season')
-                                                @lang('cup_stages.' . $livescore->stage->data->name) -
+                                            <a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang("leagues." . $league->name)</a> -
+                                            @if($livescore->stage->data->name !== "Regular Season")
+                                                @lang("cup_stages." . $livescore->stage->data->name) -
                                             @endif
-                                            @lang('application.Matchday') {{$livescore->round->data->name}}</td>
+                                            @lang("application.Matchday") {{$livescore->round->data->name}}</td>
                                     </tr>
                                 @endif
                             @elseif($last_stage_id !== $livescore->stage->data->name)
                                 <tr>
-                                    <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('leagues.' . $league->name)</a> - @lang('cup_stages.' . $livescore->stage->data->name)</td>
+                                    <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang("leagues." . $league->name)</a> - @lang("cup_stages." . $livescore->stage->data->name)</td>
                                 </tr>
                             @endif
                             <thead>

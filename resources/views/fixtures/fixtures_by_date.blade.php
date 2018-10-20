@@ -3,7 +3,7 @@
 @section("content")
     <div class = "container">
         @if(isset($date))
-            <h1>@lang('application.Fixtures') - {{date($date_format, strtotime($date))}}</h1>
+            <h1>@lang("application.Fixtures") - {{date($date_format, strtotime($date))}}</h1>
         @endif
 
         @if(count($fixtures) >= 1 && gettype($fixtures) == "array")
@@ -19,16 +19,16 @@
                     $awayTeam = $fixture->visitorTeam->data;
                     
                     if($homeTeam->national_team == true) {
-                        $homeTeam->name = trans('countries.' . $homeTeam->name);
+                        $homeTeam->name = trans("countries." . $homeTeam->name);
                     }
                     if($awayTeam->national_team == true) {
-                        $awayTeam->name = trans('countries.' . $awayTeam->name);
+                        $awayTeam->name = trans("countries." . $awayTeam->name);
                     }
                     
-                    if(strpos($homeTeam->name, 'countries') !== false) {
-                        Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $homeTeam->name) . ' in ' . app()->getLocale() . '/countries.php');
-                    } elseif(strpos($awayTeam->name, 'countries') !== false) {
-                        Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $awayTeam->name) . ' in ' . app()->getLocale() . '/countries.php');
+                    if(strpos($homeTeam->name, "countries") !== false) {
+                        Log::warning("Missing translation-string for: " . str_replace("countries.", "", $homeTeam->name) . " in " . app()->getLocale() . "/countries.php");
+                    } elseif(strpos($awayTeam->name, "countries") !== false) {
+                        Log::warning("Missing translation-string for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
                     }
                     
                     if(in_array($fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
@@ -61,15 +61,15 @@
                         @if($last_round_id !== $fixture->round->data->name)
                             <tr>
                                 <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
-                                    @if($fixture->stage->data->name !== 'Regular Season')
-                                        @lang('cup_stages.' . $fixture->stage->data->name) -
+                                    @if($fixture->stage->data->name !== "Regular Season")
+                                        @lang("cup_stages." . $fixture->stage->data->name) -
                                     @endif
-                                    @lang('application.Matchday') - {{$fixture->round->data->name}}</td>
+                                    @lang("application.Matchday") - {{$fixture->round->data->name}}</td>
                             </tr>
                         @endif
                     @elseif($last_stage_id !== $fixture->stage->data->name)
                         <tr>
-                            <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('cup_stages.' . $fixture->stage->data->name)</td>
+                            <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang("cup_stages." . $fixture->stage->data->name)</td>
                         </tr>
                     @endif
                     <tr>
@@ -125,16 +125,16 @@
                             @if($last_round_id !== $fixture->round->data->name)
                                 <tr>
                                     <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">
-                                        <a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('leagues.' . $league->name)</a> -
-                                        @if($fixture->stage->data->name !== 'Regular Season')
-                                            @lang('cup_stages.' . $fixture->stage->data->name) -
+                                        <a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang("leagues." . $league->name)</a> -
+                                        @if($fixture->stage->data->name !== "Regular Season")
+                                            @lang("cup_stages." . $fixture->stage->data->name) -
                                         @endif
-                                        @lang('application.Matchday') {{$fixture->round->data->name}}</td>
+                                        @lang("application.Matchday") {{$fixture->round->data->name}}</td>
                                 </tr>
                             @endif
                         @elseif($last_stage_id !== $fixture->stage->data->name)
                             <tr>
-                                <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('leagues.' . $league->name)</a> - @lang('cup_stages.' . $fixture->stage->data->name)</td>
+                                <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang("leagues." . $league->name)</a> - @lang("cup_stages." . $fixture->stage->data->name)</td>
                             </tr>
                         @endif
                         <thead>
@@ -200,7 +200,7 @@
             </tbody>
         </table>
         @else
-            <p>@lang('application.msg_no_matches_found', ["date" => date($date_format, strtotime($date))])</p>
+            <p>@lang("application.msg_no_matches_found", ["date" => date($date_format, strtotime($date))])</p>
         @endif
     </div>
 @endsection

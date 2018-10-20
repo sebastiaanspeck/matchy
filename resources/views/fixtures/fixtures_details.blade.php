@@ -15,16 +15,16 @@
             $awayTeam = $fixture->visitorTeam->data;
             
             if($homeTeam->national_team == true) {
-                $homeTeam->name = trans('countries.' . $homeTeam->name);
+                $homeTeam->name = trans("countries." . $homeTeam->name);
             }
             if($awayTeam->national_team == true) {
-                $awayTeam->name = trans('countries.' . $awayTeam->name);
+                $awayTeam->name = trans("countries." . $awayTeam->name);
             }
             
-            if(strpos($homeTeam->name, 'countries') !== false) {
-                Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $homeTeam->name) . ' in ' . app()->getLocale() . '/countries.php');
-            } elseif(strpos($awayTeam->name, 'countries') !== false) {
-                Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $awayTeam->name) . ' in ' . app()->getLocale() . '/countries.php');
+            if(strpos($homeTeam->name, "countries") !== false) {
+                Log::warning("Missing translation-string for: " . str_replace("countries.", "", $homeTeam->name) . " in " . app()->getLocale() . "/countries.php");
+            } elseif(strpos($awayTeam->name, "countries") !== false) {
+                Log::warning("Missing translation-string for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
             }
             
             $events = $fixture->events->data;
@@ -45,7 +45,7 @@
 
 
         <div id="heading" style="text-align: center">
-            <h1><a href=" {{route("leaguesDetails", ["id" => $league->id])}} "> @lang('leagues.' . $league->name) </a></h1>
+            <h1><a href=" {{route("leaguesDetails", ["id" => $league->id])}} "> @lang("leagues." . $league->name) </a></h1>
                 <table style="width:100%">
                     <tr>
                         <td width="49%"><img style="max-height: 200px; max-width: 200px" src={{$homeTeam->logo_path}}></td>
@@ -64,7 +64,7 @@
                     <span style="font-size: x-large"> {{$fixture->scores->localteam_score}} - {{$fixture->scores->visitorteam_score}} </span><br>
                     <span>
                     @if(isset($fixture->scores->localteam_pen_score) && isset($fixture->scores->visitorteam_pen_score))
-                        ({{$fixture->scores->localteam_pen_score}} - {{$fixture->scores->visitorteam_pen_score}}) @lang('application.penalties')
+                        ({{$fixture->scores->localteam_pen_score}} - {{$fixture->scores->visitorteam_pen_score}}) @lang("application.penalties")
                     @endif
                     </span>
                     @break
@@ -129,7 +129,7 @@
                                 @if($event->type == "substitution")
                                     <td scope="row" style="text-align:right" width="1%"> {{$event->minute}}&apos;</td>
                                     <td scope="row" style="text-align:center" width="1%"><img src="/images/events/{{$event->type}}.svg"></td>
-                                    <td scope="row" style="text-align:left" width="49%">{{$event->player_name}} <img src='/images/events/substitution-in.svg'> {{$event->related_player_name}} <img src='/images/events/substitution-out.svg'></td>
+                                    <td scope="row" style="text-align:left" width="49%">{{$event->player_name}} <img src="/images/events/substitution-in.svg"> {{$event->related_player_name}} <img src="/images/events/substitution-out.svg"></td>
                                 @else
                                     <td scope="row" style="text-align:right" width="1%">{{$event->minute}}&apos;</td>
                                     <td scope="row" style="text-align:center" width="1%"><img src="/images/events/{{$event->type}}.svg"></td>
@@ -153,7 +153,7 @@
                         </tbody>
                     </table>
                 @else
-                    <span style="font-weight: bold">@lang('application.Match Summary') @choice('application.msg_no_data', 1)</span>
+                    <span style="font-weight: bold">@lang("application.Match Summary") @choice("application.msg_no_data", 1)</span>
                 @endif
             </div>
             <div class="tab-pane fade" id="statistics" role="tabpanel" aria-labelledby="statistics-tab">
@@ -283,7 +283,7 @@
                         @endforeach
                     </table>
                 @else
-                    <span style="font-weight: bold">@lang('application.Statistics') @choice('application.msg_no_data', 2)</span>
+                    <span style="font-weight: bold">@lang("application.Statistics") @choice("application.msg_no_data", 2)</span>
                 @endif
             </div>
             <div class="tab-pane fade" id="lineups" role="tabpanel" aria-labelledby="lineups-tab">
@@ -295,7 +295,7 @@
                                 <span>{{$fixture->formations->localteam_formation}}</span>
                             </td>
                             <td style="font-weight: bold">
-                                <span>@lang('application.Formation')</span>
+                                <span>@lang("application.Formation")</span>
                             </td>
                             <td colspan="3">
                                 <span>{{$fixture->formations->visitorteam_formation}}</span>
@@ -304,7 +304,7 @@
                         @endif
                         <tr style="font-weight: bold; text-align: center; background: #D3D3D3">
                             <td colspan="7">
-                                <span>@lang('application.Starting lineups')</span>
+                                <span>@lang("application.Starting lineups")</span>
                             </td>
                         </tr>
                         @for($index = 0; $index < count($lineup)/2; $index++)
@@ -412,7 +412,7 @@
                         @endfor
                         <tr style="font-weight: bold; text-align: center; background: #D3D3D3">
                             <td colspan="7">
-                                <span>@lang('application.Substitutes')</span>
+                                <span>@lang("application.Substitutes")</span>
                             </td>
                         </tr>
                         @for($index = 0; $index < count($bench)/2; $index++)
@@ -520,7 +520,7 @@
                         @if(count($sidelined) > 0)
                             <tr style="font-weight: bold; text-align: center; background: #D3D3D3">
                                 <td colspan="7">
-                                    <span>@lang('application.Missing players')</span>
+                                    <span>@lang("application.Missing players")</span>
                                 </td>
                             </tr>
                             @php
@@ -559,21 +559,21 @@
                                     <tr>
                                         <td></td>
                                         <td style="width: 1%"><img src="/images/flags/shiny/16/{{$home_sidelined_player->nationality}}.png"></td>
-                                        <td style="text-align: left">{{$home_sidelined_player->common_name}} <span style="color: #A9A9A9">(@lang('injuries.' . $home_sidelined_player->reason))</span></td>
+                                        <td style="text-align: left">{{$home_sidelined_player->common_name}} <span style="color: #A9A9A9">(@lang("injuries." . $home_sidelined_player->reason))</span></td>
                                         <td></td>
-                                        <td style="text-align: right">{{$away_sidelined_player->common_name}} <span style="color: #A9A9A9">(@lang('injuries.' . $away_sidelined_player->reason))</span></td>
+                                        <td style="text-align: right">{{$away_sidelined_player->common_name}} <span style="color: #A9A9A9">(@lang("injuries." . $away_sidelined_player->reason))</span></td>
                                         <td style="width: 1%"><img src="/images/flags/shiny/16/{{$away_sidelined_player->nationality}}.png"></td>
                                     </tr>
                                 @elseif(isset($home_sidelined_player) && !isset($away_sidelined_player))
                                     <tr>
                                         <td></td>
                                         <td style="width: 1%"><img src="/images/flags/shiny/16/{{$home_sidelined_player->nationality}}.png"></td>
-                                        <td style="text-align: left">{{$home_sidelined_player->common_name}} <span style="color: #A9A9A9">(@lang('injuries.' . $home_sidelined_player->reason))</span></td>
+                                        <td style="text-align: left">{{$home_sidelined_player->common_name}} <span style="color: #A9A9A9">(@lang("injuries." . $home_sidelined_player->reason))</span></td>
                                     </tr>
                                 @elseif(!isset($home_sidelined_player) && isset($away_sidelined_player))
                                     <tr>
                                         <td colspan="4"></td>
-                                        <td style="text-align: right">{{$away_sidelined_player->common_name}} <span style="color: #A9A9A9">(@lang('injuries.' . $away_sidelined_player->reason))</span></td>
+                                        <td style="text-align: right">{{$away_sidelined_player->common_name}} <span style="color: #A9A9A9">(@lang("injuries." . $away_sidelined_player->reason))</span></td>
                                         <td style="width: 1%"><img src="/images/flags/shiny/16/{{$away_sidelined_player->nationality}}.png"></td>
                                     </tr>
                                 @endif
@@ -583,7 +583,7 @@
                         @if(isset($localCoach) || isset($visitorCoach))
                         <tr style="font-weight: bold; text-align: center; background: #D3D3D3">
                             <td colspan="7">
-                                <span>@lang('application.Coaches')</span>
+                                <span>@lang("application.Coaches")</span>
                             </td>
                         </tr>
                         <tr>
@@ -609,7 +609,7 @@
                         @endif
                     </table>
                 @else
-                    <span style="font-weight: bold">@lang('application.Lineups') @choice('application.msg_no_data', 2)</span>
+                    <span style="font-weight: bold">@lang("application.Lineups") @choice("application.msg_no_data", 2)</span>
                 @endif
             </div>
         </div>
