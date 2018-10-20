@@ -363,10 +363,10 @@
                                     $away_player_common_name = $away_player->player_name;
                                 }
                                 
-                                if($away_player_nationality == "Unknown") {
-                                    \Illuminate\Support\Facades\Log::alert("Missing nationality for " . $away_player->player_id);
-                                } elseif($home_player_nationality == "Unknown"){
-                                    \Illuminate\Support\Facades\Log::alert("Missing nationality for " . $home_player->player_id);
+                                if($home_player_nationality == "Unknown" && !isset($home_player->player->data)) {
+                                    Log::alert("Missing nationality for " . $home_player->player_id);
+                                } elseif($away_player_nationality == "Unknown" && !isset($away_player->player->data)){
+                                    Log::alert("Missing nationality for " . $away_player->player_id);
                                 }
                             @endphp
                             <tr>
@@ -470,10 +470,10 @@
                                     $away_player_common_name = $away_player->player_name;
                                 }
                                 
-                                if($away_player_nationality == "Unknown") {
-                                    \Illuminate\Support\Facades\Log::alert("Missing nationality for " . $away_player->player_id);
-                                } elseif($home_player_nationality == "Unknown"){
-                                    \Illuminate\Support\Facades\Log::alert("Missing nationality for " . $home_player->player_id);
+                                if($home_player_nationality == "Unknown" && !isset($home_player->player->data)) {
+                                    Log::alert("Missing nationality for " . $home_player->player_id);
+                                } elseif($away_player_nationality == "Unknown" && !isset($away_player->player->data)){
+                                    Log::alert("Missing nationality for " . $away_player->player_id);
                                 }
                             @endphp
                             <tr>
