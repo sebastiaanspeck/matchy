@@ -22,7 +22,7 @@ return [
     'fixtures'                  => 'fixtures',
     'Fixtures'                  => 'Fixtures',
     'todays\'s fixtures'        => 'todays\'s fixtures',
-    'last fixtures'             => '{1} Last fixture|[2,*] Upcoming :count fixtures',
+    'last fixtures'             => '{1} Last fixture|[2,*] Last :count fixtures',
     'upcoming fixtures'         => '{1} Upcoming fixture|[2,*] Upcoming :count fixtures',
     'Matchday'                  => 'Matchday',
     'Standings'                 => 'Standings',

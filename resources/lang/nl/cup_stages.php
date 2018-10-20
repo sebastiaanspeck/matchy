@@ -20,6 +20,7 @@ return [
     'Qualifying Round'              => 'Kwalificatie',
 
     'Group Stage'                   => 'Groepsfase',
+    'Group stage'                   => 'Groepsfase',
     '16th Finals'                   => '16e Finales',
     '8th Finals'                    => '8ste Finales',
     'Quarter-finals'                => 'Kwartfinale',
