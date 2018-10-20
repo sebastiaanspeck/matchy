@@ -76,6 +76,7 @@
                             <td scope="row"><a href="{{route("fixturesDetails", ["id" => $livescore->id])}}"><i class="fa fa-info-circle"></i></a></td>
                         </tr>
                     @else
+                        @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; @endphp
                         <table class="table table-striped table-light table-sm" width="100%">
                             @if(isset($livescore->round))
                                 @if($last_round_id !== $livescore->round->data->name)

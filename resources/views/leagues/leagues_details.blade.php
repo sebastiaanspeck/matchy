@@ -146,6 +146,7 @@
                                 <td scope="row"><a href= {{route("fixturesDetails", ["id" => $last_fixture->id])}}><i class="fa fa-info-circle"></i></a></td>
                             </tr>
                         @else
+                            @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; @endphp
                             <table class="table table-striped table-light table-sm" style="width:100%">
                                 <thead>
                                 <tr>
@@ -272,6 +273,7 @@
                                 <td scope="row"><a href= {{route("fixturesDetails", ["id" => $upcoming_fixture->id])}}><i class="fa fa-info-circle"></i></a></td>
                             </tr>
                         @else
+                            @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; @endphp
                             <table class="table table-striped table-light table-sm" style="width:100%">
                                 @if(isset($upcoming_fixture->round))
                                     @if($last_round_id !== $upcoming_fixture->round->data->name)
