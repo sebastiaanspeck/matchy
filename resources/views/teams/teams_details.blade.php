@@ -179,7 +179,7 @@
                                     {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
                                     @switch($last_fixture->time->status)
                                         @case("FT_PEN")
-                                            <td scope="row">{$last_fixture->scores->localteam_score}} - {{$last_fixture->scores->visitorteam_score}} ({{$last_fixture->scores->localteam_pen_score}} - {{$last_fixture->scores->visitorteam_pen_score}}) </td>
+                                            <td scope="row">{{$last_fixture->scores->localteam_score}} - {{$last_fixture->scores->visitorteam_score}} ({{$last_fixture->scores->localteam_pen_score}} - {{$last_fixture->scores->visitorteam_pen_score}}) </td>
                                             @break
                                         @case("AET")
                                             <td scope="row">{{$last_fixture->scores->localteam_score}} - {{$last_fixture->scores->visitorteam_score}} (ET)</td>
