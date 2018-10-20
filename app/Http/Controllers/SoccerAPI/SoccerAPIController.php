@@ -70,42 +70,32 @@ class SoccerAPIController extends BaseController
         $dateFormat = self::getDateFormat();
 
         $soccerAPI = new SoccerAPI();
-        $customSoccerAPI = new CustomSoccerApi();
         $includeLeague = 'country,season';
         $includeStandings = 'standings.team';
         $includeSeason = 'upcoming.localTeam,upcoming.visitorTeam,upcoming.league,upcoming.stage,upcoming.round,results:order(starting_at|desc),results.localTeam,results.visitorTeam,results.league,results.round,results.stage';
         $includeTopscorers = 'goalscorers.player,goalscorers.team';
-        $includeAgTopscorers = 'aggregatedGoalscorers.player,aggregatedGoalscorers.team';
 
         $league = $soccerAPI->leagues()->setInclude($includeLeague)->byId($leagueId)->data;
-
-        $excludedLeagues = [2, 5, 732];
 
         $standingsRaw = $soccerAPI->standings()->setInclude($includeStandings)->bySeasonId($league->current_season_id);
 
         $season = $soccerAPI->seasons()->setInclude($includeSeason)->byId($league->current_season_id);
 
-        $topscorers = [];
-      
-        if (!in_array($leagueId, $excludedLeagues)) {
+        $topscorers = array();
 
-            $topscorers = array();
+        // check if league has topscorer_goals coverage or is a cup (the is_cup, excludes World Cup, Europa League,
+        if(!$league->coverage->topscorer_goals || !$league->is_cup) {
+            $topscorers = $soccerAPI->topscorers()->setInclude($includeTopscorers)->bySeasonId($league->current_season_id)->goalscorers->data;
 
-            if ($league->is_cup == false) {
-                $topscorersDefault = $soccerAPI->topscorers()->setInclude($includeTopscorers)->bySeasonId($league->current_season_id)->goalscorers->data;
-                $topscorers = self::addPagination($topscorersDefault, 10); 
-            } 
-
-            if ($league->country->data->name == "World" || $league->country->data->name == "Europe") {
-                $topscorersAggregated = $soccerAPI->topscorers()->setInclude($includeAgTopscorers)->aggregatedBySeasonId($league->current_season_id)->aggregatedGoalscorers->data;
-                if(count($topscorersAggregated) > 0) {
-                    $topscorers = $topscorersAggregated;
-                    $topscorers = self::addPagination($topscorersAggregated, 10); 
+            foreach($topscorers as $key => $topscorer) {
+                // remove all topscorers where stage_id is not the current_stage_id (like qualifying rounds before the actual season etc)
+                if($topscorer->stage_id != $league->current_stage_id) {
+                    unset($topscorers[$key]);
                 }
             }
-
             $topscorers = self::addPagination($topscorers, 10);
-
+        } else {
+            Log::info("Missing topscorers for:" . $league->name);
         }
 
         $lastFixtures = [];
