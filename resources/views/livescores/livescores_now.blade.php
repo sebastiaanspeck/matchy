@@ -6,8 +6,8 @@
 
 @section("content")
     <div class = "container">
-        <h1>@lang("application.Livescores") - {{date($date_format)}} </h1>
-        <p>@lang("application.Last update"): {{date($date_format . " H:i:s")}} </p>
+        <h1>{{ Lang::has("application.Livescores") ? trans("application.Livescores") : Log::critical("Missing cup-stage translation for: Livescores") . "Livescores" }}- {{date($date_format)}} </h1>
+        <p>{{ Lang::has("application.Last update") ? trans("application.Last update") : Log::critical("Missing cup-stage translation for: Last update") . "Last update" }} {{date($date_format . " H:i:s")}} </p>
 
         @if(isset($livescores))
             @if(count($livescores) >= 1)
@@ -43,14 +43,14 @@
                                 <tr>
                                     <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
                                         @if($livescore->stage->data->name !== "Regular Season")
-                                            @lang("cup_stages." . $livescore->stage->data->name) -
+                                            {{ Lang::has("cup_stages.". $livescore->stage->data->name) ? trans("cup_stages.". $livescore->stage->data->name) : Log::critical("Missing cup-stage translation for: " . $livescore->stage->data->name) . $livescore->stage->data->name }} -
                                         @endif
-                                        @lang("application.Matchday") {{$livescore->round->data->name}}</td>
+                                        {{ Lang::has("application.Matchday") ? trans("application.Matchday") : Log::emergency("Missing application translation for: Matchday") . "Matchday" }} {{$livescore->round->data->name}}</td>
                                 </tr>
                             @endif
                         @elseif($last_stage_id !== $livescore->stage->data->name)
                             <tr>
-                                <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang("cup_stages." . $livescore->stage->data->name)</td>
+                                <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">{{ Lang::has("cup_stages.". $livescore->stage->data->name) ? trans("cup_stages.". $livescore->stage->data->name) : Log::critical("Missing cup-stage translation for: " . $livescore->stage->data->name) . $livescore->stage->data->name }}</td>
                             </tr>
                         @endif
                         <tr>
@@ -81,16 +81,16 @@
                                 @if($last_round_id !== $livescore->round->data->name)
                                     <tr>
                                         <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">
-                                            <a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang("leagues." . $league->name)</a> -
+                                            <a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{ Lang::has("leagues." . $league->name) ? trans("leagues." . $league->name) : Log::critical("Missing league translation for: " . $league->name)   . $league->name }}</a> -
                                             @if($livescore->stage->data->name !== "Regular Season")
-                                                @lang("cup_stages." . $livescore->stage->data->name) -
+                                                {{ Lang::has("cup_stages.". $livescore->stage->data->name) ? trans("cup_stages.". $livescore->stage->data->name) : Log::critical("Missing cup-stage translation for: " . $livescore->stage->data->name) . $livescore->stage->data->name }} -
                                             @endif
-                                            @lang("application.Matchday") {{$livescore->round->data->name}}</td>
+                                            {{ Lang::has("application.Matchday") ? trans("application.Matchday") : Log::emergency("Missing application translation for: Matchday") . "Matchday" }} {{$livescore->round->data->name}}</td>
                                     </tr>
                                 @endif
                             @elseif($last_stage_id !== $livescore->stage->data->name)
                                 <tr>
-                                    <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang("leagues." . $league->name)</a> - @lang("cup_stages." . $livescore->stage->data->name)</td>
+                                    <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{ Lang::has("leagues." . $league->name) ? trans("leagues." . $league->name) : Log::critical("Missing league translation for: " . $league->name)   . $league->name }}</a> - {{ Lang::has("cup_stages.". $livescore->stage->data->name) ? trans("cup_stages.". $livescore->stage->data->name) : Log::critical("Missing cup-stage translation for: " . $livescore->stage->data->name) . $livescore->stage->data->name }}</td>
                                 </tr>
                             @endif
                             <thead>

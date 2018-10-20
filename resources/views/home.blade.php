@@ -33,9 +33,9 @@
             <div class="title">{{ config('app.name') }}</div>
 
             <div class="links">
-                <a href="{{route('leagues')}}">@lang('application.leagues')</a>
-                <a href="{{route('livescores', ['type' => 'today'])}}">@lang('application.today')</a>
-                <a href="{{route('livescores', ['type' => 'now'])}}">@lang('application.live')</a>
+                <a href="{{route("leagues")}}">{{ Lang::has("application.leagues") ? trans("application.leagues") : Log::emergency("Missing application translation for: leagues") . "leagues" }}</a>
+                <a href="{{route("livescores", ["type" => "today"])}}">{{ Lang::has("application.today") ? trans("application.today") : Log::emergency("Missing application translation for: today") . "today" }}</a>
+                <a href="{{route("livescores", ["type" => "now"])}}">{{ Lang::has("application.live") ? trans("application.live") : Log::emergency("Missing application translation for: live") . "live" }}</a>
             </div>
         </div>
     </div>

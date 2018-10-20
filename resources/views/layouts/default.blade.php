@@ -129,24 +129,24 @@
             <div id="navbarSupportedContent" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav mr-auto">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownFixtures" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">@lang("application.Fixtures")</a>
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownFixtures" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ Lang::has("application.Fixtures") ? trans("application.Fixtures") : Log::emergency("Missing application translation for: Fixtures") . "Fixtures" }}</a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownFixtures">
-                            <a class="dropdown-item" href="{{route("fixturesByDate", ["day" => "yesterday"])}}">@lang("application.Yesterday")</a>
-                            <a class="dropdown-item" href="{{route("fixturesByDate", ["day" => "tomorrow"])}}">@lang("application.Tomorrow")</a>
+                            <a class="dropdown-item" href="{{route("fixturesByDate", ["day" => "yesterday"])}}">{{ Lang::has("application.Yesterday") ? trans("application.Yesterday") : Log::emergency("Missing application translation for: Yesterday") . "Yesterday" }}</a>
+                            <a class="dropdown-item" href="{{route("fixturesByDate", ["day" => "tomorrow"])}}">{{ Lang::has("application.Tomorrow") ? trans("application.Tomorrow") : Log::emergency("Missing application translation for: Tomorrow") . "Tomorrow" }}</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownLivescores" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">@lang("application.Livescores")</a>
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownLivescores" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ Lang::has("application.Livescores") ? trans("application.Livescores") : Log::emergency("Missing application translation for: Livescores") . "Livescores" }}</a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownLivescores">
-                            <a class="dropdown-item" href="{{route("livescores", ["type" => "now"])}}">@lang("application.Livescores") -  @lang("application.now") <span class="badge badge-danger">{{$live}}</span></a>
+                            <a class="dropdown-item" href="{{route("livescores", ["type" => "now"])}}">{{ Lang::has("application.Livescores") ? trans("application.Livescores") : Log::emergency("Missing application translation for: Livescores") . "Livescores" }} -  {{ Lang::has("application.now") ? trans("application.now") : Log::emergency("Missing application translation for: now") . "now" }} <span class="badge badge-danger">{{$live}}</span></a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{{route("livescores", ["type" => "today"])}}">@lang("application.Livescores") - @lang("application.today")</a>
+                            <a class="dropdown-item" href="{{route("livescores", ["type" => "today"])}}">{{ Lang::has("application.Livescores") ? trans("application.Livescores") : Log::emergency("Missing application translation for: Livescores") . "Livescores" }} - {{ Lang::has("application.today") ? trans("application.today") : Log::emergency("Missing application translation for: today") . "today" }}</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownLeagues" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">@lang("application.Leagues")</a>
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownLeagues" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ Lang::has("application.Leagues") ? trans("application.Leagues") : Log::emergency("Missing application translation for: Leagues") . "Leagues" }}</a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownLeagues">
-                            <a class="dropdown-item" href="{{route("leagues")}}">@lang("application.All leagues")</a>
+                            <a class="dropdown-item" href="{{route("leagues")}}">{{ Lang::has("application.All leagues") ? trans("application.All leagues") : Log::emergency("Missing application translation for: All leagues") . "All leagues" }}</a>
                         </div>
                     </li>
                 </ul>

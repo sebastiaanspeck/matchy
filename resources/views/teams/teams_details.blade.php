@@ -76,14 +76,14 @@
                                     <tr>
                                         <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
                                             @if($last_fixture->stage->data->name !== "Regular Season")
-                                                @lang("cup_stages." . $last_fixture->stage->data->name) -
+                                                {{ Lang::has("cup_stages." . $last_fixture->stage->data->name) ? trans("cup_stages." . $last_fixture->stage->data->name) : Log::critical("Missing cup-stage translation for: " . $last_fixture->stage->data->name) . $last_fixture->stage->data->name }} -
                                             @endif
-                                            @lang("application.Matchday") {{$last_fixture->round->data->name}}</td>
+                                            {{ Lang::has("application.Matchday") ? trans("application.Matchday") : Log::emergency("Missing application translation for: Matchday") . "Matchday" }} {{$last_fixture->round->data->name}}</td>
                                     </tr>
                                 @endif
                             @elseif($last_stage_id !== $last_fixture->stage->data->name)
                                 <tr>
-                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang("cup_stages." . $last_fixture->stage->data->name)</td>
+                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">{{ Lang::has("cup_stages." . $last_fixture->stage->data->name) ? trans("cup_stages." . $last_fixture->stage->data->name) : Log::critical("Missing cup-stage translation for: " . $last_fixture->stage->data->name) . $last_fixture->stage->data->name }}</td>
                                 </tr>
                             @endif
                             <tr>
@@ -133,16 +133,16 @@
                                     @if($last_round_id !== $last_fixture->round->data->name)
                                         <tr>
                                             <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">
-                                                <a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang("leagues." . $league->name)</a> -
+                                                <a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{ Lang::has("leagues." . $league->name) ? trans("leagues." . $league->name) : Log::critical("Missing league translation for: " . $league->name)   . $league->name }}</a> -
                                                 @if($last_fixture->stage->data->name !== "Regular Season")
-                                                    @lang("cup_stages." . $last_fixture->stage->data->name) -
+                                                    {{ Lang::has("cup_stages." . $last_fixture->stage->data->name) ? trans("cup_stages." . $last_fixture->stage->data->name) : Log::critical("Missing cup-stage translation for: " . $last_fixture->stage->data->name) . $last_fixture->stage->data->name }} -
                                                 @endif
-                                                @lang("application.Matchday") {{$last_fixture->round->data->name}}</td>
+                                                {{ Lang::has("application.Matchday") ? trans("application.Matchday") : Log::emergency("Missing application translation for: Matchday") . "Matchday" }} {{$last_fixture->round->data->name}}</td>
                                         </tr>
                                     @endif
                                 @elseif($last_stage_id !== $last_fixture->stage->data->name)
                                     <tr>
-                                        <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang("leagues." . $league->name)</a> - @lang("cup_stages." . $last_fixture->stage->data->name)</td>
+                                        <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{ Lang::has("leagues." . $league->name) ? trans("leagues." . $league->name) : Log::critical("Missing league translation for: " . $league->name)   . $league->name }}</a> - {{ Lang::has("cup_stages." . $last_fixture->stage->data->name) ? trans("cup_stages." . $last_fixture->stage->data->name) : Log::critical("Missing cup-stage translation for: " . $last_fixture->stage->data->name) . $last_fixture->stage->data->name }}</td>
                                     </tr>
                                 @endif
                                 <thead>
@@ -244,14 +244,16 @@
                                     <tr>
                                         <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
                                             @if($upcoming_fixture->stage->data->name !== "Regular Season")
-                                                @lang("cup_stages." . $upcoming_fixture->stage->data->name) -
+                                                {{ Lang::has("cup_stages." . $upcoming_fixture->stage->data->name) ? trans("cup_stages." . $upcoming_fixture->stage->data->name) :
+Log::critical("Missing cup-stage translation for: " . $upcoming_fixture->stage->data->name) . $upcoming_fixture->stage->data->name }} -
                                             @endif
-                                            @lang("application.Matchday") {{$upcoming_fixture->round->data->name}}</td>
+                                            {{ Lang::has("application.Matchday") ? trans("application.Matchday") : Log::emergency("Missing application translation for: Matchday") . "Matchday" }} {{$upcoming_fixture->round->data->name}}</td>
                                     </tr>
                                 @endif
                             @elseif($last_stage_id !== $upcoming_fixture->stage->data->name)
                                 <tr>
-                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang("cup_stages." . $upcoming_fixture->stage->data->name)</td>
+                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">{{ Lang::has("cup_stages." . $upcoming_fixture->stage->data->name) ? trans("cup_stages." . $upcoming_fixture->stage->data->name) :
+Log::critical("Missing cup-stage translation for: " . $upcoming_fixture->stage->data->name) . $upcoming_fixture->stage->data->name }}</td>
                                 </tr>
                             @endif
                             <tr>
@@ -300,16 +302,18 @@
                                     @if($last_round_id !== $upcoming_fixture->round->data->name)
                                         <tr>
                                             <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">
-                                                <a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang("leagues." . $league->name)</a> -
+                                                <a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{ Lang::has("leagues." . $league->name) ? trans("leagues." . $league->name) : Log::critical("Missing league translation for: " . $league->name)   . $league->name }}</a> -
                                                 @if($upcoming_fixture->stage->data->name !== "Regular Season")
-                                                    @lang("cup_stages." . $upcoming_fixture->stage->data->name) -
+                                                    {{ Lang::has("cup_stages." . $upcoming_fixture->stage->data->name) ? trans("cup_stages." . $upcoming_fixture->stage->data->name) :
+Log::critical("Missing cup-stage translation for: " . $upcoming_fixture->stage->data->name) . $upcoming_fixture->stage->data->name }} -
                                                 @endif
-                                                @lang("application.Matchday") {{$upcoming_fixture->round->data->name}}</td>
+                                                {{ Lang::has("application.Matchday") ? trans("application.Matchday") : Log::emergency("Missing application translation for: Matchday") . "Matchday" }} {{$upcoming_fixture->round->data->name}}</td>
                                         </tr>
                                     @endif
                                 @elseif($last_stage_id !== $upcoming_fixture->stage->data->name)
                                     <tr>
-                                        <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang("leagues." . $league->name)</a> - @lang("cup_stages." . $upcoming_fixture->stage->data->name)</td>
+                                        <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{ Lang::has("leagues." . $league->name) ? trans("leagues." . $league->name) : Log::critical("Missing league translation for: " . $league->name)   . $league->name }}</a> - {{ Lang::has("cup_stages." . $upcoming_fixture->stage->data->name) ? trans("cup_stages." . $upcoming_fixture->stage->data->name) :
+Log::critical("Missing cup-stage translation for: " . $upcoming_fixture->stage->data->name) . $upcoming_fixture->stage->data->name }}</td>
                                     </tr>
                                 @endif
                                 <thead>
