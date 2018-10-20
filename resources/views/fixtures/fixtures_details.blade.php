@@ -596,6 +596,10 @@
                             @endfor
                         @endif
                         @if(isset($localCoach) || isset($visitorCoach))
+                            @php
+                                $localCoach->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($localCoach->nationality);
+                                $visitorCoach->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($visitorCoach->nationality);
+                            @endphp
                         <tr style="font-weight: bold; text-align: center; background: #D3D3D3">
                             <td colspan="7">
                                 <span>{{ Lang::has("application.Coaches") ? trans("application.Coaches") : Log::emergency("Missing application translation for: Coaches")
