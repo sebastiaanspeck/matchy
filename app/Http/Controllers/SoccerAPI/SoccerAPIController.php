@@ -95,7 +95,7 @@ class SoccerAPIController extends BaseController
             }
             $topscorers = self::addPagination($topscorers, 10);
         } else {
-            Log::info("Missing topscorers for:" . $league->name);
+            Log::info("Missing topscorers for: " . $league->name);
         }
 
         $lastFixtures = [];
