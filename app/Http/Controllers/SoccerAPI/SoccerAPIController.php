@@ -71,6 +71,7 @@ class SoccerAPIController extends BaseController
 
         $soccerAPI = new SoccerAPI();
         $includeLeague = 'country,season';
+        $includeStandings = 'standings.team';
         $includeSeason = 'upcoming.localTeam,upcoming.visitorTeam,upcoming.league,upcoming.stage,upcoming.round,results:order(starting_at|desc),results.localTeam,results.visitorTeam,results.league,results.round,results.stage';
         $includeTopscorers = 'goalscorers.player,goalscorers.team';
 
@@ -80,7 +81,7 @@ class SoccerAPIController extends BaseController
 
         $excludedLeagues = [2, 5, 732];
 
-        $standingsRaw = $soccerAPI->standings()->bySeasonId($league->current_season_id);
+        $standingsRaw = $soccerAPI->standings()->setInclude($includeStandings)->bySeasonId($league->current_season_id);
 
         $season = $soccerAPI->seasons()->setInclude($includeSeason)->byId($league->current_season_id);
 

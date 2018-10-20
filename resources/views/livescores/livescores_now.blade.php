@@ -30,6 +30,12 @@
                         if($awayTeam->national_team == true) {
                             $awayTeam->name = trans('countries.' . $awayTeam->name);
                         }
+                        
+                        if(strpos($homeTeam->name, 'countries') !== false) {
+                            Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $homeTeam->name) . ' in ' . app()->getLocale() . '/countries.php');
+                        } elseif(strpos($awayTeam->name, 'countries') !== false) {
+                            Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $awayTeam->name) . ' in ' . app()->getLocale() . '/countries.php');
+                        }
                     @endphp
                     @if($livescore->league_id == $last_league_id)
                         @if(isset($livescore->round))

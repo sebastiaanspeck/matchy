@@ -50,6 +50,13 @@
                             if($awayTeam->national_team == true) {
                                 $awayTeam->name = trans('countries.' . $awayTeam->name);
                             }
+                            
+                            if(strpos($homeTeam->name, 'countries') !== false) {
+                                Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $homeTeam->name) . ' in ' . app()->getLocale() . '/countries.php');
+                            } elseif(strpos($awayTeam->name, 'countries') !== false) {
+                                Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $awayTeam->name) . ' in ' . app()->getLocale() . '/countries.php');
+                            }
+                            
                             if(in_array($last_fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
                                 switch($last_fixture->time->status) {
                                     case("FT_PEN"):
@@ -229,6 +236,12 @@
                             if($awayTeam->national_team == true) {
                                 $awayTeam->name = trans('countries.' . $awayTeam->name);
                             }
+                            
+                            if(strpos($homeTeam->name, 'countries') !== false) {
+                                Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $homeTeam->name) . ' in ' . app()->getLocale() . '/countries.php');
+                            } elseif(strpos($awayTeam->name, 'countries') !== false) {
+                                Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $awayTeam->name) . ' in ' . app()->getLocale() . '/countries.php');
+                            }
                         @endphp
                         @if($upcoming_fixture->league_id == $last_league_id)
                             @if(isset($upcoming_fixture->round))
@@ -333,7 +346,15 @@
                             </thead>
                             <tbody>
                                     @foreach($standing as $team)
-                                        @php if(Lang::has('countries.' . $team->team_name)) { $team->team_name = trans('countries.' . $team->team_name);} @endphp
+                                        @php
+                                            if($team->team->data->national_team == true) {
+                                                $team->team_name = trans('countries.' . $team->team_name);
+                                            }
+                                            
+                                            if(strpos($team->team_name, 'countries') !== false) {
+                                                Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $team->team_name) . ' in ' . app()->getLocale() . '/countries.php');
+                                            }
+                                        @endphp
                                         <tr>
                                             <td scope="row">{{$team->position}}</td>
                                             <td scope="row"><a href ="{{route("teamsDetails", ["id" => $team->team_id])}}">{{$team->team_name}}</a></td>
@@ -394,14 +415,25 @@
                                 <tr>
                                     <td scope="row">{{$topscorer->position}}</td>
                                     @php
-                                        if(isset($topscorer->player->data->nationality)) {
-                                            $topscorer->player->data->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($topscorer->player->data->nationality);
+                                        $team = $topscorer->team->data;
+                                        $player = $topscorer->player->data;
+                                        
+                                        if(isset($player->nationality)) {
+                                            $player->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($player->nationality);
                                         } else {
-                                            $topscorer->player->data->nationality = "Unknown";
+                                            $player->nationality = "Unknown";
+                                        }
+                                        
+                                        if($team->national_team == true) {
+                                            $team->name = trans('countries.' . $team->name);
+                                        }
+                                        
+                                        if(strpos($team->name, 'countries') !== false) {
+                                            Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $team->name) . ' in ' . app()->getLocale() . '/countries.php');
                                         }
                                     @endphp
-                                    <td scope="row"><img src="/images/flags/shiny/16/{{$topscorer->player->data->nationality}}.png">&nbsp;&nbsp;{{$topscorer->player->data->common_name}}</td>
-                                    <td scope="row"><a href ="{{route("teamsDetails", ["id" => $team->team_id])}}">{{$topscorer->team->data->name}}</a></td>
+                                    <td scope="row"><img src="/images/flags/shiny/16/{{$player->nationality}}.png">&nbsp;&nbsp;{{$player->common_name}}</td>
+                                    <td scope="row"><a href ="{{route("teamsDetails", ["id" => $team->id])}}">{{$team->name}}</a></td>
                                     <td scope="row">{{$topscorer->goals}}</td>
                                 </tr>
                             @endforeach

@@ -21,6 +21,12 @@
                 $awayTeam->name = trans('countries.' . $awayTeam->name);
             }
             
+            if(strpos($homeTeam->name, 'countries') !== false) {
+                Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $homeTeam->name) . ' in ' . app()->getLocale() . '/countries.php');
+            } elseif(strpos($awayTeam->name, 'countries') !== false) {
+                Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $awayTeam->name) . ' in ' . app()->getLocale() . '/countries.php');
+            }
+            
             $events = $fixture->events->data;
 
             $lineup = $fixture->lineup->data;

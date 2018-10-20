@@ -23,6 +23,12 @@
                             $awayTeam->name = trans('countries.' . $awayTeam->name);
                         }
                         
+                        if(strpos($homeTeam->name, 'countries') !== false) {
+                            Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $homeTeam->name) . ' in ' . app()->getLocale() . '/countries.php');
+                        } elseif(strpos($awayTeam->name, 'countries') !== false) {
+                            Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $awayTeam->name) . ' in ' . app()->getLocale() . '/countries.php');
+                        }
+                        
                         if($livescore->scores->localteam_score > $livescore->scores->visitorteam_score && in_array($livescore->time->status,  array("FT", "AET", "FT_PEN"))) {
                             $winningTeam = $homeTeam->name;
                         } elseif ($livescore->scores->localteam_score == $livescore->scores->visitorteam_score && in_array($livescore->time->status,  array("FT", "AET", "FT_PEN"))) {
