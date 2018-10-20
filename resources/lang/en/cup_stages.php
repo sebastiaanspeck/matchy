@@ -21,6 +21,7 @@ return [
     '3rd Round Qualifying Replays'  => '3rd Round Qualifying Replays',
     '3rd Qualifying Round'          => '3rd Qualifying Round',
     '4th Round'                     => '4th Round',
+    '4th Round Qualifying'          => '4th Round Qualifying',
     '4th Preliminary Round'         => '4th Preliminary Round',
     '5th Round'                     => '5th Round',
     '7th Round'                     => '7th Round',
@@ -29,6 +30,7 @@ return [
     'Preliminary Round'             => 'Preliminary Round',
 
     'Group Stage'                   => 'Group Stage',
+    'Group stage'                   => 'Group stage',
     '16th Finals'                   => '16th Finals',
     '8th Finals'                    => '8th Finals',
     'Quarter-finals'                => 'Quarter-finals',
