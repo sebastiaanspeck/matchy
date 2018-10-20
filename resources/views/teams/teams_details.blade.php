@@ -8,6 +8,15 @@
                     <td><img src="{{$team->logo_path}}" style="max-height: 200px; max-width: 200px"></td>
                 </tr>
                 <tr>
+                    @php
+                        if($team->national_team == true) {
+                            $team->name = trans('countries.' . $team->name);
+                        }
+                        
+                        if(strpos($team->name, 'countries') !== false) {
+                            Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $team->name) . ' in ' . app()->getLocale() . '/countries.php');
+                        }
+                    @endphp
                     <td style="vertical-align: top"><h3>{{$team->name}}</h3></td>
                 </tr>
             </table>
@@ -37,6 +46,20 @@
                             $league = $last_fixture->league->data;
                             $homeTeam = $last_fixture->localTeam->data;
                             $awayTeam = $last_fixture->visitorTeam->data;
+                            
+                            if($homeTeam->national_team == true) {
+                                $homeTeam->name = trans('countries.' . $homeTeam->name);
+                            }
+                            if($awayTeam->national_team == true) {
+                                $awayTeam->name = trans('countries.' . $awayTeam->name);
+                            }
+                            
+                            if(strpos($homeTeam->name, 'countries') !== false) {
+                                Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $homeTeam->name) . ' in ' . app()->getLocale() . '/countries.php');
+                            } elseif(strpos($awayTeam->name, 'countries') !== false) {
+                                Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $awayTeam->name) . ' in ' . app()->getLocale() . '/countries.php');
+                            }
+                            
                             if($last_fixture->scores->localteam_score > $last_fixture->scores->visitorteam_score && in_array($last_fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
                                 $winningTeam = $homeTeam->name;
                             } elseif ($last_fixture->scores->localteam_score == $last_fixture->scores->visitorteam_score && in_array($last_fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
@@ -53,14 +76,14 @@
                                     <tr>
                                         <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
                                             @if($last_fixture->stage->data->name !== 'Regular Season')
-                                                @lang('cup_rounds.' . $last_fixture->stage->data->name) -
+                                                @lang('cup_stages.' . $last_fixture->stage->data->name) -
                                             @endif
                                             @lang('application.Matchday') {{$last_fixture->round->data->name}}</td>
                                     </tr>
                                 @endif
                             @elseif($last_stage_id !== $last_fixture->stage->data->name)
                                 <tr>
-                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('cup_rounds.' . $last_fixture->stage->data->name)</td>
+                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('cup_stages.' . $last_fixture->stage->data->name)</td>
                                 </tr>
                             @endif
                             <tr>
@@ -99,7 +122,7 @@
     
                                 <td scope="row">{{date($date_format . " H:i", strtotime($last_fixture->time->starting_at->date_time))}}
                                     @if($last_fixture->time->status == "LIVE")
-                                        <span style="color:#FF0000">LIVE</span>
+                                        <span style="color:#ff0000">LIVE</span>
                                     @endif
                                 </td>
                                 <td scope="row"><a href= {{route("fixturesDetails", ["id" => $last_fixture->id])}}><i class="fa fa-info-circle"></i></a></td>
@@ -110,16 +133,16 @@
                                     @if($last_round_id !== $last_fixture->round->data->name)
                                         <tr>
                                             <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">
-                                                <a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('competitions.' . $league->name)</a>
+                                                <a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('leagues.' . $league->name)</a> -
                                                 @if($last_fixture->stage->data->name !== 'Regular Season')
-                                                    @lang('cup_rounds.' . $last_fixture->stage->data->name) -
+                                                    @lang('cup_stages.' . $last_fixture->stage->data->name) -
                                                 @endif
                                                 @lang('application.Matchday') {{$last_fixture->round->data->name}}</td>
                                         </tr>
                                     @endif
                                 @elseif($last_stage_id !== $last_fixture->stage->data->name)
                                     <tr>
-                                        <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('competitions.' . $league->name)</a> - @lang('cup_rounds.' . $last_fixture->stage->data->name)</td>
+                                        <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('leagues.' . $league->name)</a> - @lang('cup_stages.' . $last_fixture->stage->data->name)</td>
                                     </tr>
                                 @endif
                                 <thead>
@@ -156,7 +179,7 @@
                                     {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
                                     @switch($last_fixture->time->status)
                                         @case("FT_PEN")
-                                            <td scope="row">{$last_fixture->scores->localteam_score}} - {{$last_fixture->scores->visitorteam_score}} ({{$last_fixture->scores->localteam_pen_score}} - {{$last_fixture->scores->visitorteam_pen_score}}) </td>
+                                            <td scope="row">{{$last_fixture->scores->localteam_score}} - {{$last_fixture->scores->visitorteam_score}} ({{$last_fixture->scores->localteam_pen_score}} - {{$last_fixture->scores->visitorteam_pen_score}}) </td>
                                             @break
                                         @case("AET")
                                             <td scope="row">{{$last_fixture->scores->localteam_score}} - {{$last_fixture->scores->visitorteam_score}} (ET)</td>
@@ -169,7 +192,7 @@
                                     {{-- show date_time, if LIVE -> show LIVE after date_time --}}
                                     <td scope="row">{{date($date_format . " H:i", strtotime($last_fixture->time->starting_at->date_time))}}
                                         @if($last_fixture->time->status == "LIVE")
-                                            <span style="color:#FF0000">LIVE</span>
+                                            <span style="color:#ff0000">LIVE</span>
                                         @endif
                                     </td>
                                     {{-- show button to view fixtures-details --}}
@@ -191,6 +214,20 @@
                             $league = $upcoming_fixture->league->data;
                             $homeTeam = $upcoming_fixture->localTeam->data;
                             $awayTeam = $upcoming_fixture->visitorTeam->data;
+                            
+                            if($homeTeam->national_team == true) {
+                                $homeTeam->name = trans('countries.' . $homeTeam->name);
+                            }
+                            if($awayTeam->national_team == true) {
+                                $awayTeam->name = trans('countries.' . $awayTeam->name);
+                            }
+                            
+                            if(strpos($homeTeam->name, 'countries') !== false) {
+                                Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $homeTeam->name) . ' in ' . app()->getLocale() . '/countries.php');
+                            } elseif(strpos($awayTeam->name, 'countries') !== false) {
+                                Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $awayTeam->name) . ' in ' . app()->getLocale() . '/countries.php');
+                            }
+                            
                             if($upcoming_fixture->scores->localteam_score > $upcoming_fixture->scores->visitorteam_score && in_array($upcoming_fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
                                 $winningTeam = $homeTeam->name;
                             } elseif ($upcoming_fixture->scores->localteam_score == $upcoming_fixture->scores->visitorteam_score && in_array($upcoming_fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
@@ -207,14 +244,14 @@
                                     <tr>
                                         <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
                                             @if($upcoming_fixture->stage->data->name !== 'Regular Season')
-                                                @lang('cup_rounds.' . $upcoming_fixture->stage->data->name) -
+                                                @lang('cup_stages.' . $upcoming_fixture->stage->data->name) -
                                             @endif
                                             @lang('application.Matchday') {{$upcoming_fixture->round->data->name}}</td>
                                     </tr>
                                 @endif
                             @elseif($last_stage_id !== $upcoming_fixture->stage->data->name)
                                 <tr>
-                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('cup_rounds.' . $upcoming_fixture->stage->data->name)</td>
+                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang('cup_stages.' . $upcoming_fixture->stage->data->name)</td>
                                 </tr>
                             @endif
                             <tr>
@@ -253,7 +290,7 @@
     
                                 <td scope="row">{{date($date_format . " H:i", strtotime($upcoming_fixture->time->starting_at->date_time))}}
                                     @if($upcoming_fixture->time->status == "LIVE")
-                                        <span style="color:#FF0000">LIVE</span>
+                                        <span style="color:#ff0000">LIVE</span>
                                 @endif
                                 <td scope="row"><a href= {{route("fixturesDetails", ["id" => $upcoming_fixture->id])}}><i class="fa fa-info-circle"></i></a></td>
                             </tr>
@@ -263,16 +300,16 @@
                                     @if($last_round_id !== $upcoming_fixture->round->data->name)
                                         <tr>
                                             <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">
-                                                <a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('competitions.' . $league->name)</a>
+                                                <a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('leagues.' . $league->name)</a> -
                                                 @if($upcoming_fixture->stage->data->name !== 'Regular Season')
-                                                    @lang('cup_rounds.' . $upcoming_fixture->stage->data->name) -
+                                                    @lang('cup_stages.' . $upcoming_fixture->stage->data->name) -
                                                 @endif
                                                 @lang('application.Matchday') {{$upcoming_fixture->round->data->name}}</td>
                                         </tr>
                                     @endif
                                 @elseif($last_stage_id !== $upcoming_fixture->stage->data->name)
                                     <tr>
-                                        <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('competitions.' . $league->name)</a> - @lang('cup_rounds.' . $upcoming_fixture->stage->data->name)</td>
+                                        <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">@lang('leagues.' . $league->name)</a> - @lang('cup_stages.' . $upcoming_fixture->stage->data->name)</td>
                                     </tr>
                                 @endif
                                 <thead>
@@ -322,7 +359,7 @@
     
                                     <td scope="row">{{date($date_format . " H:i", strtotime($upcoming_fixture->time->starting_at->date_time))}}
                                         @if($upcoming_fixture->time->status == "LIVE")
-                                            <span style="color:#FF0000">LIVE</span>
+                                            <span style="color:#ff0000">LIVE</span>
                                     @endif
                                     <td scope="row"><a href="{{route("fixturesDetails", ["id" => $upcoming_fixture->id])}}"><i class="fa fa-info-circle"></i></a></td>
                                 </tr>

@@ -13,6 +13,20 @@
             $homeTeam = $fixture->localTeam->data;
             $homeTeamId = $homeTeam->id;
             $awayTeam = $fixture->visitorTeam->data;
+            
+            if($homeTeam->national_team == true) {
+                $homeTeam->name = trans('countries.' . $homeTeam->name);
+            }
+            if($awayTeam->national_team == true) {
+                $awayTeam->name = trans('countries.' . $awayTeam->name);
+            }
+            
+            if(strpos($homeTeam->name, 'countries') !== false) {
+                Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $homeTeam->name) . ' in ' . app()->getLocale() . '/countries.php');
+            } elseif(strpos($awayTeam->name, 'countries') !== false) {
+                Log::warning('Missing translation-string for: ' . str_replace('countries.', '', $awayTeam->name) . ' in ' . app()->getLocale() . '/countries.php');
+            }
+            
             $events = $fixture->events->data;
 
             $lineup = $fixture->lineup->data;
@@ -31,7 +45,7 @@
 
 
         <div id="heading" style="text-align: center">
-            <h1><a href=" {{route("leaguesDetails", ["id" => $league->id])}} "> @lang('competitions.' . $league->name) </a></h1>
+            <h1><a href=" {{route("leaguesDetails", ["id" => $league->id])}} "> @lang('leagues.' . $league->name) </a></h1>
                 <table style="width:100%">
                     <tr>
                         <td width="49%"><img style="max-height: 200px; max-width: 200px" src={{$homeTeam->logo_path}}></td>
@@ -50,9 +64,9 @@
                     <span style="font-size: x-large"> {{$fixture->scores->localteam_score}} - {{$fixture->scores->visitorteam_score}} </span><br>
                     <span>
                     @if(isset($fixture->scores->localteam_pen_score) && isset($fixture->scores->visitorteam_pen_score))
-                        ({{$fixture->scores->localteam_pen_score}} - {{$fixture->scores->visitorteam_pen_score}}) penalties
+                        ({{$fixture->scores->localteam_pen_score}} - {{$fixture->scores->visitorteam_pen_score}}) @lang('application.penalties')
                     @endif
-                    Penalties</span>
+                    </span>
                     @break
                 @case("AET")
                     <span style="font-size: x-large"> {{$fixture->scores->ft_score}} (ET) </span>
@@ -116,29 +130,19 @@
                                     <td scope="row" style="text-align:right" width="1%"> {{$event->minute}}&apos;</td>
                                     <td scope="row" style="text-align:center" width="1%"><img src="/images/events/{{$event->type}}.svg"></td>
                                     <td scope="row" style="text-align:left" width="49%">{{$event->player_name}} <img src='/images/events/substitution-in.svg'> {{$event->related_player_name}} <img src='/images/events/substitution-out.svg'></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
                                 @else
                                     <td scope="row" style="text-align:right" width="1%">{{$event->minute}}&apos;</td>
                                     <td scope="row" style="text-align:center" width="1%"><img src="/images/events/{{$event->type}}.svg"></td>
                                     <td scope="row" style="text-align:left" width="49%"> {{$event->player_name}} </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
                                 @endif
                             @else
                                 @if($event->type == "substitution")
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td scope="row" style="text-align:right" width="49%">{{$event->player_name}} <img src='/images/events/substitution-in.svg'> {{$event->related_player_name}} <img src='/images/events/substitution-out.svg'></td>
+                                    <td colspan="3"></td>
+                                    <td scope="row" style="text-align:right" width="49%">{{$event->player_name}}<img src="/images/events/substitution-in.svg"> {{$event->related_player_name}} <img src="/images/events/substitution-out.svg"></td>
                                     <td scope="row" style="text-align:center" width="1%"><img src="/images/events/{{$event->type}}.svg"></td>
                                     <td scope="row" style="text-align:left" width="1%">{{$event->minute}}&apos;</td>
                                 @else
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td colspan="3"></td>
                                     <td scope="row" style="text-align:right" width="49%"> {{$event->player_name}} </td>
                                     <td scope="row" style="text-align:center" width="1%"><img src="/images/events/{{$event->type}}.svg"></td>
                                     <td scope="row" style="text-align:left" width="1%">{{$event->minute}}&apos;</td>
@@ -274,7 +278,6 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                    
                                     </tr>
                             @endif
                         @endforeach
@@ -359,37 +362,51 @@
                                     $away_player_nationality = "Unknown";
                                     $away_player_common_name = $away_player->player_name;
                                 }
+                                
+                                if($home_player_nationality == "Unknown" && !isset($home_player->player->data)) {
+                                    Log::alert("Missing nationality for " . $home_player->player_id);
+                                } elseif($away_player_nationality == "Unknown" && !isset($away_player->player->data)){
+                                    Log::alert("Missing nationality for " . $away_player->player_id);
+                                }
                             @endphp
                             <tr>
-                                @if(isset($home_player) && isset($home_player->player))
+                                @if(isset($home_player) && isset($away_player))
                                     <td style="width:1%">{{$home_player->number}}</td>
                                     <td style="width:1%"><img src="/images/flags/shiny/16/{{$home_player_nationality}}.png"></td>
                                     <td style="text-align: left">
-                                        {{$home_player->player->data->common_name}}
+                                        {{$home_player_common_name}}
                                         @foreach($home_player_stats as $stat)
                                             <img src="{{$stat}}">
                                         @endforeach
                                     </td>
-                                @else
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                @endif
-                                @if(isset($away_player) && isset($away_player->player))
                                     <td style="width: 1%"></td>
                                     <td style="text-align: right">
                                         @foreach($away_player_stats as $stat)
                                             <img src="{{$stat}}">
                                         @endforeach
-                                        {{$away_player->player->data->common_name}}
+                                        {{$away_player_common_name}}
                                     </td>
                                     <td style="width:1%"><img src="/images/flags/shiny/16/{{$away_player_nationality}}.png"></td>
                                     <td style="width:1%">{{$away_player->number}}</td>
-                                @else
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                @elseif(isset($home_player) && !isset($away_player))
+                                    <td style="width:1%">{{$home_player->number}}</td>
+                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$home_player_nationality}}.png"></td>
+                                    <td style="text-align: left">
+                                        {{$home_player_common_name}}
+                                        @foreach($home_player_stats as $stat)
+                                            <img src="{{$stat}}">
+                                        @endforeach
+                                    </td>
+                                @elseif(!isset($home_player) && isset($away_player))
+                                    <td colspan="5"></td>
+                                    <td style="text-align: right">
+                                        @foreach($away_player_stats as $stat)
+                                            <img src="{{$stat}}">
+                                        @endforeach
+                                        {{$away_player_common_name}}
+                                    </td>
+                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$away_player_nationality}}.png"></td>
+                                    <td style="width:1%">{{$away_player->number}}</td>
                                 @endif
                             </tr>
                         @endfor
@@ -452,6 +469,12 @@
                                     $away_player_nationality = "Unknown";
                                     $away_player_common_name = $away_player->player_name;
                                 }
+                                
+                                if($home_player_nationality == "Unknown" && !isset($home_player->player->data)) {
+                                    Log::alert("Missing nationality for " . $home_player->player_id);
+                                } elseif($away_player_nationality == "Unknown" && !isset($away_player->player->data)){
+                                    Log::alert("Missing nationality for " . $away_player->player_id);
+                                }
                             @endphp
                             <tr>
                                 @if(isset($home_player) && isset($away_player))
@@ -481,15 +504,8 @@
                                             <img src="{{$stat}}">
                                         @endforeach
                                     </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
                                 @elseif(!isset($home_player) && isset($away_player))
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td colspan="4"></td>
                                     <td style="text-align: right; width: 50%">
                                         @foreach($away_player_stats as $stat)
                                             <img src="{{$stat}}">
@@ -543,24 +559,21 @@
                                     <tr>
                                         <td></td>
                                         <td style="width: 1%"><img src="/images/flags/shiny/16/{{$home_sidelined_player->nationality}}.png"></td>
-                                        <td style="text-align: left">{{$home_sidelined_player->common_name}} <span style="color: #A9A9A9">({{$home_sidelined_player->reason}})</span></td>
+                                        <td style="text-align: left">{{$home_sidelined_player->common_name}} <span style="color: #A9A9A9">(@lang('injuries.' . $home_sidelined_player->reason))</span></td>
                                         <td></td>
-                                        <td style="text-align: right">{{$away_sidelined_player->common_name}} <span style="color: #A9A9A9">({{$away_sidelined_player->reason}})</span></td>
+                                        <td style="text-align: right">{{$away_sidelined_player->common_name}} <span style="color: #A9A9A9">(@lang('injuries.' . $away_sidelined_player->reason))</span></td>
                                         <td style="width: 1%"><img src="/images/flags/shiny/16/{{$away_sidelined_player->nationality}}.png"></td>
                                     </tr>
                                 @elseif(isset($home_sidelined_player) && !isset($away_sidelined_player))
                                     <tr>
                                         <td></td>
                                         <td style="width: 1%"><img src="/images/flags/shiny/16/{{$home_sidelined_player->nationality}}.png"></td>
-                                        <td style="text-align: left">{{$home_sidelined_player->common_name}} <span style="color: #A9A9A9">({{$home_sidelined_player->reason}})</span></td>
+                                        <td style="text-align: left">{{$home_sidelined_player->common_name}} <span style="color: #A9A9A9">(@lang('injuries.' . $home_sidelined_player->reason))</span></td>
                                     </tr>
                                 @elseif(!isset($home_sidelined_player) && isset($away_sidelined_player))
                                     <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td style="text-align: right">{{$away_sidelined_player->common_name}} <span style="color: #A9A9A9">({{$away_sidelined_player->reason}})</span></td>
+                                        <td colspan="4"></td>
+                                        <td style="text-align: right">{{$away_sidelined_player->common_name}} <span style="color: #A9A9A9">(@lang('injuries.' . $away_sidelined_player->reason))</span></td>
                                         <td style="width: 1%"><img src="/images/flags/shiny/16/{{$away_sidelined_player->nationality}}.png"></td>
                                     </tr>
                                 @endif
@@ -586,15 +599,8 @@
                                 <td style="width: 1%"></td>
                                 <td style="width:1%"><img src="/images/flags/shiny/16/{{$localCoach->nationality}}.png"></td>
                                 <td style="text-align: left">{{$localCoach->common_name}}</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
                             @elseif(!isset($localCoach) && isset($visitorCoach))
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td colspan="4"></td>
                                 <td style="text-align: right">{{$visitorCoach->common_name}}</td>
                                 <td style="width:1%"><img src="/images/flags/shiny/16/{{$visitorCoach->nationality}}.png"></td>
                                 <td style="width: 1%"></td>

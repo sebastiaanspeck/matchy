@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Application Language Lines
@@ -23,11 +22,11 @@ return [
     'fixtures'                  => 'partidos',
     'Fixtures'                  => 'Partidos',
     'todays\'s fixtures'        => 'partidos de hoy',
-    'last fixtures'             => '{1} Partido pasados|[2,*] Próximos :count partidos',
-    'upcoming fixtures'         => '{1} Partido pasado|[2,*] Próximos :count partidos',
+    'last fixtures'             => '{1} Partido pasado|[2,*] Partidos :count pasados',
+    'upcoming fixtures'         => '{1} Próximos partido|[2,*] Próximos :count partidos',
     'Matchday'                  => 'Jornada',
     'Standings'                 => 'Posiciones',
-    'Topscorers'                => 'Goleadores',
+    'Top Scorers'               => 'Goleadores',
     'Player'                    => 'Jugador',
 
     'No.'                       => 'No.',
@@ -42,6 +41,7 @@ return [
     'W'                         => 'G',
     'D'                         => 'E',
     'L'                         => 'P',
+    'Group'                     => 'Group',
 
     'live'                      => 'En vivo',
     'livescores'                => 'puntuaciones en vivo',
@@ -98,5 +98,4 @@ return [
     'msg_no_livescores_today'   => 'No hay resultados en vivo para hoy.',
     'msg_no_matches_found'      => 'No hay partidos para :date.',
     'msg_no_data'               => 'no está (aún) disponible para este partido|no están (aún) disponibles para este partido',
-
 ];

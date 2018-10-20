@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Application Language Lines
@@ -27,7 +26,7 @@ return [
     'upcoming fixtures'         => '{1} Volgende wedstrijd|[2,*] Volgende :count wedstrijden',
     'Matchday'                  => 'Speelronde',
     'Standings'                 => 'Ranglijst',
-    'Topscorers'                => 'Topscorers',
+    'Top Scorers'               => 'Topscorers',
     'Player'                    => 'Speler',
 
     'No.'                       => 'Nr.',
@@ -42,6 +41,7 @@ return [
     'W'                         => 'W',
     'D'                         => 'G',
     'L'                         => 'V',
+    'Group'                     => 'Groep',
 
     'live'                      => 'live',
     'livescores'                => 'live wedstrijden',
@@ -59,6 +59,7 @@ return [
     'Substitutes'               => 'Wisselspelers',
     'Missing players'           => 'Ontbrekende spelers',
     'Coaches'                   => 'Coaches',
+    'penalties'                 => 'penalties',
 
     'Total shots'               => 'Totale schoten',
     'Shots on goal'             => 'Schoten op doel',
@@ -98,5 +99,4 @@ return [
     'msg_no_livescores_today'   => 'Geen wedstrijden voor vandaag.',
     'msg_no_matches_found'      => 'Geen wedstrijden voor :date gevonden.',
     'msg_no_data'               => 'is (nog) niet beschikbaar voor deze wedstrijd|zijn (nog) niet beschikbaar voor deze wedstrijd',
-
 ];

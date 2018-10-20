@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Carbon\Carbon;
 use DateTime;
-use App\CustomSoccerApi;
+use Log;
 
 class SoccerAPIController extends BaseController
 {
@@ -34,11 +34,20 @@ class SoccerAPIController extends BaseController
 
         $leagues = $soccerAPI->leagues()->setInclude($include)->all();
 
+        $currentYear = Carbon::now()->year;
+        $nextYear = Carbon::now()->addYear()->year;
+        $season = $currentYear . "/" . $nextYear;
+
+        foreach($leagues as $key => $league) {
+            if(!in_array($league->season->data->name, array($season, $currentYear))) {
+                unset($leagues[$key]);
+            }
+        }
+
         usort($leagues, function ($item1, $item2) {
             if ($item1->country->data->name == $item2->country->data->name) {
                 return $item1->id <=> $item2->id;
             }
-
             return $item1->country->data->name <=> $item2->country->data->name;
         });
 
@@ -63,20 +72,21 @@ class SoccerAPIController extends BaseController
         $soccerAPI = new SoccerAPI();
         $customSoccerAPI = new CustomSoccerApi();
         $includeLeague = 'country,season';
+        $includeStandings = 'standings.team';
         $includeSeason = 'upcoming.localTeam,upcoming.visitorTeam,upcoming.league,upcoming.stage,upcoming.round,results:order(starting_at|desc),results.localTeam,results.visitorTeam,results.league,results.round,results.stage';
         $includeTopscorers = 'goalscorers.player,goalscorers.team';
         $includeAgTopscorers = 'aggregatedGoalscorers.player,aggregatedGoalscorers.team';
 
         $league = $soccerAPI->leagues()->setInclude($includeLeague)->byId($leagueId)->data;
 
-        $excludedLeagues = [214, 1371, 24, 2, 5, 720, 1325, 1326, 307, 109, 390];
+        $excludedLeagues = [2, 5, 732];
 
-        $standingsRaw = $soccerAPI->standings()->bySeasonId($league->current_season_id);
+        $standingsRaw = $soccerAPI->standings()->setInclude($includeStandings)->bySeasonId($league->current_season_id);
 
         $season = $soccerAPI->seasons()->setInclude($includeSeason)->byId($league->current_season_id);
 
         $topscorers = [];
-
+      
         if (!in_array($leagueId, $excludedLeagues)) {
 
             $topscorers = array();
@@ -87,12 +97,15 @@ class SoccerAPIController extends BaseController
             } 
 
             if ($league->country->data->name == "World" || $league->country->data->name == "Europe") {
-                $topscorersAggregated = $customSoccerAPI->topscorers()->setInclude($includeAgTopscorers)->aggregatedBySeasonId($league->current_season_id)->aggregatedGoalscorers->data;
+                $topscorersAggregated = $soccerAPI->topscorers()->setInclude($includeAgTopscorers)->aggregatedBySeasonId($league->current_season_id)->aggregatedGoalscorers->data;
                 if(count($topscorersAggregated) > 0) {
                     $topscorers = $topscorersAggregated;
                     $topscorers = self::addPagination($topscorersAggregated, 10); 
                 }
             }
+
+            $topscorers = self::addPagination($topscorers, 10);
+
         }
 
         $lastFixtures = [];
@@ -364,9 +377,6 @@ class SoccerAPIController extends BaseController
         }
 
         switch ($country) {
-            case ('World'):
-                $country = 'Unknown';
-                break;
             case (null):
                 $country = 'Unknown';
                 break;
@@ -376,7 +386,7 @@ class SoccerAPIController extends BaseController
         }
 
         if (!file_exists('images/flags/shiny/16/' . $country . '.png')) {
-            error_log('Missing flag for: ' . $country);
+            Log::alert('Missing flag for: ' . $country);
             $country = 'Unknown';
         }
 

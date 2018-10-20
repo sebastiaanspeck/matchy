@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Application Language Lines
@@ -23,11 +22,11 @@ return [
     'fixtures'                  => 'fixtures',
     'Fixtures'                  => 'Fixtures',
     'todays\'s fixtures'        => 'todays\'s fixtures',
-    'last fixtures'             => '{1} Last fixture|[2,*] Upcoming :count fixtures',
+    'last fixtures'             => '{1} Last fixture|[2,*] Last :count fixtures',
     'upcoming fixtures'         => '{1} Upcoming fixture|[2,*] Upcoming :count fixtures',
     'Matchday'                  => 'Matchday',
     'Standings'                 => 'Standings',
-    'Topscorers'                => 'Topscorers',
+    'Top Scorers'               => 'Top Scorers',
     'Player'                    => 'Player',
 
     'No.'                       => 'No.',
@@ -42,6 +41,7 @@ return [
     'W'                         => 'W',
     'D'                         => 'D',
     'L'                         => 'L',
+    'Group'                     => 'Group',
 
     'live'                      => 'live',
     'livescores'                => 'livescores',
@@ -59,9 +59,10 @@ return [
     'Substitutes'               => 'Substitutes',
     'Missing players'           => 'Missing players',
     'Coaches'                   => 'Coaches',
+    'penalties'                 => 'penalties',
 
     'Total shots'               => 'Total shots',
-    'Shots on goal'             => 'Schots on goal',
+    'Shots on goal'             => 'Shots on goal',
     'Shots of goal'             => 'Shots of goal',
     'Blocked shots'             => 'Blocked shots',
     'Shots inside box'          => 'Shots inside box',
@@ -98,5 +99,4 @@ return [
     'msg_no_livescores_today'   => 'No livescores for today.',
     'msg_no_matches_found'      => 'No matches found for :date.',
     'msg_no_data'               => 'is not (yet) available for this fixture|are not (yet) available for this fixture',
-
 ];

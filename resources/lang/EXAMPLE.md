@@ -18,3 +18,20 @@
 5. Run `php artisan trans:publish [2-lettered country code] --force`
 5. Update the translation-files.
 6. Commit and open a PR.
+
+# Files
+**Make sure you have the following files in the folder.**
+
+## Custom files
+- application.php -> strings which are used throughout the application.
+- countries.php -> strings which are used throughout the application for countries and national teams.
+- cup_stages.php -> strings which are used to show the cup-stages
+- injuries.php -> strings which are used to show the reason why a player is sidelined
+- leagues.php -> strings which are used to show the leagues
+
+## Default files
+
+- auth.php
+- pagination.php
+- passwords.php
+- validation.php

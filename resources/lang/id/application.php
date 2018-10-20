@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Application Language Lines
@@ -23,11 +22,11 @@ return [
     'fixtures'                  => 'pekan',
     'Fixtures'                  => 'pekan',
     'todays\'s fixtures'        => 'todays\'s fixtures',
-    'last fixtures'             => '{1} Laatste wedstrijd|[2,*] Upcoming :count fixtures',
+    'last fixtures'             => '{1} Last fixture|[2,*] Upcoming :count fixtures',
     'upcoming fixtures'         => '{1} Upcoming fixture|[2,*] Upcoming :count fixtures',
     'Matchday'                  => 'Matchday',
     'Standings'                 => 'Klasemen',
-    'Topscorers'                => 'Top Skor',
+    'Top Scorers'               => 'Top Skor',
     'Player'                    => 'Pemain',
 
     'No.'                       => 'No.',
@@ -42,6 +41,7 @@ return [
     'W'                         => 'M',
     'D'                         => 'S',
     'L'                         => 'K',
+    'Group'                     => 'Group',
 
     'live'                      => 'langsung',
     'livescores'                => 'livescores',
@@ -98,5 +98,4 @@ return [
     'msg_no_livescores_today'   => 'Tidak ada update score hari ini',
     'msg_no_matches_found'      => 'Tidak ada pertandingan pada tanggal :date.',
     'msg_no_data'               => 'tidak tersedia pada minggu ini |are not (yet) available for this fixture',
-
 ];
