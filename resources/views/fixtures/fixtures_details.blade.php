@@ -124,29 +124,19 @@
                                     <td scope="row" style="text-align:right" width="1%"> {{$event->minute}}&apos;</td>
                                     <td scope="row" style="text-align:center" width="1%"><img src="/images/events/{{$event->type}}.svg"></td>
                                     <td scope="row" style="text-align:left" width="49%">{{$event->player_name}} <img src='/images/events/substitution-in.svg'> {{$event->related_player_name}} <img src='/images/events/substitution-out.svg'></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
                                 @else
                                     <td scope="row" style="text-align:right" width="1%">{{$event->minute}}&apos;</td>
                                     <td scope="row" style="text-align:center" width="1%"><img src="/images/events/{{$event->type}}.svg"></td>
                                     <td scope="row" style="text-align:left" width="49%"> {{$event->player_name}} </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
                                 @endif
                             @else
                                 @if($event->type == "substitution")
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td scope="row" style="text-align:right" width="49%">{{$event->player_name}} <img src='/images/events/substitution-in.svg'> {{$event->related_player_name}} <img src='/images/events/substitution-out.svg'></td>
+                                    <td colspan="3"></td>
+                                    <td scope="row" style="text-align:right" width="49%">{{$event->player_name}}<img src="/images/events/substitution-in.svg"> {{$event->related_player_name}} <img src="/images/events/substitution-out.svg"></td>
                                     <td scope="row" style="text-align:center" width="1%"><img src="/images/events/{{$event->type}}.svg"></td>
                                     <td scope="row" style="text-align:left" width="1%">{{$event->minute}}&apos;</td>
                                 @else
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td colspan="3"></td>
                                     <td scope="row" style="text-align:right" width="49%"> {{$event->player_name}} </td>
                                     <td scope="row" style="text-align:center" width="1%"><img src="/images/events/{{$event->type}}.svg"></td>
                                     <td scope="row" style="text-align:left" width="1%">{{$event->minute}}&apos;</td>
@@ -282,7 +272,6 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                    
                                     </tr>
                             @endif
                         @endforeach
@@ -403,8 +392,7 @@
                                         @endforeach
                                     </td>
                                 @elseif(!isset($home_player) && isset($away_player))
-                                    <td colspan="4"></td>
-                                    <td style="width: 1%"></td>
+                                    <td colspan="5"></td>
                                     <td style="text-align: right">
                                         @foreach($away_player_stats as $stat)
                                             <img src="{{$stat}}">
@@ -510,15 +498,8 @@
                                             <img src="{{$stat}}">
                                         @endforeach
                                     </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
                                 @elseif(!isset($home_player) && isset($away_player))
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td colspan="4"></td>
                                     <td style="text-align: right; width: 50%">
                                         @foreach($away_player_stats as $stat)
                                             <img src="{{$stat}}">
@@ -612,15 +593,8 @@
                                 <td style="width: 1%"></td>
                                 <td style="width:1%"><img src="/images/flags/shiny/16/{{$localCoach->nationality}}.png"></td>
                                 <td style="text-align: left">{{$localCoach->common_name}}</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
                             @elseif(!isset($localCoach) && isset($visitorCoach))
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td colspan="4"></td>
                                 <td style="text-align: right">{{$visitorCoach->common_name}}</td>
                                 <td style="width:1%"><img src="/images/flags/shiny/16/{{$visitorCoach->nationality}}.png"></td>
                                 <td style="width: 1%"></td>
