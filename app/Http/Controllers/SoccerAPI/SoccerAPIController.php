@@ -65,7 +65,7 @@ class SoccerAPIController extends BaseController
         $includeLeague = 'country,season';
         $includeSeason = 'upcoming.localTeam,upcoming.visitorTeam,upcoming.league,upcoming.stage,upcoming.round,results:order(starting_at|desc),results.localTeam,results.visitorTeam,results.league,results.round,results.stage';
         $includeTopscorers = 'goalscorers.player,goalscorers.team';
-        $includeTopscorersAggregated = 'aggregatedGoalscorers.player,aggregatedGoalscorers.team';
+        $includeAgTopscorers = 'aggregatedGoalscorers.player,aggregatedGoalscorers.team';
 
         $league = $soccerAPI->leagues()->setInclude($includeLeague)->byId($leagueId)->data;
 
@@ -78,17 +78,19 @@ class SoccerAPIController extends BaseController
         $topscorers = [];
 
         if (!in_array($leagueId, $excludedLeagues)) {
-            $topscorersDefault = $soccerAPI->topscorers()->setInclude($includeTopscorers)->bySeasonId($league->current_season_id)->goalscorers->data;
 
-            /* cups don't work yet -> try: check with current_stage_id */
-            
-            if (count($topscorersDefault) > 0) {
-                $topscorers = self::addPagination($topscorersDefault, 10);
-                $topscorersAggregated = $customSoccerAPI->topscorers()->setInclude($includeTopscorersAggregated)->aggregatedBySeasonId($league->current_season_id)->aggregatedGoalscorers->data;
+            $topscorers = array();
+
+            if ($league->is_cup == false) {
+                $topscorersDefault = $soccerAPI->topscorers()->setInclude($includeTopscorers)->bySeasonId($league->current_season_id)->goalscorers->data;
+                $topscorers = self::addPagination($topscorersDefault, 10); 
+            } 
+
+            if ($league->country->data->name == "World" || $league->country->data->name == "Europe") {
+                $topscorersAggregated = $customSoccerAPI->topscorers()->setInclude($includeAgTopscorers)->aggregatedBySeasonId($league->current_season_id)->aggregatedGoalscorers->data;
                 if(count($topscorersAggregated) > 0) {
                     $topscorers = $topscorersAggregated;
-                } else {
-                    $topscorers = array();
+                    $topscorers = self::addPagination($topscorersAggregated, 10); 
                 }
             }
         }
