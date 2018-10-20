@@ -368,9 +368,6 @@ class SoccerAPIController extends BaseController
         }
 
         switch ($country) {
-            case ('World'):
-                $country = 'Unknown';
-                break;
             case (null):
                 $country = 'Unknown';
                 break;
