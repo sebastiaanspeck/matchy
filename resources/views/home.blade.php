@@ -1,6 +1,6 @@
-@extends('layouts.default')
+@extends("layouts.default")
 
-@section('style')
+@section("style")
     .container {
         text-align: center;
     }
@@ -27,10 +27,10 @@
     }
 @endsection
 
-@section('content')
+@section("content")
     <div class="container">
         <div class="div-centered">
-            <div class="title">{{ config('app.name') }}</div>
+            <div class="title">{{ config("app.name") }}</div>
 
             <div class="links">
                 <a href="{{route("leagues")}}">{{ Lang::has("application.leagues") ? trans("application.leagues") : Log::emergency("Missing application translation for: leagues") . "leagues" }}</a>
