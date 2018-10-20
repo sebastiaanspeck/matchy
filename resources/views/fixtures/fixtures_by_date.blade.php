@@ -197,6 +197,8 @@
                 @endif
                 @php $last_league_id = $fixture->league_id; if(isset($fixture->round)) {$last_round_id = $fixture->round->data->name;} $last_stage_id = $fixture->stage->data->name; @endphp
             @endforeach
+            </tbody>
+        </table>
         @else
             <p>@lang('application.msg_no_matches_found', ["date" => date($date_format, strtotime($date))])</p>
         @endif
