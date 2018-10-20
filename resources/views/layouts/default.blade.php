@@ -107,10 +107,14 @@
             background-color: #f0be4b;
         }
 
+        .live {
+            animation: blinker 1.5s linear infinite;
+        }
 
-
-        caption {
-            caption-side: top;
+        @keyframes blinker {
+            50% {
+                opacity: 0;
+            }
         }
 
         @yield("style")
