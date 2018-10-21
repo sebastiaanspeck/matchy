@@ -1,3 +1,4 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/58d7eedeb5694fda93ceb2240308b54e)](https://app.codacy.com/app/shem-speck/matchy?utm_source=github.com&utm_medium=referral&utm_content=sebastiaanspeck/matchy&utm_campaign=Badge_Grade_Dashboard)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1e92b8e1d53f40cc9b92f9ebcf8aa8b9)](https://app.codacy.com/app/shem-speck/sportmonks?utm_source=github.com&utm_medium=referral&utm_content=sebastiaanspeck/sportmonks&utm_campaign=Badge_Grade_Settings)
 [![BCH compliance](https://bettercodehub.com/edge/badge/sebastiaanspeck/sportmonks?branch=master)](https://bettercodehub.com/)
 
