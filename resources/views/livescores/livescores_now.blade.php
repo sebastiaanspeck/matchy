@@ -66,7 +66,7 @@
                                 @elseif(in_array($livescore->time->added_time, array(0, null)))
                                     <td scope="row">{{$livescore->time->minute}}&apos;</td>
                                 @elseif(!in_array($livescore->time->added_time, array(0, null)))
-                                    <td scope="row">{{$livescore->time->minute}}&apos;+{{$livescore->time->added_time}}</td>
+                                    <td scope="row">{{$livescore->time->minute}}+{{$livescore->time->added_time}}&apos;</td>
                                 @else
                                     <td scope="row">{{$livescore->time->minute}}</td>
                                 @endif
@@ -117,7 +117,7 @@
                                     @elseif(in_array($livescore->time->added_time, array(0, null)))
                                         <td scope="row">{{$livescore->time->minute}}&apos;</td>
                                     @elseif(!in_array($livescore->time->added_time, array(0, null)))
-                                        <td scope="row">{{$livescore->time->minute}}&apos;+{{$livescore->time->added_time}}</td>
+                                        <td scope="row">{{$livescore->time->minute}}+{{$livescore->time->added_time}}&apos;</td>
                                     @else
                                         <td scope="row">{{$livescore->time->minute}}</td>
                                     @endif

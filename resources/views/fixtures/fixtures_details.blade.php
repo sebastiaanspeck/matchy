@@ -52,6 +52,7 @@
                         <td width="2%"><h1> - </h1></td>
                         <td width="49%"><img style="max-height: 200px; max-width: 200px" src={{$awayTeam->logo_path}}></td>
                     </tr>
+                    <tr style="height: 10px"></tr>
                     <tr>
                         <td width="49%" style="vertical-align: top"><h5><a href =" {{route("teamsDetails", ["id" => $homeTeam->id])}} "> {{$homeTeam->name}} </a></h5></td>
                         <td></td>
@@ -85,7 +86,7 @@
                 @elseif($fixture->time->added_time == null)
                     <span style="font-size: medium"> {{$fixture->time->status}} - {{$fixture->time->minute}}&apos;</span>
                 @elseif(!$fixture->time->added_time == null)
-                    <span style="font-size: medium"> {{$fixture->time->status}} - {{$fixture->time->minute}}&apos; +{{$fixture->time->injury_time}} </span>
+                    <span style="font-size: medium"> {{$fixture->time->status}} - {{$fixture->time->minute}}+{{$fixture->time->injury_time}}&apos;</span>
                 @endif
             @else
                 <span style="font-size: medium"> {{date($date_format . " H:i", strtotime($fixture->time->starting_at->date_time))}} </span>
@@ -133,11 +134,11 @@
                             <tr>
                             @if($event->team_id == $homeTeamId)
                                 @if($event->type == "substitution")
-                                    <td scope="row" style="text-align:right" width="1%"> {{$event->minute}}&apos;</td>
+                                    <td scope="row" style="text-align:right" width="1%">{{$event->minute}}@if(!is_null($event->extra_minute))+{{$event->extra_minute}}@endif&apos;</td>
                                     <td scope="row" style="text-align:center" width="1%"><img src="/images/events/{{$event->type}}.svg"></td>
                                     <td scope="row" style="text-align:left" width="49%">{{$event->player_name}} <img src="/images/events/substitution-in.svg"> {{$event->related_player_name}} <img src="/images/events/substitution-out.svg"></td>
                                 @else
-                                    <td scope="row" style="text-align:right" width="1%">{{$event->minute}}&apos;</td>
+                                    <td scope="row" style="text-align:right" width="1%">{{$event->minute}}@if(!is_null($event->extra_minute))+{{$event->extra_minute}}@endif&apos;</td>
                                     <td scope="row" style="text-align:center" width="1%"><img src="/images/events/{{$event->type}}.svg"></td>
                                     <td scope="row" style="text-align:left" width="49%"> {{$event->player_name}} </td>
                                 @endif
@@ -146,12 +147,12 @@
                                     <td colspan="3"></td>
                                     <td scope="row" style="text-align:right" width="49%">{{$event->player_name}}<img src="/images/events/substitution-in.svg"> {{$event->related_player_name}} <img src="/images/events/substitution-out.svg"></td>
                                     <td scope="row" style="text-align:center" width="1%"><img src="/images/events/{{$event->type}}.svg"></td>
-                                    <td scope="row" style="text-align:left" width="1%">{{$event->minute}}&apos;</td>
+                                    <td scope="row" style="text-align:left" width="1%">{{$event->minute}}@if(!is_null($event->extra_minute))+{{$event->extra_minute}}@endif&apos;</td>
                                 @else
                                     <td colspan="3"></td>
                                     <td scope="row" style="text-align:right" width="49%"> {{$event->player_name}} </td>
                                     <td scope="row" style="text-align:center" width="1%"><img src="/images/events/{{$event->type}}.svg"></td>
-                                    <td scope="row" style="text-align:left" width="1%">{{$event->minute}}&apos;</td>
+                                    <td scope="row" style="text-align:left" width="1%">{{$event->minute}}@if(!is_null($event->extra_minute))+{{$event->extra_minute}}@endif&apos;</td>
                                 @endif
                             @endif
                             <tr>
