@@ -139,8 +139,8 @@
                                 @endswitch
     
                                 <td scope="row">{{date($date_format . " H:i", strtotime($last_fixture->time->starting_at->date_time))}}
-                                    @if($last_fixture->time->status == "LIVE")
-                                        <span style="color:#ff0000" class="live">LIVE</span>
+                                    @if(in_array($last_fixture->time->status, array("LIVE", "HT", "ET")))
+                                        <span class="live">{{ $last_fixture->time->status }}</span>
                                     @endif
                                 </td>
                                 <td scope="row"><a href= {{route("fixturesDetails", ["id" => $last_fixture->id])}}><i class="fa fa-info-circle"></i></a></td>
@@ -209,8 +209,8 @@
 
                                         {{-- show date_time, if LIVE -> show LIVE after date_time --}}
                                         <td scope="row">{{date($date_format . " H:i", strtotime($last_fixture->time->starting_at->date_time))}}
-                                            @if($last_fixture->time->status == "LIVE")
-                                                <span style="color:#ff0000" class="live">LIVE</span>
+                                            @if(in_array($last_fixture->time->status, array("LIVE", "HT", "ET")))
+                                                <span class="live">{{ $last_fixture->time->status }}</span>
                                             @endif
                                         </td>
                                         {{-- show button to view fixtures-details --}}
@@ -266,8 +266,8 @@
                                 <td scope="row">{{$upcoming_fixture->scores->localteam_score}} - {{$upcoming_fixture->scores->visitorteam_score}}</td>
     
                                 <td scope="row">{{date($date_format . " H:i", strtotime($upcoming_fixture->time->starting_at->date_time))}}
-                                    @if($upcoming_fixture->time->status == "LIVE")
-                                        <span style="color:#ff0000" class="live">LIVE</span>
+                                    @if(in_array($upcoming_fixture->time->status, array("LIVE", "HT", "ET")))
+                                        <span class="live">{{ $upcoming_fixture->time->status }}</span>
                                     @endif
                                 </td>
                                 <td scope="row"><a href= {{route("fixturesDetails", ["id" => $upcoming_fixture->id])}}><i class="fa fa-info-circle"></i></a></td>
@@ -290,14 +290,14 @@
                                         <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang("cup_stages." . $upcoming_fixture->stage->data->name)</td>
                                     </tr>
                                 @endif
-                                <thead>
-                                <tr>
-                                    <th scope="col" width="32%"></th>
-                                    <th scope="col" width="32%"></th>
-                                    <th scope="col" width="11%"></th>
-                                    <th scope="col" width="17%"></th>
-                                    <th scope="col" width="5%"></th>
-                                </tr>
+                                <thead style="visibility: collapse">
+                                    <tr>
+                                        <th scope="col" width="32%"></th>
+                                        <th scope="col" width="32%"></th>
+                                        <th scope="col" width="11%"></th>
+                                        <th scope="col" width="17%"></th>
+                                        <th scope="col" width="5%"></th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
@@ -306,8 +306,8 @@
                                     <td scope="row">{{$upcoming_fixture->scores->localteam_score}} - {{$upcoming_fixture->scores->visitorteam_score}}</td>
     
                                     <td scope="row">{{date($date_format . " H:i", strtotime($upcoming_fixture->time->starting_at->date_time))}}
-                                        @if($upcoming_fixture->time->status == "LIVE")
-                                            <span style="color:#ff0000" class="live">LIVE</span>
+                                        @if(in_array($upcoming_fixture->time->status, array("LIVE", "HT", "ET")))
+                                            <span class="live">{{ $upcoming_fixture->time->status }}</span>
                                         @endif
                                     </td>
                                     <td scope="row"><a href= {{route("fixturesDetails", ["id" => $upcoming_fixture->id])}}><i class="fa fa-info-circle"></i></a></td>
@@ -343,7 +343,7 @@
                                     <th scope="col">@lang("application.Lost")</th>
                                     <th scope="col" colspan="2">@lang("application.Goals")</th>
                                     <th scope="col">@lang("application.Points")</th>
-                                    <th scope="col" width="24%">@lang("application.Form")</th>
+                                    <th scope="col" width="13%">@lang("application.Form")</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -404,7 +404,7 @@
             <div class="tab-pane fade" id="topscorers" role="tabpanel" aria-labelledby="topscorers-tab">
                 @if(count($topscorers) > 0)
                     <table class="table table-light table-striped table-sm" style="width: 100%">
-                        <thead>
+                        <thead class="thead-dark">
                             <tr>
                                 <th scope="col" width="1%">@lang("application.No.")</th>
                                 <th scope="col">@lang("application.Player")</th>
