@@ -7,7 +7,7 @@
 
         @if(count($leagues) >= 1)
             <table class="table table-striped table-light table-sm" width="100%">
-                <thead>
+                <thead class="thead-dark">
                     <tr>
                         <th scope="col" width="50%">{{ Lang::has("application.League name") ? trans("application.League name") : Log::emergency("Missing application translation for: League name")
  . "League name" }}</th>

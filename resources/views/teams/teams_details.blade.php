@@ -145,14 +145,14 @@
                                         <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{ Lang::has("leagues." . $league->name) ? trans("leagues." . $league->name) : Log::critical("Missing league translation for: " . $league->name)   . $league->name }}</a> - {{ Lang::has("cup_stages." . $last_fixture->stage->data->name) ? trans("cup_stages." . $last_fixture->stage->data->name) : Log::critical("Missing cup-stage translation for: " . $last_fixture->stage->data->name) . $last_fixture->stage->data->name }}</td>
                                     </tr>
                                 @endif
-                                <thead>
-                                <tr>
-                                    <th scope="col" width="32%"></th>
-                                    <th scope="col" width="32%"></th>
-                                    <th scope="col" width="11%"></th>
-                                    <th scope="col" width="17%"></th>
-                                    <th scope="col" width="5%"></th>
-                                </tr>
+                                <thead style="visibility: collapse">
+                                    <tr>
+                                        <th scope="col" width="32%"></th>
+                                        <th scope="col" width="32%"></th>
+                                        <th scope="col" width="11%"></th>
+                                        <th scope="col" width="17%"></th>
+                                        <th scope="col" width="5%"></th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
@@ -316,14 +316,14 @@ Log::critical("Missing cup-stage translation for: " . $upcoming_fixture->stage->
 Log::critical("Missing cup-stage translation for: " . $upcoming_fixture->stage->data->name) . $upcoming_fixture->stage->data->name }}</td>
                                     </tr>
                                 @endif
-                                <thead>
-                                <tr>
-                                    <th scope="col" width="32%"></th>
-                                    <th scope="col" width="32%"></th>
-                                    <th scope="col" width="11%"></th>
-                                    <th scope="col" width="17%"></th>
-                                    <th scope="col" width="5%"></th>
-                                </tr>
+                                <thead style="visibility: collapse">
+                                    <tr>
+                                        <th scope="col" width="32%"></th>
+                                        <th scope="col" width="32%"></th>
+                                        <th scope="col" width="11%"></th>
+                                        <th scope="col" width="17%"></th>
+                                        <th scope="col" width="5%"></th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                 <tr>

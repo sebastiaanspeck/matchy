@@ -115,7 +115,7 @@
                                     <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{ Lang::has("leagues." . $league->name) ? trans("leagues." . $league->name) : Log::critical("Missing league translation for: " . $league->name)   . $league->name }}</a> - {{ Lang::has("cup_stages." . $livescore->stage->data->name) ? trans("cup_stages." . $livescore->stage->data->name) : Log::critical("Missing cup-stage translation for: " . $livescore->stage->data->name) . $livescore->stage->data->name }}</td>
                                 </tr>
                             @endif
-                            <thead>
+                            <thead style="visibility: collapse">
                                 <tr>
                                     <th scope="col" width="35%"></th>
                                     <th scope="col" width="35%"></th>

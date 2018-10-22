@@ -148,14 +148,14 @@
                         @else
                             @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; @endphp
                             <table class="table table-striped table-light table-sm" style="width:100%">
-                                <thead>
-                                <tr>
-                                    <th scope="col" width="32%"></th>
-                                    <th scope="col" width="32%"></th>
-                                    <th scope="col" width="11%"></th>
-                                    <th scope="col" width="17%"></th>
-                                    <th scope="col" width="5%"></th>
-                                </tr>
+                                <thead style="visibility: collapse">
+                                    <tr>
+                                        <th scope="col" width="32%"></th>
+                                        <th scope="col" width="32%"></th>
+                                        <th scope="col" width="11%"></th>
+                                        <th scope="col" width="17%"></th>
+                                        <th scope="col" width="5%"></th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     @if(isset($last_fixture->round))
