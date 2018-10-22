@@ -542,7 +542,7 @@
                                 $counter_a = 0;
                                 foreach($sidelined as $val){
                                     $val->team_id == $homeTeam->id ? $val->team = "home" : $val->team = "away";
-                                    $player = array("common_name" => $val->player->data->common_name, "nationality" => $val->player->data->nationality, "reason" => $val->reason);
+                                    $player = array("player_id" => $val->player_id, "common_name" => $val->player->data->common_name, "nationality" => $val->player->data->nationality, "reason" => $val->reason);
                                     if($val->team == "home") {
                                         $home_sidelined_players->{$counter_h} = (object) $player;
                                         $counter_h++;
@@ -561,10 +561,18 @@
                                     if(isset($home_sidelined_players[$index])) {
                                         $home_sidelined_player = $home_sidelined_players[$index];
                                         $home_sidelined_player->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($home_sidelined_player->nationality);
+                                        
+                                        if($home_sidelined_player->nationality == "Unknown") {
+                                            Log::emergency("Missing nationality for player with id: " . $home_sidelined_player->player_id);
+                                        }
                                     }
                                     if(isset($away_sidelined_players[$index])) {
                                         $away_sidelined_player = $away_sidelined_players[$index];
                                         $away_sidelined_player->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($away_sidelined_player->nationality);
+                                        
+                                        if($away_sidelined_player->nationality == "Unknown"){
+                                            Log::emergency("Missing nationality for player with id: " . $home_sidelined_player->player_id);
+                                        }
                                     }
                                 @endphp
                                 @if(isset($home_sidelined_player) && isset($away_sidelined_player))
@@ -600,6 +608,14 @@
                             @php
                                 $localCoach->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($localCoach->nationality);
                                 $visitorCoach->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($visitorCoach->nationality);
+                            
+                                if($localCoach->nationality == "Unknown") {
+                                    Log::emergency("Missing nationality for coach with id: " . $localCoach->coach_id);
+                                }
+                                
+                                if($visitorCoach->nationality == "Unknown") {
+                                    Log::emergency("Missing nationality for coach with id: " . $visitorCoach->coach_id);
+                                }
                             @endphp
                         <tr style="font-weight: bold; text-align: center; background: #D3D3D3">
                             <td colspan="7">
