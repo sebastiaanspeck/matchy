@@ -383,6 +383,9 @@ class SoccerAPIController extends BaseController
         return $country;
     }
 
+    /**
+     * @return string
+     */
     function getDateFormat()
     {
         switch (config('app.locale')) {
@@ -400,6 +403,10 @@ class SoccerAPIController extends BaseController
         return $dateFormat;
     }
 
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @return array|null|string
+     */
     function getDateFromRequest(Request $request)
     {
         if ($request->has('day')) {
