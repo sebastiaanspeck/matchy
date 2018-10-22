@@ -114,8 +114,8 @@
                         @endswitch
     
                         <td scope="row">{{date($date_format . " H:i", strtotime($fixture->time->starting_at->date_time))}}
-                            @if($fixture->time->status == "LIVE")
-                                <span style="color:#ff0000" class="live">LIVE</span>
+                            @if(in_array($fixture->time->status, array("LIVE", "HT", "ET")))
+                                <span class="live">{{ $fixture->time->status }}</span>
                             @endif
                         </td>
                         <td scope="row"><a href="{{route("fixturesDetails", ["id" => $fixture->id])}}"><i class="fa fa-info-circle"></i></a></td>
@@ -190,9 +190,9 @@
                             @endswitch
     
                             <td scope="row">{{date($date_format . " H:i", strtotime($fixture->time->starting_at->date_time))}}
-                            @if($fixture->time->status == "LIVE")
-                                <span style="color:#ff0000" class="live">LIVE</span>
-                            @endif
+                                @if(in_array($fixture->time->status, array("LIVE", "HT", "ET")))
+                                    <span class="live">{{ $fixture->time->status }}</span>
+                                @endif
                             </td>
                             <td scope="row"><a href="{{route("fixturesDetails", ["id" => $fixture->id])}}"><i class="fa fa-info-circle"></i></a></td>
                         </tr>
