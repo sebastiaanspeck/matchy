@@ -36,5 +36,6 @@ return [
     'European Championship'         => 'EK',
     'Eredivisie Playoffs'           => 'Eredivisie Playoffs',
     'UEFA Europa League Play-offs'  => 'UEFA Europa League Play-offs',
+    'UEFA Nations League'           => 'UEFA Nations League',
 
 ];
