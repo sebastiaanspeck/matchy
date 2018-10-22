@@ -14,7 +14,7 @@
                         }
                         
                         if(strpos($team->name, "countries") !== false) {
-                            Log::warning("Missing translation-string for: " . str_replace("countries.", "", $team->name) . " in " . app()->getLocale() . "/countries.php");
+                            Log::critical("Missing country translation for: " . str_replace("countries.", "", $team->name) . " in " . app()->getLocale() . "/countries.php");
                         }
                     @endphp
                     <td style="vertical-align: top"><h3>{{$team->name}}</h3></td>
@@ -55,9 +55,9 @@
                             }
                             
                             if(strpos($homeTeam->name, "countries") !== false) {
-                                Log::warning("Missing translation-string for: " . str_replace("countries.", "", $homeTeam->name) . " in " . app()->getLocale() . "/countries.php");
+                                Log::critical("Missing country translation for: " . str_replace("countries.", "", $homeTeam->name) . " in " . app()->getLocale() . "/countries.php");
                             } elseif(strpos($awayTeam->name, "countries") !== false) {
-                                Log::warning("Missing translation-string for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
+                                Log::critical("Missing country translation for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
                             }
                             
                             if($last_fixture->scores->localteam_score > $last_fixture->scores->visitorteam_score && in_array($last_fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
@@ -223,9 +223,9 @@
                             }
                             
                             if(strpos($homeTeam->name, "countries") !== false) {
-                                Log::warning("Missing translation-string for: " . str_replace("countries.", "", $homeTeam->name) . " in " . app()->getLocale() . "/countries.php");
+                                Log::critical("Missing country translation for: " . str_replace("countries.", "", $homeTeam->name) . " in " . app()->getLocale() . "/countries.php");
                             } elseif(strpos($awayTeam->name, "countries") !== false) {
-                                Log::warning("Missing translation-string for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
+                                Log::critical("Missing country translation for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
                             }
                             
                             if($upcoming_fixture->scores->localteam_score > $upcoming_fixture->scores->visitorteam_score && in_array($upcoming_fixture->time->status,  array("FT", "AET", "FT_PEN"))) {

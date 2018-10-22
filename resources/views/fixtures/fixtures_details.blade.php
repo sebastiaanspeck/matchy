@@ -22,9 +22,9 @@
             }
             
             if(strpos($homeTeam->name, "countries") !== false) {
-                Log::warning("Missing translation-string for: " . str_replace("countries.", "", $homeTeam->name) . " in " . app()->getLocale() . "/countries.php");
+                Log::critical("Missing country translation for: " . str_replace("countries.", "", $homeTeam->name) . " in " . app()->getLocale() . "/countries.php");
             } elseif(strpos($awayTeam->name, "countries") !== false) {
-                Log::warning("Missing translation-string for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
+                Log::critical("Missing country translation for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
             }
             
             $events = $fixture->events->data;
@@ -375,9 +375,9 @@
                                 }
                                 
                                 if($home_player_nationality == "Unknown" && !isset($home_player->player->data)) {
-                                    Log::alert("Missing nationality for " . $home_player->player_id);
+                                    Log::emergency("Missing nationality for player with id: " . $home_player->player_id);
                                 } elseif($away_player_nationality == "Unknown" && !isset($away_player->player->data)){
-                                    Log::alert("Missing nationality for " . $away_player->player_id);
+                                    Log::emergency("Missing nationality for player with id: " . $away_player->player_id);
                                 }
                             @endphp
                             <tr>
@@ -481,10 +481,10 @@
                                     $away_player_common_name = $away_player->player_name;
                                 }
                                 
-                                if($home_player_nationality == "Unknown" && !isset($home_player->player->data)) {
-                                    Log::alert("Missing nationality for " . $home_player->player_id);
-                                } elseif($away_player_nationality == "Unknown" && !isset($away_player->player->data)){
-                                    Log::alert("Missing nationality for " . $away_player->player_id);
+                                if($home_player_nationality == "Unknown") {
+                                    Log::emergency("Missing nationality for player with id: " . $home_player->player_id);
+                                } elseif($away_player_nationality == "Unknown"){
+                                    Log::emergency("Missing nationality for player with id: " . $away_player->player_id);
                                 }
                             @endphp
                             <tr>

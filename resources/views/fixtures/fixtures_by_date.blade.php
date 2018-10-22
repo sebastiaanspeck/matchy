@@ -27,9 +27,9 @@
                     }
                     
                     if(strpos($homeTeam->name, "countries") !== false) {
-                        Log::warning("Missing translation-string for: " . str_replace("countries.", "", $homeTeam->name) . " in " . app()->getLocale() . "/countries.php");
+                        Log::critical("Missing country translation for: " . str_replace("countries.", "", $homeTeam->name) . " in " . app()->getLocale() . "/countries.php");
                     } elseif(strpos($awayTeam->name, "countries") !== false) {
-                        Log::warning("Missing translation-string for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
+                        Log::critical("Missing country translation for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
                     }
                     
                     if(in_array($fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
