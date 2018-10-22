@@ -14,7 +14,8 @@
         "kirill-latish/laravel-sportmonks-soccer": "^2.0",
         "laravel/framework": "5.7.*",
         "laravel/tinker": "^1.0",
-        "overtrue/laravel-lang": "^3.0"
+        "overtrue/laravel-lang": "^3.0",
+        "rap2hpoutre/laravel-log-viewer": "^0.22.1"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

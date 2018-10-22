@@ -151,6 +151,8 @@ return [
          * Package Service Providers...
          */
         Sportmonks\SoccerAPI\SoccerAPIServiceProvider::class,
+        Arcanedev\LogViewer\LogViewerServiceProvider::class,
+        Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
 
         /*
          * Application Service Providers...
