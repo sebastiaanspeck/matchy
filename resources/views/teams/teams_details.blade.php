@@ -348,7 +348,7 @@ Log::critical("Missing cup-stage translation for: " . $upcoming_fixture->stage->
                                             @break
                                     @endswitch
 
-                                {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
+                                    {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
                                     @switch($upcoming_fixture->time->status)
                                         @case("FT_PEN")
                                             <td scope="row">{{$upcoming_fixture->scores->localteam_score}} - {{$upcoming_fixture->scores->visitorteam_score}} ({{$upcoming_fixture->scores->localteam_pen_score}} - {{$upcoming_fixture->scores->visitorteam_pen_score}})</td>
