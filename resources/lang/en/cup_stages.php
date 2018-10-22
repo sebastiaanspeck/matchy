@@ -40,4 +40,9 @@ return [
     'Final'                         => 'Final',
 
     'Play-offs'                     => 'Play-offs',
+
+    'League A'                      => 'League A',
+    'League B'                      => 'League B',
+    'League C'                      => 'League C',
+    'League D'                      => 'League D',
 ];
