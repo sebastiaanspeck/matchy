@@ -19,6 +19,7 @@ return [
     'Standings' => '',
     'Top Scorers' => '',
     'Player' => '',
+    'No.' => '',
     'Team' => '',
     'Played' => '',
     'Won' => '',
@@ -81,5 +82,4 @@ return [
     'msg_no_livescores_today' => '',
     'msg_no_matches_found' => '',
     'msg_no_data' => '',
-    'No.' => '',
 ];

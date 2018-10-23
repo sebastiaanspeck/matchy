@@ -153,7 +153,7 @@ return [
         Sportmonks\SoccerAPI\SoccerAPIServiceProvider::class,
         Arcanedev\LogViewer\LogViewerServiceProvider::class,
         Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
-
+        Themsaid\Langman\LangmanServiceProvider::class,
         /*
          * Application Service Providers...
          */
