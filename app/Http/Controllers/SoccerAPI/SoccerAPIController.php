@@ -84,7 +84,7 @@ class SoccerAPIController extends BaseController
         $topscorers = array();
 
         // check if league has topscorer_goals coverage or is a cup (the is_cup, excludes World Cup, Europa League,
-        if(!$league->coverage->topscorer_goals || !$league->is_cup) {
+        if($league->coverage->topscorer_goals) {
             $topscorers = $soccerAPI->topscorers()->setInclude($includeTopscorers)->bySeasonId($league->current_season_id)->goalscorers->data;
 
             foreach($topscorers as $key => $topscorer) {
