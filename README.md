@@ -31,7 +31,7 @@ $ composer update
 $ php artisan vendor:publish --provider="Sportmonks\SoccerAPI\SoccerAPIServiceProvider"
 ```
 
-**4-** Review the configuration file and add your token in your .env file: `'api_token' => env('API_TOKEN')`
+**4-** Review the configuration file and add your token in your .env file: `SPORTMONKS_API_TOKEN`
 
 ***If you don't have a API-token, you can get a free one [here](https://www.sportmonks.com/register) This should be enough to experiment with the code.***
 
