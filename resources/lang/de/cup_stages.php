@@ -1,6 +1,5 @@
 <?php
 
-
 return [
     '1st Round'                    => 'Erste Runde',
     '2nd Round'                    => '2nd Round',

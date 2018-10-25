@@ -1,6 +1,5 @@
 <?php
 
-
 return [
     '1st Qualifying Round'         => '',
     '2nd Qualifying Round'         => '',
