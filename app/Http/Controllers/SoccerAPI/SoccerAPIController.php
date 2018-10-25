@@ -368,46 +368,48 @@ class SoccerAPIController extends BaseController
     /**
      * @param $transType
      * @param $transString
+     *
      * @return array|\Illuminate\Contracts\Translation\Translator|null|string
      */
     public static function translateString($transType, $transString)
     {
-        $logString = $transType . "." . $transString;
+        $logString = $transType.'.'.$transString;
         if (\Lang::has($logString) && trans($logString) !== '') {
-            if(trans($logString) == trans($logString, [], 'en')) {
+            if (trans($logString) == trans($logString, [], 'en')) {
                 switch ($transType) {
-                    case("application"):
-                        Log::alert($transType . " translation for: " . $transString . " in " . app()->getLocale() . "/" . $transType . ".php is the same as the one in en/" . $transType .  ".php");
+                    case 'application':
+                        Log::alert($transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php is the same as the one in en/'.$transType.'.php');
                         break;
-                    case("countries"):
-                        Log::critical($transType . " translation for: " . $transString . " in " . app()->getLocale() . "/" . $transType . ".php is the same as the one in en/" . $transType .  ".php");
+                    case 'countries':
+                        Log::critical($transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php is the same as the one in en/'.$transType.'.php');
                         break;
-                    case("injuries"):
-                        Log::notice($transType . " translation for: " . $transString . " in " . app()->getLocale() . "/" . $transType . ".php is the same as the one in en/" . $transType .  ".php");
+                    case 'injuries':
+                        Log::notice($transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php is the same as the one in en/'.$transType.'.php');
                         break;
                 }
             }
+
             return trans($logString);
         }
 
         switch ($transType) {
-            case("application"):
-                Log::alert("Missing " . $transType . " translation for: " . $transString . " in " . app()->getLocale() . "/" . $transType . ".php");
+            case 'application':
+                Log::alert('Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php');
                 break;
-            case("countries"):
-                Log::critical("Missing " . $transType . " translation for: " . $transString . " in " . app()->getLocale() . "/" . $transType . ".php");
+            case 'countries':
+                Log::critical('Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php');
                 break;
-            case("cup_stages"):
-                Log::warning("Missing " . $transType . " translation for: " . $transString . " in " . app()->getLocale() . "/" . $transType . ".php");
+            case 'cup_stages':
+                Log::warning('Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php');
                 break;
-            case("injuries"):
-                Log::notice("Missing " . $transType . " translation for: " . $transString . " in " . app()->getLocale() . "/" . $transType . ".php");
+            case 'injuries':
+                Log::notice('Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php');
                 break;
-            case("leagues"):
-                Log::info("Missing " . $transType . " translation for: " . $transString . " in " . app()->getLocale() . "/" . $transType . ".php");
+            case 'leagues':
+                Log::info('Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php');
                 break;
             default:
-                Log::error("Missing error-level for: " . $transString);
+                Log::error('Missing error-level for: '.$transString);
                 break;
         }
 
