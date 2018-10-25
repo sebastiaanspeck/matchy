@@ -96,5 +96,5 @@ return [
     'Thigh Muscle Rupture'      => 'Oberschenkelmuskelriss',
     'Sprained Finger'           => 'Verstauchter Finger',
     'Plantaris Injury'          => 'Verletzung des Fußsohlenmuskels',
-    'Jumpers Knee'              => 'Verletzung der Kniescheibensehne',  
+    'Jumpers Knee'              => 'Verletzung der Kniescheibensehne',
 ];
