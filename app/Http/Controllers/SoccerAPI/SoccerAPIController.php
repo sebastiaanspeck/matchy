@@ -375,7 +375,7 @@ class SoccerAPIController extends BaseController
     {
         $logString = $transType.'.'.$transString;
         if (\Lang::has($logString) && trans($logString) !== '') {
-            if (trans($logString) == trans($logString, [], 'en')) {
+            if (trans($logString) == trans($logString, [], 'en') && app()->getLocale() !== 'en') {
                 switch ($transType) {
                     case 'application':
                         Log::alert($transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php is the same as the one in en/'.$transType.'.php');
