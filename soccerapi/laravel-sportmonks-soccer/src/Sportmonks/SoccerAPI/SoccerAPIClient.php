@@ -5,19 +5,19 @@ namespace Sportmonks\SoccerAPI;
 use GuzzleHttp\Client;
 use Sportmonks\SoccerAPI\Exceptions\ApiRequestException;
 
-class SoccerAPIClient {
-
+class SoccerAPIClient
+{
     /* @var $client Client */
     protected $client;
 
     protected $apiToken;
     protected $withoutData;
     protected $include = [];
-	protected $leagues = [];
+    protected $leagues = [];
     protected $perPage = 100;
     protected $page = 1;
-	protected $timezone;
-    
+    protected $timezone;
+
     public function __construct()
     {
         $options = [
@@ -27,11 +27,10 @@ class SoccerAPIClient {
         $this->client = new Client($options);
 
         $this->apiToken = config('soccerapi.api_token');
-        if(empty($this->apiToken))
-        {
+        if (empty($this->apiToken)) {
             throw new \InvalidArgumentException('No API token set');
         }
-		$this->timezone = empty(config('soccerapi.timezone')) ? config('app.timezone') : config('soccerapi.timezone');
+        $this->timezone = empty(config('soccerapi.timezone')) ? config('app.timezone') : config('soccerapi.timezone');
 
         $this->withoutData = empty(config('soccerapi.without_data')) ? false : config('soccerapi.without_data');
     }
@@ -40,42 +39,34 @@ class SoccerAPIClient {
     {
         $query = [
             'api_token' => $this->apiToken,
-            'per_page' => $this->perPage,
-            'page' => $this->page
+            'per_page'  => $this->perPage,
+            'page'      => $this->page,
         ];
-        if(!empty($this->include))
-        {
+        if (!empty($this->include)) {
             $query['include'] = $this->include;
         }
-		if ($this->timezone)
-		{
-			$query['tz'] = $this->timezone;
-		}
-		if(!empty($this->leagues))
-		{
-			$query['leagues'] = $this->leagues;
-		}
+        if ($this->timezone) {
+            $query['tz'] = $this->timezone;
+        }
+        if (!empty($this->leagues)) {
+            $query['leagues'] = $this->leagues;
+        }
 
         $response = $this->client->get($url, ['query' => $query]);
 
         $body = json_decode($response->getBody()->getContents());
 
-        if(property_exists($body, 'error'))
-        {
-            if(is_object($body->error))
-            {
+        if (property_exists($body, 'error')) {
+            if (is_object($body->error)) {
                 throw new ApiRequestException($body->error->message, $body->error->code);
-            }
-            else
-            {
+            } else {
                 throw new ApiRequestException($body->error, 500);
             }
 
             return $response;
         }
 
-        if($hasData && $this->withoutData)
-        {
+        if ($hasData && $this->withoutData) {
             return $body->data;
         }
 
@@ -89,8 +80,7 @@ class SoccerAPIClient {
 
     public function setInclude($include)
     {
-        if(is_array($include) && !empty($include))
-        {
+        if (is_array($include) && !empty($include)) {
             $include = implode(',', $include);
         }
 
@@ -99,17 +89,16 @@ class SoccerAPIClient {
         return $this;
     }
 
-	public function setLeagues($leagues)
-	{
-		if(is_array($leagues) && !empty($leagues))
-		{
-			$leagues = implode(',', $leagues);
-		}
+    public function setLeagues($leagues)
+    {
+        if (is_array($leagues) && !empty($leagues)) {
+            $leagues = implode(',', $leagues);
+        }
 
-		$this->leagues = $leagues;
+        $this->leagues = $leagues;
 
-		return $this;
-	}
+        return $this;
+    }
 
     public function setPerPage($perPage)
     {

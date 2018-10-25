@@ -23,7 +23,7 @@ return [
     'Costa Rica'                    => 'Costa Rica',
     'Croatia'                       => 'Croatia',
     'Cyprus'                        => 'Cyprus',
-    'Czech Republic'                => 'Czech Republic',    
+    'Czech Republic'                => 'Czech Republic',
     'Denmark'                       => 'Denmark',
     'Ecuador'                       => 'Ecuador',
     'England'                       => 'England',

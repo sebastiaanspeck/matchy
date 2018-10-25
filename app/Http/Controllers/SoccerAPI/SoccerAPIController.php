@@ -3,21 +3,21 @@
  * Created by PhpStorm.
  * User: sebastiaanspeck
  * Date: 24/09/2018
- * Time: 10:21
+ * Time: 10:21.
  */
 
 namespace App\Http\Controllers\SoccerAPI;
 
-use Illuminate\Routing\Controller as BaseController;
-use Sportmonks\SoccerAPI\SoccerAPI;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Carbon\Carbon;
 use DateTime;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Routing\Controller as BaseController;
 use Log;
+use Sportmonks\SoccerAPI\SoccerAPI;
 
 class SoccerAPIController extends BaseController
 {
@@ -25,9 +25,10 @@ class SoccerAPIController extends BaseController
 
     /**
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    function allLeagues(Request $request)
+    public function allLeagues(Request $request)
     {
         $soccerAPI = new SoccerAPI();
         $include = 'country,season';
@@ -36,10 +37,10 @@ class SoccerAPIController extends BaseController
 
         $currentYear = Carbon::now()->year;
         $nextYear = Carbon::now()->addYear()->year;
-        $season = $currentYear . "/" . $nextYear;
+        $season = $currentYear.'/'.$nextYear;
 
-        foreach($leagues as $key => $league) {
-            if(!in_array($league->season->data->name, array($season, $currentYear))) {
+        foreach ($leagues as $key => $league) {
+            if (!in_array($league->season->data->name, [$season, $currentYear])) {
                 unset($leagues[$key]);
             }
         }
@@ -48,6 +49,7 @@ class SoccerAPIController extends BaseController
             if ($item1->country->data->name == $item2->country->data->name) {
                 return $item1->id <=> $item2->id;
             }
+
             return $item1->country->data->name <=> $item2->country->data->name;
         });
 
@@ -63,9 +65,10 @@ class SoccerAPIController extends BaseController
     /**
      * @param $leagueId
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    function leaguesDetails($leagueId, Request $request)
+    public function leaguesDetails($leagueId, Request $request)
     {
         $dateFormat = self::getDateFormat();
 
@@ -81,21 +84,21 @@ class SoccerAPIController extends BaseController
 
         $season = $soccerAPI->seasons()->setInclude($includeSeason)->byId($league->current_season_id);
 
-        $topscorers = array();
+        $topscorers = [];
 
         // check if league has topscorer_goals coverage or is a cup (the is_cup, excludes World Cup, Europa League,
-        if($league->coverage->topscorer_goals) {
+        if ($league->coverage->topscorer_goals) {
             $topscorers = $soccerAPI->topscorers()->setInclude($includeTopscorers)->bySeasonId($league->current_season_id)->goalscorers->data;
 
-            foreach($topscorers as $key => $topscorer) {
+            foreach ($topscorers as $key => $topscorer) {
                 // remove all topscorers where stage_id is not the current_stage_id (like qualifying rounds before the actual season etc)
-                if($topscorer->stage_id != $league->current_stage_id) {
+                if ($topscorer->stage_id != $league->current_stage_id) {
                     unset($topscorers[$key]);
                 }
             }
             $topscorers = self::addPagination($topscorers, 10);
         } else {
-            Log::debug("Missing topscorers for: " . $league->name);
+            Log::debug('Missing topscorers for: '.$league->name);
         }
 
         $lastFixtures = [];
@@ -119,7 +122,6 @@ class SoccerAPIController extends BaseController
             });
             $lastFixtures = self::addPagination($lastFixtures, $numberOfMatches);
 
-
             $upcomingFixtures = $season->data->upcoming->data;
             usort($upcomingFixtures, function ($item1, $item2) {
                 if ($item1->league_id == $item2->league_id) {
@@ -136,22 +138,23 @@ class SoccerAPIController extends BaseController
         }
 
         return view('leagues/leagues_details', [
-            'league' => $league,
-            'standings_raw' => $standingsRaw,
-            'last_fixtures' => $lastFixtures,
+            'league'            => $league,
+            'standings_raw'     => $standingsRaw,
+            'last_fixtures'     => $lastFixtures,
             'upcoming_fixtures' => $upcomingFixtures,
             'number_of_matches' => $numberOfMatches,
-            'topscorers' => $topscorers,
-            'date_format' => $dateFormat
+            'topscorers'        => $topscorers,
+            'date_format'       => $dateFormat,
         ]);
     }
 
     /**
      * @param $type
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      */
-    function livescores($type, Request $request)
+    public function livescores($type, Request $request)
     {
         $dateFormat = self::getDateFormat();
 
@@ -165,7 +168,7 @@ class SoccerAPIController extends BaseController
         }
 
         switch ($type) {
-            case ('today'):
+            case 'today':
                 $livescores = $soccerAPI->livescores()->setInclude($include)->setLeagues($leagues)->today();
 
                 usort($livescores, function ($item1, $item2) {
@@ -182,7 +185,7 @@ class SoccerAPIController extends BaseController
 
                 return view('livescores/livescores_today', ['livescores' => $livescores, 'date_format' => $dateFormat]);
                 break;
-            case ('now'):
+            case 'now':
                 $livescores = $soccerAPI->livescores()->setInclude($include)->setLeagues($leagues)->now();
 
                 usort($livescores, function ($item1, $item2) {
@@ -206,9 +209,10 @@ class SoccerAPIController extends BaseController
 
     /**
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    function fixturesByDate(Request $request)
+    public function fixturesByDate(Request $request)
     {
         $dateFormat = self::getDateFormat();
 
@@ -242,9 +246,10 @@ class SoccerAPIController extends BaseController
 
     /**
      * @param $fixtureId
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    function fixturesDetails($fixtureId)
+    public function fixturesDetails($fixtureId)
     {
         $dateFormat = self::getDateFormat();
 
@@ -259,9 +264,10 @@ class SoccerAPIController extends BaseController
     /**
      * @param $teamId
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    function teamsDetails($teamId, Request $request)
+    public function teamsDetails($teamId, Request $request)
     {
         $dateFormat = self::getDateFormat();
 
@@ -275,17 +281,17 @@ class SoccerAPIController extends BaseController
         $upcomingFixtures = self::addPagination($team->upcoming->data, $numberOfMatches);
 
         return view('teams/teams_details', [
-            'team' => $team,
-            'last_fixtures' => $lastFixtures,
+            'team'              => $team,
+            'last_fixtures'     => $lastFixtures,
             'upcoming_fixtures' => $upcomingFixtures,
-            'date_format' => $dateFormat
+            'date_format'       => $dateFormat,
         ]);
     }
 
     /**
      * @return int
      */
-    function countLivescores()
+    public function countLivescores()
     {
         $soccerAPI = new SoccerAPI();
         $livescores = $soccerAPI->livescores()->now();
@@ -294,21 +300,22 @@ class SoccerAPIController extends BaseController
 
         if (count($livescores) >= 1) {
             foreach ($livescores as $livescore) {
-                if (!in_array($livescore->time->status, ['NS', 'FT', 'FT_PEN', 'CANCL', 'POSTP', 'INT', 'ABAN', 'SUSP', 'AWARDED','DELAYED','TBA', 'WO', 'AU'])) {
+                if (!in_array($livescore->time->status, ['NS', 'FT', 'FT_PEN', 'CANCL', 'POSTP', 'INT', 'ABAN', 'SUSP', 'AWARDED', 'DELAYED', 'TBA', 'WO', 'AU'])) {
                     $count++;
                 }
             }
         }
 
-        return ($count);
+        return $count;
     }
 
     /**
      * @param $data
      * @param $perPage
+     *
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    function addPagination($data, $perPage)
+    public function addPagination($data, $perPage)
     {
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
 
@@ -323,9 +330,10 @@ class SoccerAPIController extends BaseController
 
     /**
      * @param \Illuminate\Http\Request $request
+     *
      * @return mixed|string
      */
-    function removePageParameter(Request $request)
+    public function removePageParameter(Request $request)
     {
         // set url path for generated links
         $url = parse_url($request->fullUrl());
@@ -345,9 +353,10 @@ class SoccerAPIController extends BaseController
     /**
      * @param $date
      * @param string $format
+     *
      * @return bool
      */
-    function validateDate($date, $format = 'Y-m-d')
+    public function validateDate($date, $format = 'Y-m-d')
     {
         $dateTime = new DateTime();
 
@@ -358,6 +367,7 @@ class SoccerAPIController extends BaseController
 
     /**
      * @param $country
+     *
      * @return string
      */
     public static function getCountryFlag($country)
@@ -367,16 +377,16 @@ class SoccerAPIController extends BaseController
         }
 
         switch ($country) {
-            case (null):
+            case null:
                 $country = 'Unknown';
                 break;
-            case ('Northern-Ireland'):
+            case 'Northern-Ireland':
                 $country = 'United-Kingdom';
                 break;
         }
 
-        if (!file_exists('images/flags/shiny/16/' . $country . '.png')) {
-            Log::emergency('Missing flag for: ' . $country);
+        if (!file_exists('images/flags/shiny/16/'.$country.'.png')) {
+            Log::emergency('Missing flag for: '.$country);
             $country = 'Unknown';
         }
 
@@ -386,13 +396,13 @@ class SoccerAPIController extends BaseController
     /**
      * @return string
      */
-    function getDateFormat()
+    public function getDateFormat()
     {
         switch (config('app.locale')) {
-            case ('nl'):
+            case 'nl':
                 $dateFormat = 'd-m-Y';
                 break;
-            case ('en'):
+            case 'en':
                 $dateFormat = 'Y-m-d';
                 break;
             default:
@@ -405,9 +415,10 @@ class SoccerAPIController extends BaseController
 
     /**
      * @param \Illuminate\Http\Request $request
+     *
      * @return array|null|string
      */
-    function getDateFromRequest(Request $request)
+    public function getDateFromRequest(Request $request)
     {
         if ($request->has('day')) {
             if ($request->query('day') == 'yesterday') {
@@ -420,7 +431,7 @@ class SoccerAPIController extends BaseController
         } elseif ($request->has('date')) {
             return $request->query('date');
         }
-        
+
         return Carbon::now()->toDateString();
     }
 }
