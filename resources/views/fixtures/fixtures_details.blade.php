@@ -65,8 +65,7 @@
                     <span style="font-size: x-large"> {{$fixture->scores->localteam_score}} - {{$fixture->scores->visitorteam_score}} </span><br>
                     <span>
                     @if(isset($fixture->scores->localteam_pen_score) && isset($fixture->scores->visitorteam_pen_score))
-                        ({{$fixture->scores->localteam_pen_score}} - {{$fixture->scores->visitorteam_pen_score}}) {{ Lang::has("application.penalties") ? trans("application.penalties") : Log::emergency("Missing application translation for: penalties")
- . "penalties" }}
+                        ({{$fixture->scores->localteam_pen_score}} - {{$fixture->scores->visitorteam_pen_score}}) {{ Lang::has("application.penalties") ? trans("application.penalties") : Log::emergency("Missing application translation for: penalties") . "penalties" }}
                     @endif
                     </span>
                     @break
@@ -94,13 +93,11 @@
             <br>
 
             @if(isset($venue))
-                <span>{{ Lang::has("application.Venue") ? trans("application.Venue") : Log::emergency("Missing application translation for: Venue")
- . "Venue" }}: {{$venue->name}} - {{$venue->city}} </span>
+                <span>{{ Lang::has("application.Venue") ? trans("application.Venue") : Log::emergency("Missing application translation for: Venue") . "Venue" }}: {{$venue->name}} - {{$venue->city}} </span>
                 <br>
             @endif
             @if(isset($referee))
-                <span>{{ Lang::has("application.Referee") ? trans("application.Referee") : Log::emergency("Missing application translation for: Referee")
- . "Referee" }}: {{$referee->fullname}} </span>
+                <span>{{ Lang::has("application.Referee") ? trans("application.Referee") : Log::emergency("Missing application translation for: Referee") . "Referee" }}: {{$referee->fullname}} </span>
                 <br>
             @endif
         </div>
@@ -108,16 +105,13 @@
         {{-- Nav tabs --}}
         <ul class="nav nav-tabs" id="nav_tabs" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="events-tab" data-toggle="tab" href="#match_summary" role="tab" aria-controls="match_summary" aria-selected="true">{{ Lang::has("application.Match Summary") ? trans("application.Match Summary") : Log::emergency("Missing application translation for: Match Summary")
- . "Match Summary" }}</a>
+                <a class="nav-link active" id="events-tab" data-toggle="tab" href="#match_summary" role="tab" aria-controls="match_summary" aria-selected="true">{{ Lang::has("application.Match Summary") ? trans("application.Match Summary") : Log::emergency("Missing application translation for: Match Summary") . "Match Summary" }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="statistics-tab" data-toggle="tab" href="#statistics" role="tab" aria-controls="statistics" aria-selected="true">{{ Lang::has("application.Statistics") ? trans("application.Statistics") : Log::emergency("Missing application translation for: Statistics")
- . "Statistics" }}</a>
+                <a class="nav-link" id="statistics-tab" data-toggle="tab" href="#statistics" role="tab" aria-controls="statistics" aria-selected="true">{{ Lang::has("application.Statistics") ? trans("application.Statistics") : Log::emergency("Missing application translation for: Statistics") . "Statistics" }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="lineups-tab" data-toggle="tab" href="#lineups" role="tab" aria-controls="lineups" aria-selected="true">{{ Lang::has("application.Lineups") ? trans("application.Lineups") : Log::emergency("Missing application translation for: Lineups")
- . "Lineups" }}</a>
+                <a class="nav-link" id="lineups-tab" data-toggle="tab" href="#lineups" role="tab" aria-controls="lineups" aria-selected="true">{{ Lang::has("application.Lineups") ? trans("application.Lineups") : Log::emergency("Missing application translation for: Lineups") . "Lineups" }}</a>
             </li>
         </ul>
 
@@ -160,8 +154,7 @@
                         </tbody>
                     </table>
                 @else
-                    <span style="font-weight: bold">{{ Lang::has("application.Match Summary") ? trans("application.Match Summary") : Log::emergency("Missing application translation for: Match Summary")
- . "Match Summary" }} @choice("application.msg_no_data", 1)</span>
+                    <span style="font-weight: bold">{{ Lang::has("application.Match Summary") ? trans("application.Match Summary") : Log::emergency("Missing application translation for: Match Summary") . "Match Summary" }} @choice("application.msg_no_data", 1)</span>
                 @endif
             </div>
             <div class="tab-pane fade" id="statistics" role="tabpanel" aria-labelledby="statistics-tab">
@@ -291,8 +284,7 @@
                         @endforeach
                     </table>
                 @else
-                    <span style="font-weight: bold">{{ Lang::has("application.Statistics") ? trans("application.Statistics") : Log::emergency("Missing application translation for: Statistics")
- . "Statistics" }} @choice("application.msg_no_data", 2)</span>
+                    <span style="font-weight: bold">{{ Lang::has("application.Statistics") ? trans("application.Statistics") : Log::emergency("Missing application translation for: Statistics") . "Statistics" }} @choice("application.msg_no_data", 2)</span>
                 @endif
             </div>
             <div class="tab-pane fade" id="lineups" role="tabpanel" aria-labelledby="lineups-tab">
@@ -304,8 +296,7 @@
                                 <span>{{$fixture->formations->localteam_formation}}</span>
                             </td>
                             <td style="font-weight: bold">
-                                <span>{{ Lang::has("application.Formation") ? trans("application.Formation") : Log::emergency("Missing application translation for: Formation")
- . "Formation" }}</span>
+                                <span>{{ Lang::has("application.Formation") ? trans("application.Formation") : Log::emergency("Missing application translation for: Formation") . "Formation" }}</span>
                             </td>
                             <td colspan="3">
                                 <span>{{$fixture->formations->visitorteam_formation}}</span>
@@ -314,8 +305,7 @@
                         @endif
                         <tr style="font-weight: bold; text-align: center; background: #D3D3D3">
                             <td colspan="7">
-                                <span>{{ Lang::has("application.Starting lineups") ? trans("application.Starting lineups") : Log::emergency("Missing application translation for: Starting lineups")
- . "Starting lineups" }}</span>
+                                <span>{{ Lang::has("application.Starting lineups") ? trans("application.Starting lineups") : Log::emergency("Missing application translation for: Starting lineups") . "Starting lineups" }}</span>
                             </td>
                         </tr>
                         @for($index = 0; $index < count($lineup)/2; $index++)
@@ -531,8 +521,7 @@
                         @if(count($sidelined) > 0)
                             <tr style="font-weight: bold; text-align: center; background: #D3D3D3">
                                 <td colspan="7">
-                                    <span>{{ Lang::has("application.Missing players") ? trans("application.Missing players") : Log::emergency("Missing application translation for: Missing players")
- . "Missing players" }}</span>
+                                    <span>{{ Lang::has("application.Missing players") ? trans("application.Missing players") : Log::emergency("Missing application translation for: Missing players") . "Missing players" }}</span>
                                 </td>
                             </tr>
                             @php
@@ -579,25 +568,21 @@
                                     <tr>
                                         <td></td>
                                         <td style="width: 1%"><img src="/images/flags/shiny/16/{{$home_sidelined_player->nationality}}.png"></td>
-                                        <td style="text-align: left">{{$home_sidelined_player->common_name}} <span style="color: #A9A9A9">({{ Lang::has("injuries." . $home_sidelined_player->reason) ? trans("injuries." . $home_sidelined_player->reason) : Log::notice("Missing injury translation for: " . $home_sidelined_player->reason)
- . $home_sidelined_player->reason }})</span></td>
+                                        <td style="text-align: left">{{$home_sidelined_player->common_name}} <span style="color: #A9A9A9">({{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("injuries", $home_sidelined_player->reason) }})</span></td>
                                         <td></td>
-                                        <td style="text-align: right">{{$away_sidelined_player->common_name}} <span style="color: #A9A9A9">({{ Lang::has("injuries." . $away_sidelined_player->reason) ? trans("injuries." . $away_sidelined_player->reason) : Log::notice("Missing injury translation for: " . $away_sidelined_player->reason)
- . $away_sidelined_player->reason }})</span></td>
+                                        <td style="text-align: right">{{$away_sidelined_player->common_name}} <span style="color: #A9A9A9">({{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("injuries", $away_sidelined_player->reason) }})</span></td>
                                         <td style="width: 1%"><img src="/images/flags/shiny/16/{{$away_sidelined_player->nationality}}.png"></td>
                                     </tr>
                                 @elseif(isset($home_sidelined_player) && !isset($away_sidelined_player))
                                     <tr>
                                         <td></td>
                                         <td style="width: 1%"><img src="/images/flags/shiny/16/{{$home_sidelined_player->nationality}}.png"></td>
-                                        <td style="text-align: left">{{$home_sidelined_player->common_name}} <span style="color: #A9A9A9">({{ Lang::has("injuries." . $home_sidelined_player->reason) ? trans("injuries." . $home_sidelined_player->reason) : Log::notice("Missing injury translation for: " . $home_sidelined_player->reason)
- . $home_sidelined_player->reason }})</span></td>
+                                        <td style="text-align: left">{{$home_sidelined_player->common_name}} <span style="color: #A9A9A9">({{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("injuries", $home_sidelined_player->reason) }})</span></td>
                                     </tr>
                                 @elseif(!isset($home_sidelined_player) && isset($away_sidelined_player))
                                     <tr>
                                         <td colspan="4"></td>
-                                        <td style="text-align: right">{{$away_sidelined_player->common_name}} <span style="color: #A9A9A9">({{ Lang::has("injuries." . $away_sidelined_player->reason) ? trans("injuries." . $away_sidelined_player->reason) : Log::notice("Missing injury translation for: " . $away_sidelined_player->reason)
- . $away_sidelined_player->reason }})</span></td>
+                                        <td style="text-align: right">{{$away_sidelined_player->common_name}} <span style="color: #A9A9A9">({{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("injuries", $away_sidelined_player->reason) }})</span></td>
                                         <td style="width: 1%"><img src="/images/flags/shiny/16/{{$away_sidelined_player->nationality}}.png"></td>
                                     </tr>
                                 @endif
@@ -619,8 +604,7 @@
                             @endphp
                         <tr style="font-weight: bold; text-align: center; background: #D3D3D3">
                             <td colspan="7">
-                                <span>{{ Lang::has("application.Coaches") ? trans("application.Coaches") : Log::emergency("Missing application translation for: Coaches")
- . "Coaches" }}</span>
+                                <span>{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Coaches") }}</span>
                             </td>
                         </tr>
                         <tr>
@@ -646,8 +630,7 @@
                         @endif
                     </table>
                 @else
-                    <span style="font-weight: bold">{{ Lang::has("application.Lineups") ? trans("application.Lineups") : Log::emergency("Missing application translation for: Lineups")
- . "Lineups" }} @choice("application.msg_no_data", 2)</span>
+                    <span style="font-weight: bold">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Lineups") }} @choice("application.msg_no_data", 2)</span>
                 @endif
             </div>
         </div>
