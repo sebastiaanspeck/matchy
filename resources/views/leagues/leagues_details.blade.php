@@ -5,7 +5,7 @@
         <div id="heading" style="text-align: center">
             <table width="100%">
                 <tr>
-                    <td><h1>{{ Lang::has("leagues." . $league->name) ? trans("leagues." . $league->name) : Log::critical("Missing league translation for: " . $league->name)   . $league->name }} - {{$league->season->data->name}}</h1></td>
+                    <td><h1>{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }} - {{$league->season->data->name}}</h1></td>
                 </tr>
             </table>
         </div>
@@ -88,9 +88,9 @@
                                     <tr>
                                         <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
                                             @if($last_fixture->stage->data->name !== "Regular Season")
-                                                @lang("cup_stages." . $last_fixture->stage->data->name) -
+                                                {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $last_fixture->stage->data->name) }} -
                                             @endif
-                                            @lang("application.Matchday") {{$last_fixture->round->data->name}}</td>
+                                            {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Matchday") }} {{$last_fixture->round->data->name}}</td>
                                     </tr>
                                 @endif
                             @elseif($last_stage_id !== $last_fixture->stage->data->name)
@@ -163,9 +163,9 @@
                                             <tr>
                                                 <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
                                                     @if($last_fixture->stage->data->name !== "Regular Season")
-                                                        @lang("cup_stages." . $last_fixture->stage->data->name) -
+                                                        {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $last_fixture->stage->data->name) }} -
                                                     @endif
-                                                    @lang("application.Matchday") {{$last_fixture->round->data->name}}</td>
+                                                    {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Matchday") }} {{$last_fixture->round->data->name}}</td>
                                             </tr>
                                         @endif
                                     @elseif($last_stage_id !== $last_fixture->stage->data->name)
@@ -250,9 +250,9 @@
                                     <tr>
                                         <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
                                             @if($upcoming_fixture->stage->data->name !== "Regular Season")
-                                                @lang("cup_stages." . $upcoming_fixture->stage->data->name) -
+                                                {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $upcoming_fixture->stage->data->name) }} -
                                             @endif
-                                            @lang("application.Matchday") {{$upcoming_fixture->round->data->name}}</td>
+                                            {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Matchday") }} {{$upcoming_fixture->round->data->name}}</td>
                                     </tr>
                                 @endif
                             @elseif($last_stage_id !== $upcoming_fixture->stage->data->name)
@@ -280,14 +280,14 @@
                                         <tr>
                                             <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
                                                 @if($upcoming_fixture->stage->data->name !== "Regular Season")
-                                                    @lang("cup_stages." . $upcoming_fixture->stage->data->name) -
+                                                    {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $upcoming_fixture->stage->data->name) }} -
                                                 @endif
-                                                @lang("application.Matchday") {{$upcoming_fixture->round->data->name}}</td>
+                                                {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Matchday") }} {{$upcoming_fixture->round->data->name}}</td>
                                         </tr>
                                     @endif
                                 @elseif($last_stage_id !== $upcoming_fixture->stage->data->name)
                                     <tr>
-                                        <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang("cup_stages." . $upcoming_fixture->stage->data->name)</td>
+                                        <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $upcoming_fixture->stage->data->name) }}</td>
                                     </tr>
                                 @endif
                                 <thead style="visibility: collapse">
@@ -327,13 +327,13 @@
                             @if(count($standings_raw) > 1)
                                 <caption>
                                 @if(strpos($standings->name, "Group") !== false)
-                                    {{str_replace("Group", trans("application.Group"), $standings->name)}}
+                                    @if($standings->stage_name !== "Group Stage"){{$standings->stage_name}} - @endif {{str_replace("Group", trans("application.Group"), $standings->name)}}
                                 @else
                                     {{$standings->name}}
                                 @endif
                                 </caption>
                             @endif
-                            <thead>
+                            <thead class="thead-dark">
                                 <tr>
                                     <th scope="col" width="1%">@lang("application.No.")</th>
                                     <th scope="col" width="35%">@lang("application.Team")</th>

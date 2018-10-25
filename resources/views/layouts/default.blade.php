@@ -187,24 +187,24 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownFixtures" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ Lang::has("application.Fixtures") ? trans("application.Fixtures") : Log::emergency("Missing application translation for: Fixtures") . "Fixtures" }}</a>
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownFixtures" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Fixtures") }}</a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownFixtures">
-                            <a class="dropdown-item" href="{{route("fixturesByDate", ["day" => "yesterday"])}}">{{ Lang::has("application.Yesterday") ? trans("application.Yesterday") : Log::emergency("Missing application translation for: Yesterday") . "Yesterday" }}</a>
-                            <a class="dropdown-item" href="{{route("fixturesByDate", ["day" => "tomorrow"])}}">{{ Lang::has("application.Tomorrow") ? trans("application.Tomorrow") : Log::emergency("Missing application translation for: Tomorrow") . "Tomorrow" }}</a>
+                            <a class="dropdown-item" href="{{route("fixturesByDate", ["day" => "yesterday"])}}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Yesterday") }}</a>
+                            <a class="dropdown-item" href="{{route("fixturesByDate", ["day" => "tomorrow"])}}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Tomorrow") }}</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownLivescores" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ Lang::has("application.Livescores") ? trans("application.Livescores") : Log::emergency("Missing application translation for: Livescores") . "Livescores" }}</a>
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownLivescores" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Livescores") }}</a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownLivescores">
-                            <a class="dropdown-item" href="{{route("livescores", ["type" => "now"])}}">{{ Lang::has("application.Livescores") ? trans("application.Livescores") : Log::emergency("Missing application translation for: Livescores") . "Livescores" }} -  {{ Lang::has("application.now") ? trans("application.now") : Log::emergency("Missing application translation for: now") . "now" }} <span class="badge badge-danger">{{$live}}</span></a>
+                            <a class="dropdown-item" href="{{route("livescores", ["type" => "now"])}}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Livescores") }} -  {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "now") }} <span class="badge badge-danger">{{$live}}</span></a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{{route("livescores", ["type" => "today"])}}">{{ Lang::has("application.Livescores") ? trans("application.Livescores") : Log::emergency("Missing application translation for: Livescores") . "Livescores" }} - {{ Lang::has("application.today") ? trans("application.today") : Log::emergency("Missing application translation for: today") . "today" }}</a>
+                            <a class="dropdown-item" href="{{route("livescores", ["type" => "today"])}}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Livescores") }} - {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "today") }}</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownLeagues" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ Lang::has("application.Leagues") ? trans("application.Leagues") : Log::emergency("Missing application translation for: Leagues") . "Leagues" }}</a>
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownLeagues" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Leagues") }}</a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownLeagues">
-                            <a class="dropdown-item" href="{{route("leagues")}}">{{ Lang::has("application.All leagues") ? trans("application.All leagues") : Log::emergency("Missing application translation for: All leagues") . "All leagues" }}</a>
+                            <a class="dropdown-item" href="{{route("leagues")}}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "All leagues") }}</a>
                         </div>
                     </li>
                 </ul>
@@ -219,10 +219,10 @@
     <footer class="main-footer">
         <div class="container-fluid">
             <p class="text-muted pull-left">
-                Matchy - <span class="badge badge-success">{{ trans("application.version") }} 1.5.0</span> - <a href="https://github.com/sebastiaanspeck/matchy" class="text-muted" target="_blank">Github Repo <i class="fa fa-github" aria-hidden="true"></i></a>
+                Matchy - <span class="badge badge-success"> {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "version") }} 1.5.0</span> - <a href="https://github.com/sebastiaanspeck/matchy" class="text-muted" target="_blank">Github Repo <i class="fa fa-github" aria-hidden="true"></i></a>
             </p>
             <p class="text-muted pull-right">
-                {{ trans("application.Created with") }} <i class="fa fa-code" aria-hidden="true"></i> & <i class="fa fa-coffee" aria-hidden="true"></i>
+                {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Created with") }} <i class="fa fa-code" aria-hidden="true"></i> & <i class="fa fa-coffee" aria-hidden="true"></i>
             </p>
         </div>
     </footer>
