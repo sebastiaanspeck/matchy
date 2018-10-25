@@ -1,6 +1,15 @@
 <?php
 
 return [
+    /*
+    |--------------------------------------------------------------------------
+    | Application Language Lines
+    |--------------------------------------------------------------------------
+    |
+    | The following language lines are used for labels for the application.
+    |
+    */
+
     'penalties'               => '',
     'version'                 => '',
     'Created with'            => '',
