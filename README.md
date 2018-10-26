@@ -32,11 +32,5 @@ $ php artisan vendor:publish --provider="Sportmonks\SoccerAPI\SoccerAPIServicePr
 config/soccerapi.php
 ```
 
-**6-** Review the configuration file and add your timezone in your .env file: `'timezone' => config('app.timezone')`
-
-```
-config/soccerapi.php
-```
-
 ## Special thanks to
 [kirill-latish](https://github.com/kirill-latish/laravel-sportmonks-soccer)
