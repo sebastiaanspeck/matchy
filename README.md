@@ -33,6 +33,8 @@ $ php artisan vendor:publish --provider="Sportmonks\SoccerAPI\SoccerAPIServicePr
 
 **4-** Add your API token in the .env file to `SPORTMONKS_API_TOKEN`
 
+Add `env('SPORTMONKS_API_TOKEN')` to `api_token` in `config/soccerapi.php`.
+
 ***If you don't have a API-token, you can get a free one [here](https://www.sportmonks.com/register) This should be enough to experiment with the code.***
 
 **5-** Review the configuration file and change the `'without_data' => 'false' to `true`:
