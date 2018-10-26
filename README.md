@@ -20,23 +20,23 @@ $ composer install
 $ php artisan vendor:publish --provider="Sportmonks\SoccerAPI\SoccerAPIServiceProvider"
 ```
 
-**3-** Add your API token in the .env file to `SPORTMONKS_API_TOKEN`
+**3-** Make a copy of .env.example and rename to .env
+
+**4-** Add your API token in the .env file to `SPORTMONKS_API_TOKEN`
 
 ***If you don't have a API-token, you can get a free one [here](https://www.sportmonks.com/register) This should be enough to experiment with the code.***
 
-**4-** Review the configuration file and change the `'without_data' => 'false' to `true`:
+**5-** Review the configuration file and change the `'without_data' => 'false' to `true`:
 
 ```
 config/soccerapi.php
 ```
 
-**5-** Review the configuration file and add your timezone in your .env file: `'timezone' => config('app.timezone')`
+**6-** Review the configuration file and add your timezone in your .env file: `'timezone' => config('app.timezone')`
 
 ```
 config/soccerapi.php
 ```
-
-**6--** Copy the folder [soccerapi/laravel-sportmonks-soccer](https://github.com/sebastiaanspeck/sportmonks/blob/master/soccerapi) to `vendor/kirill-latish` and overwrite the existing folder.
 
 ## Special thanks to
 [kirill-latish](https://github.com/kirill-latish/laravel-sportmonks-soccer)
