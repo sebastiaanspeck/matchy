@@ -32,5 +32,9 @@ $ php artisan vendor:publish --provider="Sportmonks\SoccerAPI\SoccerAPIServicePr
 config/soccerapi.php
 ```
 
+**6-** Run `php artisan key:generate` to overcome the next [problem](https://stackoverflow.com/questions/44839648/no-application-encryption-key-has-been-specified-new-laravel-app)
+
+**7-** Run `php artisan serve` to use the application
+
 ## Special thanks to
 [kirill-latish](https://github.com/kirill-latish/laravel-sportmonks-soccer)
