@@ -195,16 +195,16 @@
         },
         {
             "name": "caouecs/laravel-lang",
-            "version": "3.0.54",
+            "version": "3.0.56",
             "source": {
                 "type": "git",
                 "url": "https://github.com/caouecs/Laravel-lang.git",
-                "reference": "eaa1e26eb643d7fc696d410b45e55290143e1f7f"
+                "reference": "c918695532b0b61a34059399c617c9695b4ef536"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/caouecs/Laravel-lang/zipball/eaa1e26eb643d7fc696d410b45e55290143e1f7f",
-                "reference": "eaa1e26eb643d7fc696d410b45e55290143e1f7f",
+                "url": "https://api.github.com/repos/caouecs/Laravel-lang/zipball/c918695532b0b61a34059399c617c9695b4ef536",
+                "reference": "c918695532b0b61a34059399c617c9695b4ef536",
                 "shasum": ""
             },
             "require-dev": {
@@ -212,6 +212,7 @@
             },
             "suggest": {
                 "ablunier/laravel-lang-installer": "Command for easily add languages to a Laravel project",
+                "andrey-helldar/laravel-lang-publisher": "Easy installation and update of translation files for your project",
                 "arcanedev/laravel-lang": "Translations manager and checker for Laravel 5",
                 "overtrue/laravel-lang": "Command to add languages in your project"
             },
@@ -233,7 +234,7 @@
                 "laravel",
                 "lpm"
             ],
-            "time": "2018-07-13T08:44:04+00:00"
+            "time": "2018-10-29T07:07:46+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -897,16 +898,16 @@
         },
         {
             "name": "kirill-latish/laravel-sportmonks-soccer",
-            "version": "v2.0.2",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kirill-latish/laravel-sportmonks-soccer.git",
-                "reference": "21fe3bf247f4e43347ad1ef12cf7909cefabdb24"
+                "reference": "ac3b6b0cc0691facf5a2d4e201b25ab5d0929b90"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kirill-latish/laravel-sportmonks-soccer/zipball/21fe3bf247f4e43347ad1ef12cf7909cefabdb24",
-                "reference": "21fe3bf247f4e43347ad1ef12cf7909cefabdb24",
+                "url": "https://api.github.com/repos/kirill-latish/laravel-sportmonks-soccer/zipball/ac3b6b0cc0691facf5a2d4e201b25ab5d0929b90",
+                "reference": "ac3b6b0cc0691facf5a2d4e201b25ab5d0929b90",
                 "shasum": ""
             },
             "require": {
@@ -952,7 +953,7 @@
                 "live-scores",
                 "soccer"
             ],
-            "time": "2018-05-09T20:17:17+00:00"
+            "time": "2018-10-25T19:33:27+00:00"
         },
         {
             "name": "laravel/framework",
@@ -4058,16 +4059,16 @@
         },
         {
             "name": "phpunit/php-token-stream",
-            "version": "3.0.0",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-token-stream.git",
-                "reference": "21ad88bbba7c3d93530d93994e0a33cd45f02ace"
+                "reference": "c99e3be9d3e85f60646f152f9002d46ed7770d18"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/21ad88bbba7c3d93530d93994e0a33cd45f02ace",
-                "reference": "21ad88bbba7c3d93530d93994e0a33cd45f02ace",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/c99e3be9d3e85f60646f152f9002d46ed7770d18",
+                "reference": "c99e3be9d3e85f60646f152f9002d46ed7770d18",
                 "shasum": ""
             },
             "require": {
@@ -4103,7 +4104,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2018-02-01T13:16:43+00:00"
+            "time": "2018-10-30T05:52:18+00:00"
         },
         {
             "name": "phpunit/phpunit",
