@@ -82,4 +82,5 @@ return [
     'msg_no_data'             => 'is not (yet) available for this fixture|are not (yet) available for this fixture',
     'version'                 => 'version',
     'Created with'            => 'Created with',
+    'H2H'                     => 'H2H',
 ];
