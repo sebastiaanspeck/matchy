@@ -16,7 +16,9 @@ return [
      | If you want to limit your translations, set your supported locales list.
      */
 
-    'locales'   => ['id', 'nl'],
+    'locales'   => [
+        //
+    ],
 
     /* -----------------------------------------------------------------
      |  Check Settings
