@@ -259,7 +259,7 @@ class SoccerAPIController extends BaseController
 
         $fixture = $soccerAPI->fixtures()->setInclude($includeFixture)->byMatchId($fixtureId)->data;
 
-        $h2hFixtures = $soccerAPI->head2head()->setInclude($includeHead2Head)->betweenTeams($fixture->localteam_id,$fixture->visitorteam_id);
+        $h2hFixtures = $soccerAPI->head2head()->setInclude($includeHead2Head)->betweenTeams($fixture->localteam_id, $fixture->visitorteam_id);
 
         return view('fixtures/fixtures_details', ['fixture' => $fixture, 'h2h_fixtures' => $h2hFixtures, 'date_format' => $dateFormat]);
     }
