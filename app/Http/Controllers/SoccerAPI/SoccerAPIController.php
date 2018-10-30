@@ -254,11 +254,14 @@ class SoccerAPIController extends BaseController
         $dateFormat = self::getDateFormat();
 
         $soccerAPI = new SoccerAPI();
-        $include = 'localTeam,visitorTeam,lineup.player,bench.player,sidelined.player,stats,comments,highlights,league,season,referee,events,venue,localCoach,visitorCoach';
+        $includeFixture = 'localTeam,visitorTeam,lineup.player,bench.player,sidelined.player,stats,comments,highlights,league,season,referee,events,venue,localCoach,visitorCoach';
+        $includeHead2Head = 'localTeam,visitorTeam,league,season,round,stage';
 
-        $fixture = $soccerAPI->fixtures()->setInclude($include)->byMatchId($fixtureId)->data;
+        $fixture = $soccerAPI->fixtures()->setInclude($includeFixture)->byMatchId($fixtureId)->data;
 
-        return view('fixtures/fixtures_details', ['fixture' => $fixture, 'date_format' => $dateFormat]);
+        $h2hFixtures = $soccerAPI->head2head()->setInclude($includeHead2Head)->betweenTeams($fixture->localteam_id,$fixture->visitorteam_id);
+
+        return view('fixtures/fixtures_details', ['fixture' => $fixture, 'h2h_fixtures' => $h2hFixtures, 'date_format' => $dateFormat]);
     }
 
     /**
