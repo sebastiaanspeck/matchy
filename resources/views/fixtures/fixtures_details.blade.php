@@ -35,7 +35,7 @@
             isset($fixture->localCoach->data) ? $localCoach = $fixture->localCoach->data : $localCoach = null;
             isset($fixture->visitorCoach->data) ? $visitorCoach = $fixture->visitorCoach->data : $localCoach = null;
 
-            isset($fixture->stats->data) ? $stats = $fixture->stats->data :$stats = null;
+            isset($fixture->stats->data) ? $stats = $fixture->stats->data : $stats = null;
             isset($fixture->comments->data) ? $comments = $fixture->comments->data : $comments = null;
             isset($fixture->highlights->data) ? $highlights = $fixture->highlights->data : $highlights = null;
 
