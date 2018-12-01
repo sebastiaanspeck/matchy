@@ -6,6 +6,9 @@
 Laravel website that uses [Sportmonks](https://www.sportmonks.com/sports/soccer) (live)score API calls. 
 Documentation for the API can be found [here](https://www.sportmonks.com/sports/soccer)
 
+## Screenshots
+[Gallery with screenshots](https://imgur.com/gallery/BlqvOwU)
+
 ## Installation
 
 **1-** Run Composer to install requirements.
