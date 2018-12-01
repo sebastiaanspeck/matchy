@@ -2,7 +2,7 @@
 
 @section("content")
     <div class = "container">
-        <h1>{{ Lang::has("application.Livescores") ? trans("application.Livescores") : Log::emergency("Missing application translation for: Livescores") . "Livescores" }}- {{date($date_format)}} </h1>
+        <h1 style="text-align: center">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Fixtures") }} - {{date($date_format)}} </h1>
 
         @if(isset($livescores))
             @if(count($livescores) >= 1 && gettype($livescores) == "array")
@@ -24,19 +24,50 @@
                         }
                         
                         if(strpos($homeTeam->name, "countries") !== false) {
-                            Log::warning("Missing translation-string for: " . str_replace("countries.", "", $homeTeam->name) . " in " . app()->getLocale() . "/countries.php");
+                            Log::critical("Missing translation-string for: " . str_replace("countries.", "", $homeTeam->name) . " in " . app()->getLocale() . "/countries.php");
                         } elseif(strpos($awayTeam->name, "countries") !== false) {
-                            Log::warning("Missing translation-string for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
+                            Log::critical("Missing translation-string for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
                         }
                         
-                        if($livescore->scores->localteam_score > $livescore->scores->visitorteam_score && in_array($livescore->time->status,  array("FT", "AET", "FT_PEN"))) {
-                            $winningTeam = $homeTeam->name;
-                        } elseif ($livescore->scores->localteam_score == $livescore->scores->visitorteam_score && in_array($livescore->time->status,  array("FT", "AET", "FT_PEN"))) {
-                            $winningTeam = "draw";
-                        } elseif ($livescore->scores->localteam_score < $livescore->scores->visitorteam_score && in_array($livescore->time->status,  array("FT", "AET", "FT_PEN"))) {
-                            $winningTeam = $awayTeam->name;
+                        if(in_array($livescore->time->status,  array("FT", "AET", "FT_PEN"))) {
+                            switch($livescore->time->status) {
+                                case("FT_PEN"):
+                                    if($livescore->scores->localteam_pen_score > $livescore->scores->visitorteam_pen_score) {
+                                        $homeTeamClass = "won-team";
+                                        $awayTeamClass = "lost-team";
+                                    } elseif($livescore->scores->localteam_pen_score == $livescore->scores->visitorteam_pen_score) {
+                                        $homeTeamClass = $awayTeamClass = "draw-team";
+                                    } elseif($livescore->scores->localteam_pen_score < $livescore->scores->visitorteam_pen_score) {
+                                        $homeTeamClass = "lost-team";
+                                        $awayTeamClass = "won-team";
+                                    }
+                                    break;
+                                default:
+                                    if($livescore->scores->localteam_score > $livescore->scores->visitorteam_score) {
+                                        $homeTeamClass = "won-team";
+                                        $awayTeamClass = "lost-team";
+                                    } elseif($livescore->scores->localteam_score == $livescore->scores->visitorteam_score) {
+                                        $homeTeamClass = $awayTeamClass = "draw-team";
+                                    } elseif($livescore->scores->localteam_score < $livescore->scores->visitorteam_score) {
+                                        $homeTeamClass = "lost-team";
+                                        $awayTeamClass = "won-team";
+                                    }
+                                    break;
+                            }
                         } else {
-                            $winningTeam = "TBD";
+                            $homeTeamClass = $awayTeamClass = "";
+                        }
+                        
+                        switch($livescore->time->status) {
+                            case("FT_PEN"):
+                                $scoreLine = $livescore->scores->localteam_score . " - " . $livescore->scores->visitorteam_score ."\n(" . $livescore->scores->localteam_pen_score . " - " . $livescore->scores->visitorteam_pen_score . ")";
+                                break;
+                            case("AET"):
+                                $scoreLine = $livescore->scores->localteam_score . " - " . $livescore->scores->visitorteam_score . "\n(ET)";
+                                break;
+                            default:
+                                $scoreLine = $livescore->scores->localteam_score . " - " . $livescore->scores->visitorteam_score;
+                                break;
                         }
                     @endphp
                     @if($livescore->league_id == $last_league_id)
@@ -56,45 +87,17 @@
                             </tr>
                         @endif
                         <tr>
-                            {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
-                            @switch($winningTeam)
-                                @case($homeTeam->name)
-                                    <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class="won-team">{{$homeTeam->name}}</a></td>
-                                    <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class="lost-team">{{$awayTeam->name}}</a></td>
-                                    @break
-                                @case($awayTeam->name)
-                                    <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class="lost-team">{{$homeTeam->name}}</a></td>
-                                    <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class="won-team">{{$awayTeam->name}}</a></td>
-                                    @break
-                                @case("draw")
-                                    <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class="draw-team">{{$homeTeam->name}}</a></td>
-                                    <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class="draw-team">{{$awayTeam->name}}</a></td>
-                                    @break
-                                @default
-                                    <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}">{{$homeTeam->name}}</a></td>
-                                    <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}">{{$awayTeam->name}}</a></td>
-                                    @break
-                            @endswitch
-
-                            {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
-                            @switch($livescore->time->status)
-                                @case("FT_PEN")
-                                    <td scope="row">{{$livescore->scores->localteam_score}} - {{$livescore->scores->visitorteam_score}} ({{$livescore->scores->localteam_pen_score}} - {{$livescore->scores->visitorteam_pen_score}})</td>
-                                    @break
-                                @case("AET")
-                                    <td scope="row">{{$livescore->scores->localteam_score}} - {{$livescore->scores->visitorteam_score}} (ET)</td>
-                                    @break
-                                @default
-                                    <td scope="row">{{$livescore->scores->localteam_score}} - {{$livescore->scores->visitorteam_score}}</td>
-                                    @break
-                            @endswitch
-    
                             <td scope="row">{{date($date_format . " H:i", strtotime($livescore->time->starting_at->date_time))}}
-                                @if(in_array($livescore->time->status, array("LIVE", "HT", "ET")))
+                            @if(in_array($livescore->time->status, array("LIVE", "HT", "ET")))
                                     <span class="live">{{ $livescore->time->status }}</span>
                                 @endif
                             </td>
-                            <td scope="row"><a href="{{route("fixturesDetails", ["id" => $livescore->id])}}"><i class="fa fa-info-circle"></i></a></td>
+                            {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
+                            <td scope="row" style="text-align: right"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}</a></td>
+                            {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
+                            <td scope="row" style="text-align: center">{!! nl2br(e($scoreLine)) !!}</td>
+                            <td scope="row" style="text-align: left"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}>{{$awayTeam->name}}</a></td>
+                            <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $livescore->id])}}"><i class="fa fa-info-circle" style="margin-right: 10px"></i></a></td>
                         </tr>
                     @else
                         @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; @endphp
@@ -117,55 +120,26 @@
                             @endif
                             <thead style="visibility: collapse">
                                 <tr>
-                                    <th scope="col" width="35%"></th>
-                                    <th scope="col" width="35%"></th>
+                                    <th scope="col" width="20%"></th>
+                                    <th scope="col" width="20%"></th>
                                     <th scope="col" width="10%"></th>
-                                    <th scope="col" width="17%"></th>
-                                    <th scope="col" width="3%"></th>
+                                    <th scope="col" width="20%"></th>
+                                    <th scope="col" width="20%"></th>
                                 </tr>
                             </thead>
                             <tbody>
                             <tr>
-                                {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
-                                @switch($winningTeam)
-                                    @case($homeTeam->name)
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class="won-team">{{$homeTeam->name}}</a></td>
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class="lost-team">{{$awayTeam->name}}</a></td>
-                                        @break
-                                    @case($awayTeam->name)
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class="lost-team">{{$homeTeam->name}}</a></td>
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class="won-team">{{$awayTeam->name}}</a></td>
-                                        @break
-                                    @case("draw")
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class="draw-team">{{$homeTeam->name}}</a></td>
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class="draw-team">{{$awayTeam->name}}</a></td>
-                                        @break
-                                    @default
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}">{{$homeTeam->name}}</a></td>
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}">{{$awayTeam->name}}</a></td>
-                                        @break
-                                @endswitch
-
-                                {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
-                                @switch($livescore->time->status)
-                                    @case("FT_PEN")
-                                        <td scope="row">{{$livescore->scores->localteam_score}} - {{$livescore->scores->visitorteam_score}} ({{$livescore->scores->localteam_pen_score}} - {{$livescore->scores->visitorteam_pen_score}})</td>
-                                        @break
-                                    @case("AET")
-                                        <td scope="row">{{$livescore->scores->localteam_score}} - {{$livescore->scores->visitorteam_score}} (ET)</td>
-                                        @break
-                                    @default
-                                        <td scope="row">{{$livescore->scores->localteam_score}} - {{$livescore->scores->visitorteam_score}}</td>
-                                        @break
-                                @endswitch
-    
                                 <td scope="row">{{date($date_format . " H:i", strtotime($livescore->time->starting_at->date_time))}}
                                     @if(in_array($livescore->time->status, array("LIVE", "HT", "ET")))
                                         <span class="live">{{ $livescore->time->status }}</span>
                                     @endif
                                 </td>
-
-                                <td scope="row"><a href="{{route("fixturesDetails", ["id" => $livescore->id])}}"><i class="fa fa-info-circle"></i></a></td>
+                                {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
+                                <td scope="row" style="text-align: right"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}</a></td>
+                                {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
+                                <td scope="row" style="text-align: center">{!! nl2br(e($scoreLine)) !!}</td>
+                                <td scope="row" style="text-align: left"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}>{{$awayTeam->name}}</a></td>
+                                <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $livescore->id])}}"><i class="fa fa-info-circle" style="margin-right: 10px"></i></a></td>
                             </tr>
                     @endif
                     @php $last_league_id = $livescore->league_id; if(isset($livescore->round)) {$last_round_id = $livescore->round->data->name;} $last_stage_id = $livescore->stage->data->name; @endphp

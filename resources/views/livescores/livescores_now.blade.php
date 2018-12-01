@@ -6,8 +6,8 @@
 
 @section("content")
     <div class = "container">
-        <h1>{{ Lang::has("application.Livescores") ? trans("application.Livescores") : Log::critical("Missing cup-stage translation for: Livescores") . "Livescores" }}- {{date($date_format)}} </h1>
-        <p>{{ Lang::has("application.Last update") ? trans("application.Last update") : Log::critical("Missing cup-stage translation for: Last update") . "Last update" }} {{date($date_format . " H:i:s")}} </p>
+        <h1 style="text-align: center">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Livescores") }} - {{date($date_format)}} </h1>
+        <p style="text-align: center">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Last update") }} {{date($date_format . " H:i:s")}} </p>
 
         @if(isset($livescores))
             @if(count($livescores) >= 1)
@@ -36,6 +36,22 @@
                         } elseif(strpos($awayTeam->name, "countries") !== false) {
                             Log::warning("Missing translation-string for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
                         }
+                        
+                        if(in_array($livescore->time->status, array("LIVE", "HT", "ET", "PEN_LIVE", "AET", "BREAK"))) {
+                            if($livescore->time->status == "HT") {
+                                $timeLine = "HT";
+                            } elseif(in_array($livescore->time->minute, array(0, null)) && $livescore->time->added_time == 0) {
+                                $timeLine = "0'";
+                            } elseif(in_array($livescore->time->added_time, array(0, null))) {
+                                $timeLine = $livescore->time->minute . "'";
+                            } elseif(!in_array($livescore->time->added_time, array(0, null))) {
+                                $timeLine =  $livescore->time->minute . "+" . $livescore->time->added_time . "'";
+                            } else {
+                                $timeLine = $livescore->time->minute . "'";
+                            }
+                        } else {
+                            $timeLine = date($date_format . " H:i", strtotime($livescore->time->starting_at->date_time));
+                        }
                     @endphp
                     @if($livescore->league_id == $last_league_id)
                         @if(isset($livescore->round))
@@ -54,26 +70,13 @@
                             </tr>
                         @endif
                         <tr>
-                            <td scope="row">{{$homeTeam->name}}</td>
-                            <td scope="row">{{$awayTeam->name}}</td>
-                            <td scope="row">{{$livescore->scores->localteam_score}} - {{$livescore->scores->visitorteam_score}}</td>
-
-                            @if(in_array($livescore->time->status, array("LIVE", "HT", "ET", "PEN_LIVE", "AET", "BREAK")))
-                                @if($livescore->time->status == "HT")
-                                    <td scope="row">HT</td>
-                                @elseif(in_array($livescore->time->minute, array(0, null)) && $livescore->time->added_time == 0)
-                                    <td scope="row">0&apos;</td>
-                                @elseif(in_array($livescore->time->added_time, array(0, null)))
-                                    <td scope="row">{{$livescore->time->minute}}&apos;</td>
-                                @elseif(!in_array($livescore->time->added_time, array(0, null)))
-                                    <td scope="row">{{$livescore->time->minute}}+{{$livescore->time->added_time}}&apos;</td>
-                                @else
-                                    <td scope="row">{{$livescore->time->minute}}</td>
-                                @endif
-                            @else
-                                <td scope="row">{{date($date_format . " H:i", strtotime($livescore->time->starting_at->date_time))}}</td>
-                            @endif
-                            <td scope="row"><a href="{{route("fixturesDetails", ["id" => $livescore->id])}}"><i class="fa fa-info-circle"></i></a></td>
+                            <td scope="row">{{$timeLine}}</td>
+                            {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
+                            <td scope="row" style="text-align: right"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}">{{$homeTeam->name}}</a></td>
+                            {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
+                            <td scope="row" style="text-align: center">{{$livescore->scores->localteam_score}} - {{$livescore->scores->visitorteam_score}}</td>
+                            <td scope="row" style="text-align: left"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}">{{$awayTeam->name}}</a></td>
+                            <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $livescore->id])}}"><i class="fa fa-info-circle" style="margin-right: 10px"></i></a></td>
                         </tr>
                     @else
                         @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; @endphp
@@ -96,35 +99,22 @@
                             @endif
                             <thead style="visibility: collapse">
                                 <tr>
-                                    <th scope="col" width="35%"></th>
-                                    <th scope="col" width="35%"></th>
+                                    <th scope="col" width="20%"></th>
+                                    <th scope="col" width="20%"></th>
                                     <th scope="col" width="10%"></th>
-                                    <th scope="col" width="17%"></th>
-                                    <th scope="col" width="3%"></th>
+                                    <th scope="col" width="20%"></th>
+                                    <th scope="col" width="20%"></th>
                                 </tr>
                             </thead>
                             <tbody>
                             <tr>
-                                <td scope="row">{{$homeTeam->name}}</td>
-                                <td scope="row">{{$awayTeam->name}}</td>
-                                <td scope="row">{{$livescore->scores->localteam_score}} - {{$livescore->scores->visitorteam_score}}</td>
-
-                                @if(in_array($livescore->time->status, array("LIVE", "HT", "ET", "PEN_LIVE", "AET", "BREAK")))
-                                    @if($livescore->time->status == "HT")
-                                        <td scope="row">HT</td>
-                                    @elseif(in_array($livescore->time->minute, array(0, null)) && $livescore->time->added_time == 0)
-                                        <td scope="row">0&apos;</td>
-                                    @elseif(in_array($livescore->time->added_time, array(0, null)))
-                                        <td scope="row">{{$livescore->time->minute}}&apos;</td>
-                                    @elseif(!in_array($livescore->time->added_time, array(0, null)))
-                                        <td scope="row">{{$livescore->time->minute}}+{{$livescore->time->added_time}}&apos;</td>
-                                    @else
-                                        <td scope="row">{{$livescore->time->minute}}</td>
-                                    @endif
-                                @else
-                                    <td scope="row">{{date($date_format . " H:i", strtotime($livescore->time->starting_at->date_time))}}</td>
-                                @endif
-                                <td scope="row"><a href="{{route("fixturesDetails", ["id" => $livescore->id])}}"><i class="fa fa-info-circle"></i></a></td>
+                                <td scope="row">{{$timeLine}}</td>
+                                {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
+                                <td scope="row" style="text-align: right"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}">{{$homeTeam->name}}</a></td>
+                                {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
+                                <td scope="row" style="text-align: center">{{$livescore->scores->localteam_score}} - {{$livescore->scores->visitorteam_score}}</td>
+                                <td scope="row" style="text-align: left"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}">{{$awayTeam->name}}</a></td>
+                                <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $livescore->id])}}"><i class="fa fa-info-circle" style="margin-right: 10px"></i></a></td>
                             </tr>
                     @endif
                     @php $last_league_id = $livescore->league_id; if(isset($livescore->round)) {$last_round_id = $livescore->round->data->name;} $last_stage_id = $livescore->stage->data->name; @endphp

@@ -4,6 +4,95 @@
     .progress {
         margin-bottom: 0 !important;
     }
+    
+    .timeline {
+        padding: 20px 0;
+        position: relative;
+    }
+    .timeline-nodes {
+        padding-bottom: 25px;
+        position: relative;
+    }
+    .timeline-nodes-left {
+        left: 100%;
+        margin-bottom: 15px;
+    }
+    .timeline-nodes-right {
+        right: 100%;
+        margin-bottom: 15px;
+        flex-direction: row-reverse;
+    }
+    .timeline span {
+        padding: 5px 15px;
+    }
+    .timeline-content-span {
+        font-weight: lighter;
+        background: #0288d1;
+    }
+    .timeline p, .timeline time {
+        color: #0288d1
+    }
+    .timeline::before {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 0;
+        border-left: 2px dashed #0288d1;
+        height: 100%;
+        z-index: 1;
+        transform: translateX(-50%);
+    }
+    .timeline-content {
+        position: relative;
+        box-shadow: 0px 3px 25px 0px rgba(10, 55, 90, 0.2);
+        height: 33px;
+    }
+    .timeline-nodes-left span {
+        text-align: right;
+        float: right;
+    }
+    .timeline-nodes-right span {
+        float: left;
+    }
+    .timeline-nodes-left .timeline-date {
+        text-align: left;
+    }
+    .timeline-nodes-right .timeline-date {
+        text-align: right;
+    }
+    .timeline-nodes-left .timeline-nodes-right .timeline-content::after {
+        content: "";
+        position: absolute;
+        top: 5%;
+        width: 0;
+        border-left: 10px solid #0288d1;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+    }
+    .timeline-image {
+        position: relative;
+        z-index: 100;
+    }
+    .timeline-image::before {
+        content: "";
+        width: 32px;
+        height: 32px;
+        border: 2px solid #0288d1;
+        border-radius: 50%;
+        display: block;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        background-color: #fff;
+        z-index: 1;
+    }
+    .timeline-image img {
+        position: relative;
+        z-index: 100;
+    }
 @endsection
 
 @section("content")
@@ -42,9 +131,9 @@
             <h1><a href=" {{route("leaguesDetails", ["id" => $league->id])}} "> {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }} </a></h1>
                 <table style="width:100%">
                     <tr>
-                        <td width="49%"><img style="max-height: 200px; max-width: 200px" src={{$homeTeam->logo_path}}></td>
+                        <td width="49%"><img style="max-height: 200px; max-width: 200px" alt="homeTeam-logo" src={{$homeTeam->logo_path}}></td>
                         <td width="2%"><h1> - </h1></td>
-                        <td width="49%"><img style="max-height: 200px; max-width: 200px" src={{$awayTeam->logo_path}}></td>
+                        <td width="49%"><img style="max-height: 200px; max-width: 200px" alt="awayTeam-logo" src={{$awayTeam->logo_path}}></td>
                     </tr>
                     <tr style="height: 10px"></tr>
                     <tr>
@@ -116,42 +205,32 @@
         <div class="tab-content" id="tab_content">
             <div class="tab-pane fade show active" id="match_summary" role="tabpanel" aria-labelledby="match_summary-tab">
                 @if(count($events) > 0)
-                    <table class="table table-sm table-borderless" align="center">
-                        <tbody>
+                    <div class="timeline">
                         @foreach($events as $event)
                             @if(in_array($event->type, array("pen_shootout_goal", "pen_shootout_miss")))
                                 @continue
                             @endif
-                            <tr>
                             @if($event->team_id == $homeTeamId)
-                                @if($event->type == "substitution")
-                                    <td scope="row" style="text-align:right" width="1%">{{$event->minute}}@if(!is_null($event->extra_minute))+{{$event->extra_minute}}@endif&apos;</td>
-                                    <td scope="row" style="text-align:center" width="1%"><img src="/images/events/{{$event->type}}.svg"></td>
-                                    <td scope="row" style="text-align:left" width="49%">{{$event->player_name}} <img src="/images/events/substitution-in.svg"> {{$event->related_player_name}} <img src="/images/events/substitution-out.svg"></td>
-                                @else
-                                    <td scope="row" style="text-align:right" width="1%">{{$event->minute}}@if(!is_null($event->extra_minute))+{{$event->extra_minute}}@endif&apos;</td>
-                                    <td scope="row" style="text-align:center" width="1%"><img src="/images/events/{{$event->type}}.svg"></td>
-                                    <td scope="row" style="text-align:left" width="49%"> {{$event->player_name}} </td>
-                                @endif
+                                <div class="row no-gutters justify-content-end justify-content-md-around align-items-start timeline-nodes-left">
                             @else
-                                @if($event->type == "substitution")
-                                    <td colspan="3"></td>
-                                    <td scope="row" style="text-align:right" width="49%">{{$event->player_name}}<img src="/images/events/substitution-in.svg"> {{$event->related_player_name}} <img src="/images/events/substitution-out.svg"></td>
-                                    <td scope="row" style="text-align:center" width="1%"><img src="/images/events/{{$event->type}}.svg"></td>
-                                    <td scope="row" style="text-align:left" width="1%">{{$event->minute}}@if(!is_null($event->extra_minute))+{{$event->extra_minute}}@endif&apos;</td>
-                                @else
-                                    <td colspan="3"></td>
-                                    <td scope="row" style="text-align:right" width="49%"> {{$event->player_name}} </td>
-                                    <td scope="row" style="text-align:center" width="1%"><img src="/images/events/{{$event->type}}.svg"></td>
-                                    <td scope="row" style="text-align:left" width="1%">{{$event->minute}}@if(!is_null($event->extra_minute))+{{$event->extra_minute}}@endif&apos;</td>
-                                @endif
+                                <div class="row no-gutters justify-content-end justify-content-md-around align-items-start timeline-nodes-right">
                             @endif
-                            <tr>
+                                    <div class="col-10 col-md-5 order-3 order-md-1 timeline-content">
+                                        <span class="text-light timeline-content-span">{{$event->minute}}@if(!is_null($event->extra_minute))+{{$event->extra_minute}}@endif&apos;</span>
+                                        @if($event->type == "substitution")
+                                            <span>{{$event->player_name}} <img src="/images/events/substitution-in.svg" alt="substitution-in"> {{$event->related_player_name}} <img src="/images/events/substitution-out.svg" alt="substitution-out"></span>
+                                        @else
+                                            <span>{{$event->player_name}}</span>
+                                        @endif
+                                    </div>
+                                    <div class="col-2 col-sm-1 px-md-3 order-1 timeline-image text-md-center">
+                                        <img src="/images/events/{{$event->type}}.svg" class="img-fluid" alt="img">
+                                    </div>
+                                    <div class="col-10 col-md-5 order-1"></div>
+                                </div>
+                                
                         @endforeach
-                        </tbody>
-                    </table>
-                @else
-                    <span style="font-weight: bold">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Match Summary") }} @choice("application.msg_no_data", 1)</span>
+                    </div>
                 @endif
             </div>
             <div class="tab-pane fade" id="statistics" role="tabpanel" aria-labelledby="statistics-tab">
@@ -370,40 +449,40 @@
                             <tr>
                                 @if(isset($home_player) && isset($away_player))
                                     <td style="width:1%">{{$home_player->number}}</td>
-                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$home_player_nationality}}.png"></td>
+                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$home_player_nationality}}.png" alt="homePlayer-nationality"></td>
                                     <td style="text-align: left">
                                         {{$home_player_common_name}}
                                         @foreach($home_player_stats as $stat)
-                                            <img src="{{$stat}}">
+                                            <img src="{{$stat}}" alt="stat">
                                         @endforeach
                                     </td>
                                     <td style="width: 1%"></td>
                                     <td style="text-align: right">
                                         @foreach($away_player_stats as $stat)
-                                            <img src="{{$stat}}">
+                                            <img src="{{$stat}}" alt="stat">
                                         @endforeach
                                         {{$away_player_common_name}}
                                     </td>
-                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$away_player_nationality}}.png"></td>
+                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$away_player_nationality}}.png" alt="awayPlayer-nationality"></td>
                                     <td style="width:1%">{{$away_player->number}}</td>
                                 @elseif(isset($home_player) && !isset($away_player))
                                     <td style="width:1%">{{$home_player->number}}</td>
-                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$home_player_nationality}}.png"></td>
+                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$home_player_nationality}}.png" alt="homePlayer-nationality"></td>
                                     <td style="text-align: left">
                                         {{$home_player_common_name}}
                                         @foreach($home_player_stats as $stat)
-                                            <img src="{{$stat}}">
+                                            <img src="{{$stat}}" alt="stat">
                                         @endforeach
                                     </td>
                                 @elseif(!isset($home_player) && isset($away_player))
                                     <td colspan="5"></td>
                                     <td style="text-align: right">
                                         @foreach($away_player_stats as $stat)
-                                            <img src="{{$stat}}">
+                                            <img src="{{$stat}}" alt="stat">
                                         @endforeach
                                         {{$away_player_common_name}}
                                     </td>
-                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$away_player_nationality}}.png"></td>
+                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$away_player_nationality}}.png" alt="awayPlayer-nationality"></td>
                                     <td style="width:1%">{{$away_player->number}}</td>
                                 @endif
                             </tr>
@@ -477,40 +556,40 @@
                             <tr>
                                 @if(isset($home_player) && isset($away_player))
                                     <td style="width:1%">{{$home_player->number}}</td>
-                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$home_player_nationality}}.png"></td>
+                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$home_player_nationality}}.png" alt="homePlayer-nationality"></td>
                                     <td style="text-align: left; width:50%">
                                         {{$home_player_common_name}}
                                         @foreach($home_player_stats as $stat)
-                                            <img src="{{$stat}}">
+                                            <img src="{{$stat}}" alt="stat">
                                         @endforeach
                                     </td>
                                     <td style="width: 1%"></td>
                                     <td style="text-align: right; width: 50%">
                                         @foreach($away_player_stats as $stat)
-                                            <img src="{{$stat}}">
+                                            <img src="{{$stat}}" alt="stat">
                                         @endforeach
                                         {{$away_player_common_name}}
                                     </td>
-                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$away_player_nationality}}.png"></td>
+                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$away_player_nationality}}.png" alt="awayPlayer-nationality"></td>
                                     <td style="width:1%">{{$away_player->number}}</td>
                                 @elseif(isset($home_player) && !isset($away_player))
                                     <td style="width:1%">{{$home_player->number}}</td>
-                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$home_player_nationality}}.png"></td>
+                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$home_player_nationality}}.png" alt="homePlayer-nationality"></td>
                                     <td style="text-align: left; width:50%">
                                         {{$home_player_common_name}}
                                         @foreach($home_player_stats as $stat)
-                                            <img src="{{$stat}}">
+                                            <img src="{{$stat}}" alt="stat">
                                         @endforeach
                                     </td>
                                 @elseif(!isset($home_player) && isset($away_player))
                                     <td colspan="4"></td>
                                     <td style="text-align: right; width: 50%">
                                         @foreach($away_player_stats as $stat)
-                                            <img src="{{$stat}}">
+                                            <img src="{{$stat}}" alt="stat">
                                         @endforeach
                                         {{$away_player_common_name}}
                                     </td>
-                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$away_player_nationality}}.png"></td>
+                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$away_player_nationality}}.png" alt="awayPlayer-nationality"></td>
                                     <td style="width:1%">{{$away_player->number}}</td>
                                 @endif
                             </tr>
@@ -564,23 +643,23 @@
                                 @if(isset($home_sidelined_player) && isset($away_sidelined_player))
                                     <tr>
                                         <td></td>
-                                        <td style="width: 1%"><img src="/images/flags/shiny/16/{{$home_sidelined_player->nationality}}.png"></td>
+                                        <td style="width: 1%"><img src="/images/flags/shiny/16/{{$home_sidelined_player->nationality}}.png" alt="homePlayer-nationality"></td>
                                         <td style="text-align: left">{{$home_sidelined_player->common_name}} <span style="color: #A9A9A9">({{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("injuries", $home_sidelined_player->reason) }})</span></td>
                                         <td></td>
                                         <td style="text-align: right">{{$away_sidelined_player->common_name}} <span style="color: #A9A9A9">({{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("injuries", $away_sidelined_player->reason) }})</span></td>
-                                        <td style="width: 1%"><img src="/images/flags/shiny/16/{{$away_sidelined_player->nationality}}.png"></td>
+                                        <td style="width: 1%"><img src="/images/flags/shiny/16/{{$away_sidelined_player->nationality}}.png" alt="awayPlayer-nationality"></td>
                                     </tr>
                                 @elseif(isset($home_sidelined_player) && !isset($away_sidelined_player))
                                     <tr>
                                         <td></td>
-                                        <td style="width: 1%"><img src="/images/flags/shiny/16/{{$home_sidelined_player->nationality}}.png"></td>
+                                        <td style="width: 1%"><img src="/images/flags/shiny/16/{{$home_sidelined_player->nationality}}.png" alt="homePlayer-nationality"></td>
                                         <td style="text-align: left">{{$home_sidelined_player->common_name}} <span style="color: #A9A9A9">({{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("injuries", $home_sidelined_player->reason) }})</span></td>
                                     </tr>
                                 @elseif(!isset($home_sidelined_player) && isset($away_sidelined_player))
                                     <tr>
                                         <td colspan="4"></td>
                                         <td style="text-align: right">{{$away_sidelined_player->common_name}} <span style="color: #A9A9A9">({{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("injuries", $away_sidelined_player->reason) }})</span></td>
-                                        <td style="width: 1%"><img src="/images/flags/shiny/16/{{$away_sidelined_player->nationality}}.png"></td>
+                                        <td style="width: 1%"><img src="/images/flags/shiny/16/{{$away_sidelined_player->nationality}}.png" alt="awayPlayer-nationality"></td>
                                     </tr>
                                 @endif
                                 @php unset($home_sidelined_player); unset($away_sidelined_player) @endphp
@@ -607,20 +686,20 @@
                         <tr>
                             @if(isset($localCoach) && isset($visitorCoach))
                                 <td style="width: 1%"></td>
-                                <td style="width:1%"><img src="/images/flags/shiny/16/{{$localCoach->nationality}}.png"></td>
+                                <td style="width:1%"><img src="/images/flags/shiny/16/{{$localCoach->nationality}}.png" alt="localCoach-nationality"></td>
                                 <td style="text-align: left">{{$localCoach->common_name}}</td>
                                 <td></td>
                                 <td style="text-align: right">{{$visitorCoach->common_name}}</td>
-                                <td style="width:1%"><img src="/images/flags/shiny/16/{{$visitorCoach->nationality}}.png"></td>
+                                <td style="width:1%"><img src="/images/flags/shiny/16/{{$visitorCoach->nationality}}.png" alt="visitiorCoach-nationality"></td>
                                 <td style="width: 1%"></td>
                             @elseif(isset($localCoach) && !isset($visitorCoach))
                                 <td style="width: 1%"></td>
-                                <td style="width:1%"><img src="/images/flags/shiny/16/{{$localCoach->nationality}}.png"></td>
+                                <td style="width:1%"><img src="/images/flags/shiny/16/{{$localCoach->nationality}}.png" alt="localCoach-nationality"></td>
                                 <td style="text-align: left">{{$localCoach->common_name}}</td>
                             @elseif(!isset($localCoach) && isset($visitorCoach))
                                 <td colspan="4"></td>
                                 <td style="text-align: right">{{$visitorCoach->common_name}}</td>
-                                <td style="width:1%"><img src="/images/flags/shiny/16/{{$visitorCoach->nationality}}.png"></td>
+                                <td style="width:1%"><img src="/images/flags/shiny/16/{{$visitorCoach->nationality}}.png" alt="visitorCoach-nationality"></td>
                                 <td style="width: 1%"></td>
                             @endif
                         </tr>
