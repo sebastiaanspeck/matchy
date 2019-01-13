@@ -39,5 +39,14 @@ config/soccerapi.php
 
 **7-** Run `php artisan serve` to use the application
 
+**8-** If the application doesn't work as expected, run the following commands. If the problem still exists, open a issue. 
+```
+php artisan config:clear
+php artisan cache:clear
+composer dump-autoload
+php artisan view:clear
+php artisan route:clear
+```
+
 ## Special thanks to
 [kirill-latish](https://github.com/kirill-latish/laravel-sportmonks-soccer)
