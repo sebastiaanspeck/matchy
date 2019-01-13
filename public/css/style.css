@@ -1,0 +1,158 @@
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+    padding-top: 60px;
+    overflow-y: scroll;
+}
+
+.container-fluid {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.main-container {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.main-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    background-color: #E8EAF6;
+}
+
+.main-footer p {
+    margin-bottom: 0;
+}
+
+/*
+ * Navbar
+ */
+
+.navbar-brand {
+    padding: .75rem 1rem;
+    font-size: 1rem;
+}
+
+.navbar-nav .nav-link {
+    padding-right: .5rem;
+    padding-left: .5rem;
+}
+
+a:link {
+    color: black;
+    background-color: transparent;
+    text-decoration:none;
+}
+a:visited {
+    color: black;
+    background-color: transparent;
+    text-decoration:none;
+}
+a:hover {
+    color: grey;
+}
+
+caption {
+    caption-side: top;
+}
+
+.won-team:link {
+    color: green;
+    background-color: transparent;
+    text-decoration:none;
+}
+.won-team:visited {
+    color: green;
+    background-color: transparent;
+    text-decoration:none;
+}
+.won-team:hover {
+    color: #32B232;
+}
+
+.lost-team:link {
+    color: #ff0000;
+    background-color: transparent;
+    text-decoration:none;
+}
+.lost-team:visited {
+    color: #ff0000;
+    background-color: transparent;
+    text-decoration:none;
+}
+.lost-team:hover {
+    color: #FF5050;
+}
+
+.draw-team:link {
+    color: #FF8040;
+    background-color: transparent;
+    text-decoration:none;
+}
+.draw-team:visited {
+    color: #FF8040;
+    background-color: transparent;
+    text-decoration:none;
+}
+.draw-team:hover {
+    color: #FFB272;
+}
+
+.result-icon {
+    display: inline-block;
+    padding: 4px;
+    font-size: .75rem;
+    line-height: 1.3;
+    font-weight: 500;
+    color: #fff;
+    text-transform: uppercase;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+}
+.result-icon-w {
+    background-color: #83cd7b;
+}
+.result-icon-l {
+    background-color: #dc656a;
+}
+.result-icon-d {
+    background-color: #f0be4b;
+}
+
+.live {
+    animation: blinker 1.5s linear infinite;
+    color: #ff0000;
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}
+
+/*
+ * Styling for mobile
+ */
+
+@media only screen and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) {
+    .main-footer {
+        display: none;
+    }
+
+    .links > a {
+        padding: 0 5px!important;
+        font-size: 15px!important;
+    }
+}
