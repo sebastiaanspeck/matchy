@@ -30,7 +30,7 @@ class SoccerAPIController extends BaseController
         $leagues = $soccerAPI->leagues()->setInclude($include)->all();
 
         $currentYear = Carbon::now()->year;
-        $season = env('SEASON', $currentYear.'/'.Carbon::now()->addYear()->year);
+        $season = env('SEASON');
 
         foreach ($leagues as $key => $league) {
             if (!in_array($league->season->data->name, [$season, $currentYear])) {
@@ -65,6 +65,8 @@ class SoccerAPIController extends BaseController
     {
         $dateFormat = self::getDateFormat();
 
+        $log = new Log();
+
         $soccerAPI = new SoccerAPI();
         $includeLeague = 'country,season';
         $includeStandings = 'standings.team';
@@ -90,9 +92,9 @@ class SoccerAPIController extends BaseController
                 }
             }
             $topscorers = self::addPagination($topscorers, 10);
-        } else {
-            Log::debug('Missing topscorers for: '.$league->name);
         }
+
+        $log->debug('Missing topscorers for: '.$league->name);
 
         $lastFixtures = [];
         $upcomingFixtures = [];
@@ -371,18 +373,20 @@ class SoccerAPIController extends BaseController
      */
     public static function translateString($transType, $transString)
     {
+        $log = new Log();
+
         $logString = $transType.'.'.$transString;
         if (\Lang::has($logString) && trans($logString) !== '') {
             if (trans($logString) == trans($logString, [], 'en') && app()->getLocale() !== 'en') {
                 switch ($transType) {
                     case 'application':
-                        Log::alert($transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php is the same as the one in en/'.$transType.'.php');
+                        $log->alert($transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php is the same as the one in en/'.$transType.'.php');
                         break;
                     case 'countries':
-                        Log::critical($transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php is the same as the one in en/'.$transType.'.php');
+                        $log->critical($transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php is the same as the one in en/'.$transType.'.php');
                         break;
                     case 'injuries':
-                        Log::notice($transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php is the same as the one in en/'.$transType.'.php');
+                        $log->notice($transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php is the same as the one in en/'.$transType.'.php');
                         break;
                 }
             }
@@ -392,22 +396,22 @@ class SoccerAPIController extends BaseController
 
         switch ($transType) {
             case 'application':
-                Log::alert('Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php');
+                $log->alert('Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php');
                 break;
             case 'countries':
-                Log::critical('Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php');
+                $log->critical('Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php');
                 break;
             case 'cup_stages':
-                Log::warning('Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php');
+                $log->warning('Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php');
                 break;
             case 'injuries':
-                Log::notice('Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php');
+                $log->notice('Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php');
                 break;
             case 'leagues':
-                Log::info('Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php');
+                $log->info('Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php');
                 break;
             default:
-                Log::error('Missing error-level for: '.$transString);
+                $log->error('Missing error-level for: '.$transString);
                 break;
         }
 
@@ -421,6 +425,8 @@ class SoccerAPIController extends BaseController
      */
     public static function getCountryFlag($country)
     {
+        $log = new Log();
+
         if (strpos($country, ' ') !== false) {
             $country = str_replace(' ', '-', $country);
         }
@@ -435,7 +441,7 @@ class SoccerAPIController extends BaseController
         }
 
         if (!file_exists('images/flags/shiny/16/'.$country.'.png')) {
-            Log::emergency('Missing flag for: '.$country);
+            $log->emergency('Missing flag for: '.$country);
             $country = 'Unknown';
         }
 
