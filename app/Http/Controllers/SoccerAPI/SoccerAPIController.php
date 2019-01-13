@@ -30,7 +30,7 @@ class SoccerAPIController extends BaseController
         $leagues = $soccerAPI->leagues()->setInclude($include)->all();
 
         $currentYear = Carbon::now()->year;
-        $season = env('SEASON', $currentYear . '/' . Carbon::now()->addYear()->year);
+        $season = env('SEASON', $currentYear.'/'.Carbon::now()->addYear()->year);
 
         foreach ($leagues as $key => $league) {
             if (!in_array($league->season->data->name, [$season, $currentYear])) {
@@ -350,8 +350,9 @@ class SoccerAPIController extends BaseController
      * @param $date
      * @param string $format
      *
-     * @return bool
      * @throws \Exception
+     *
+     * @return bool
      */
     public function validateDate($date, $format = 'Y-m-d')
     {
