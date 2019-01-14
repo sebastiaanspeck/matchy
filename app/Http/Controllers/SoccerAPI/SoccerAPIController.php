@@ -4,6 +4,7 @@ namespace App\Http\Controllers\SoccerAPI;
 
 use Carbon\Carbon;
 use DateTime;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -252,7 +253,11 @@ class SoccerAPIController extends BaseController
 
         $fixture = $soccerAPI->fixtures()->setInclude($includeFixture)->byMatchId($fixtureId)->data;
 
-        $h2hFixtures = $soccerAPI->head2head()->setInclude($includeHead2Head)->betweenTeams($fixture->localteam_id, $fixture->visitorteam_id);
+        try {
+            $h2hFixtures = $soccerAPI->head2head()->setInclude($includeHead2Head)->betweenTeams($fixture->localteam_id, $fixture->visitorteam_id);
+        } catch (ClientException $exception) {
+            $h2hFixtures = [];
+        }
 
         return view('fixtures/fixtures_details', ['fixture' => $fixture, 'h2h_fixtures' => $h2hFixtures, 'date_format' => $dateFormat]);
     }
