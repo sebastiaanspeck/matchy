@@ -74,7 +74,7 @@ return [
     'tomorrow'                => 'tomorrow',
     'Tomorrow'                => 'Tomorrow',
     'yesterday'               => 'yesterday',
-    'Yesterday'               => 'Yestterday',
+    'Yesterday'               => 'Yesterday',
     'msg_too_much_results'    => 'We only show the first :count results. The shown data might be incomplete. We try to fix this in a later version.',
     'msg_no_livescores_now'   => 'No livescores live now.',
     'msg_no_livescores_today' => 'No livescores for today.',
