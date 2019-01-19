@@ -28,5 +28,3 @@ Route::get('/fixtures/{id}', 'SoccerAPI\SoccerAPIController@fixturesDetails')->n
 
 // Teams
 Route::get('/teams/{id}', 'SoccerAPI\SoccerAPIController@teamsDetails')->name('teamsDetails');
-
-Route::get('logs_backup', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
