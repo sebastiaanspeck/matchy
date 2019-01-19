@@ -32,6 +32,8 @@ class Handler extends ExceptionHandler
      *
      * @param \Exception $exception
      *
+     * @throws Exception
+     *
      * @return void
      */
     public function report(Exception $exception)
@@ -49,17 +51,14 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        return parent::render($request, $exception);
-    }
+        if ($exception instanceof HttpException) {
+            $statusCode = $exception->getStatusCode();
 
-    protected function renderHttpException(HttpException $e)
-    {
-        $status = $e->getStatusCode();
-
-        if (view()->exists("errors.{$status}")) {
-            return response()->view("errors.{$status}", compact('e'), $status);
-        } else {
-            return (new SymfonyDisplayer(config('app.debug')))->createResponse($e);
+            if (view()->exists('errors.'.$statusCode)) {
+                return response(view('errors.'.$statusCode), $statusCode);
+            }
         }
+
+        return parent::render($request, $exception);
     }
 }
