@@ -66,7 +66,7 @@
             font-size: 1.2rem;
 
             position: absolute;
-            bottom: 150px;
+            bottom: 175px;
             left: 50%;
             transform: translate(-50%, -50%);
         }
