@@ -37,6 +37,7 @@ class SoccerAPIController extends BaseController
         $currentYear = Carbon::now()->year;
         $currentSeason = $user_prefs['current_season'];
 
+        if (!$user_prefs['show_inactive_leagues']) {
             // this hides leagues that are not "live" now, like end-of-season play-offs
             foreach ($leagues as $key => $league) {
                 if (!in_array($league->season->data->name, [$currentSeason, $currentYear])) {
