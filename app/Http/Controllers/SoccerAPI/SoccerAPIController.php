@@ -13,6 +13,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller as BaseController;
 use Log;
 use Sportmonks\SoccerAPI\SoccerAPI;
+use App\UserPreferences;
 
 class SoccerAPIController extends BaseController
 {
@@ -25,17 +26,22 @@ class SoccerAPIController extends BaseController
      */
     public function allLeagues(Request $request)
     {
+        $userPreferences = new UserPreferences();
+        $user_prefs = $userPreferences->getUserPreferences();
+        
         $soccerAPI = new SoccerAPI();
         $include = 'country,season';
 
         $leagues = $soccerAPI->leagues()->setInclude($include)->all();
 
         $currentYear = Carbon::now()->year;
-        $season = env('SEASON');
+        $currentSeason = $user_prefs['current_season'];
 
-        foreach ($leagues as $key => $league) {
-            if (!in_array($league->season->data->name, [$season, $currentYear])) {
-                unset($leagues[$key]);
+            // this hides leagues that are not "live" now, like end-of-season play-offs
+            foreach ($leagues as $key => $league) {
+                if (!in_array($league->season->data->name, [$currentSeason, $currentYear])) {
+                    unset($leagues[$key]);
+                }
             }
         }
 
