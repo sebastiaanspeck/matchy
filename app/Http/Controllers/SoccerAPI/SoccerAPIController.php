@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\SoccerAPI;
 
+use App\UserPreferences;
 use Carbon\Carbon;
 use DateTime;
 use GuzzleHttp\Exception\ClientException;
@@ -13,7 +14,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller as BaseController;
 use Log;
 use Sportmonks\SoccerAPI\SoccerAPI;
-use App\UserPreferences;
 
 class SoccerAPIController extends BaseController
 {
@@ -28,7 +28,7 @@ class SoccerAPIController extends BaseController
     {
         $userPreferences = new UserPreferences();
         $user_prefs = $userPreferences->getUserPreferences();
-        
+
         $soccerAPI = new SoccerAPI();
         $include = 'country,season';
 

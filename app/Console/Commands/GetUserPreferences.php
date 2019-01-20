@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\DB;
 
 class GetUserPreferences extends Command
 {
@@ -86,7 +85,7 @@ You can solve it, by running `generate:user_preferences`. Be aware that your pre
     {
         $ids = [];
 
-        foreach($favorites as $favorite) {
+        foreach ($favorites as $favorite) {
             array_push($ids, $favorite->id);
         }
 

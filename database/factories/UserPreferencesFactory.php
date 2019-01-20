@@ -1,14 +1,13 @@
 <?php
 
-use Faker\Generator as Faker;
 use Carbon\Carbon;
+use Faker\Generator as Faker;
 
 $factory->define(App\UserPreferences::class, function (Faker $faker) {
-
     $startYear = Carbon::now()->year;
     $endYear = Carbon::now()->addYear()->year;
 
-    if($endYear != Carbon::now()->year) {
+    if ($endYear != Carbon::now()->year) {
         $startYear -= 1;
         $endYear -= 1;
     }
@@ -16,8 +15,8 @@ $factory->define(App\UserPreferences::class, function (Faker $faker) {
     $currentSeason = $startYear.'/'.$endYear;
 
     return [
-        'uuid' => Uuid::generate()->string,
-        'name' => 'John Doe',
+        'uuid'           => Uuid::generate()->string,
+        'name'           => 'John Doe',
         'current_season' => $currentSeason,
     ];
 });

@@ -18,15 +18,15 @@ class UserPreferences extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'name', 'show_inactive_leagues'
+        'name', 'show_inactive_leagues',
     ];
 
     protected $casts = [
-        'show_inactive_leagues' => 'boolean'
+        'show_inactive_leagues' => 'boolean',
     ];
 
     public function getUserPreferences()
     {
-        return $user_preferences = UserPreferences::firstOrFail()->getAttributes();
+        return $user_preferences = self::firstOrFail()->getAttributes();
     }
 }
