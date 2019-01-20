@@ -27,6 +27,6 @@ class UserPreferences extends Model
 
     public function getUserPreferences()
     {
-        return $user_preferences = self::firstOrFail()->getAttributes();
+        return self::firstOrFail()->getAttributes();
     }
 }
