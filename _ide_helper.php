@@ -15147,4 +15147,8 @@ namespace  {
     {
     }
 
+    class Uuid extends \Webpatser\Uuid\Uuid
+    {
+    }
+
 }
