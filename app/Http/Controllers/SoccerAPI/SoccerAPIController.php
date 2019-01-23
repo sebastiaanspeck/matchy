@@ -278,7 +278,6 @@ class SoccerAPIController extends BaseController
      */
     public function countLivescores()
     {
-
         $livescores = self::makeCall('livescores/now', null, null, null, null, null, null, false);
 
         $count = 0;
@@ -474,20 +473,21 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param string $type
+     * @param string      $type
      * @param string|null $include
      * @param string|null $id
      * @param string|null $leagues
      * @param string|null $date
      * @param string|null $localteam_id
      * @param string|null $visitorteam_id
-     * @param bool $abort
+     * @param bool        $abort
+     *
      * @return \Exception|false|ClientException|mixed|\Psr\Http\Message\ResponseInterface|string
      */
     public function makeCall(string $type, string $include = null, string $id = null, string $leagues = null, string $date = null, string $localteam_id = null, string $visitorteam_id = null, bool $abort = true)
     {
         $soccerAPI = new SoccerAPI();
-        switch($type) {
+        switch ($type) {
             case 'livescores':
                 $response = $soccerAPI->livescores()->setInclude($include)->setLeagues($leagues)->today();
                 break;
@@ -526,14 +526,15 @@ class SoccerAPIController extends BaseController
                 $response = $soccerAPI->teams()->setInclude($include)->byId($id);
                 break;
             default:
-                $response = array();
+                $response = [];
                 break;
         }
 
-        if(isset($response->error_code)) {
+        if (isset($response->error_code)) {
             if ($abort) {
                 abort($response->error_code, $response->error_message);
             }
+
             return [];
         }
 
