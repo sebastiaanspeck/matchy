@@ -55,7 +55,7 @@ class Handler extends ExceptionHandler
             $statusCode = $exception->getStatusCode();
 
             if (view()->exists('errors.'.$statusCode)) {
-                return response(view('errors.'.$statusCode), $statusCode);
+                return response(view('errors.'.$statusCode, ['message' => $exception->getMessage()]), $statusCode);
             }
         }
 
