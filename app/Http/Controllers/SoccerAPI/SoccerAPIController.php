@@ -25,17 +25,16 @@ class SoccerAPIController extends BaseController
      */
     public function allLeagues(Request $request)
     {
-        $soccerAPI = new SoccerAPI();
-        $include = 'country,season';
+        $leagues = self::makeCall('leagues', 'country,season');
 
-        $leagues = $soccerAPI->leagues()->setInclude($include)->all();
+        if (!config('preferences.show_inactive_leagues')) {
+            $currentYear = Carbon::now()->year;
+            $season = config('preferences.season');
 
-        $currentYear = Carbon::now()->year;
-        $season = env('SEASON');
-
-        foreach ($leagues as $key => $league) {
-            if (!in_array($league->season->data->name, [$season, $currentYear])) {
-                unset($leagues[$key]);
+            foreach ($leagues as $key => $league) {
+                if (!in_array($league->season->data->name, [$season, $currentYear])) {
+                    unset($leagues[$key]);
+                }
             }
         }
 
@@ -66,31 +65,29 @@ class SoccerAPIController extends BaseController
     {
         $dateFormat = self::getDateFormat();
 
-        $soccerAPI = new SoccerAPI();
-        $includeLeague = 'country,season';
-        $includeStandings = 'standings.team';
-        $includeSeason = 'upcoming.localTeam,upcoming.visitorTeam,upcoming.league,upcoming.stage,upcoming.round,results:order(starting_at|desc),results.localTeam,results.visitorTeam,results.league,results.round,results.stage';
-        $includeTopscorers = 'goalscorers.player,goalscorers.team';
+        $league = self::makeCall('league_by_id', 'country,season', $leagueId)->data;
 
-        $league = $soccerAPI->leagues()->setInclude($includeLeague)->byId($leagueId)->data;
+        $standingsRaw = self::makeCall('standings', 'standings.team', $league->current_season_id);
 
-        $standingsRaw = $soccerAPI->standings()->setInclude($includeStandings)->bySeasonId($league->current_season_id);
-
-        $season = $soccerAPI->seasons()->setInclude($includeSeason)->byId($league->current_season_id);
+        $season = self::makeCall('season', 'upcoming.localTeam,upcoming.visitorTeam,upcoming.league,upcoming.stage,upcoming.round,results:order(starting_at|desc),results.localTeam,results.visitorTeam,results.league,results.round,results.stage', $league->current_season_id);
 
         $topscorers = [];
 
         // check if league has topscorer_goals coverage or is a cup (the is_cup, excludes World Cup, Europa League,
         if ($league->coverage->topscorer_goals) {
-            $topscorers = $soccerAPI->topscorers()->setInclude($includeTopscorers)->bySeasonId($league->current_season_id)->goalscorers->data;
+            try {
+                $topscorers = self::makeCall('topscorers', 'goalscorers.player,goalscorers.team', $league->current_season_id, null, null, null, null, false)->goalscorers->data;
 
-            foreach ($topscorers as $key => $topscorer) {
-                // remove all topscorers where stage_id is not the current_stage_id (like qualifying rounds before the actual season etc)
-                if ($topscorer->stage_id != $league->current_stage_id) {
-                    unset($topscorers[$key]);
+                foreach ($topscorers as $key => $topscorer) {
+                    // remove all topscorers where stage_id is not the current_stage_id (like qualifying rounds before the actual season etc)
+                    if ($topscorer->stage_id != $league->current_stage_id) {
+                        unset($topscorers[$key]);
+                    }
                 }
+                $topscorers = self::addPagination($topscorers, 10);
+            } catch (\ErrorException $e) {
+                Log::critical('Insufficient Privileges');
             }
-            $topscorers = self::addPagination($topscorers, 10);
         } else {
             Log::debug('Missing topscorers for: '.$league->name);
         }
@@ -152,9 +149,6 @@ class SoccerAPIController extends BaseController
     {
         $dateFormat = self::getDateFormat();
 
-        $soccerAPI = new SoccerAPI();
-        $include = 'league,localTeam,visitorTeam,round,stage';
-
         $leagues = '';
 
         if (!$request->query('leagues') == 'all') {
@@ -163,7 +157,7 @@ class SoccerAPIController extends BaseController
 
         switch ($type) {
             case 'today':
-                $livescores = $soccerAPI->livescores()->setInclude($include)->setLeagues($leagues)->today();
+                $livescores = self::makeCall('livescores', 'league,localTeam,visitorTeam,round,stage', $leagues);
 
                 usort($livescores, function ($item1, $item2) {
                     if ($item1->league_id == $item2->league_id) {
@@ -180,7 +174,7 @@ class SoccerAPIController extends BaseController
                 return view('livescores/livescores_today', ['livescores' => $livescores, 'date_format' => $dateFormat]);
                 break;
             case 'now':
-                $livescores = $soccerAPI->livescores()->setInclude($include)->setLeagues($leagues)->now();
+                $livescores = self::makeCall('livescores/now', 'league,localTeam,visitorTeam,round,stage', $leagues);
 
                 usort($livescores, function ($item1, $item2) {
                     if ($item1->league_id == $item2->league_id) {
@@ -218,10 +212,7 @@ class SoccerAPIController extends BaseController
             $leagues = $request->query('leagues', '');
         }
 
-        $soccerAPI = new SoccerAPI();
-        $include = 'league,localTeam,visitorTeam,round,stage';
-
-        $fixtures = $soccerAPI->fixtures()->setInclude($include)->setLeagues($leagues)->byDate($date);
+        $fixtures = self::makeCall('fixtures_by_date', 'league,localTeam,visitorTeam,round,stage', $leagues, null, $date);
 
         usort($fixtures, function ($item1, $item2) {
             if ($item1->league_id == $item2->league_id) {
@@ -247,14 +238,10 @@ class SoccerAPIController extends BaseController
     {
         $dateFormat = self::getDateFormat();
 
-        $soccerAPI = new SoccerAPI();
-        $includeFixture = 'localTeam,visitorTeam,lineup.player,bench.player,sidelined.player,stats,comments,highlights,league,season,referee,events,venue,localCoach,visitorCoach';
-        $includeHead2Head = 'localTeam,visitorTeam,league,season,round,stage';
-
-        $fixture = $soccerAPI->fixtures()->setInclude($includeFixture)->byMatchId($fixtureId)->data;
+        $fixture = self::makeCall('fixture_by_id', 'localTeam,visitorTeam,lineup.player,bench.player,sidelined.player,stats,comments,highlights,league,season,referee,events,venue,localCoach,visitorCoach', $fixtureId)->data;
 
         try {
-            $h2hFixtures = $soccerAPI->head2head()->setInclude($includeHead2Head)->betweenTeams($fixture->localteam_id, $fixture->visitorteam_id);
+            $h2hFixtures = self::makeCall('h2h', 'localTeam,visitorTeam,league,season,round,stage', null, null, null, $fixture->localteam_id, $fixture->visitorteam_id);
         } catch (ClientException $exception) {
             $h2hFixtures = [];
         }
@@ -272,10 +259,7 @@ class SoccerAPIController extends BaseController
     {
         $dateFormat = self::getDateFormat();
 
-        $soccerAPI = new SoccerAPI();
-        $include = 'squad,coach,latest.league,latest.localTeam,latest.visitorTeam,latest.round,latest.stage,upcoming.league,upcoming.localTeam,upcoming.visitorTeam,upcoming.round,upcoming.stage';
-
-        $team = $soccerAPI->teams()->setInclude($include)->byId($teamId)->data;
+        $team = self::makeCall('team_by_id', 'squad,coach,latest.league,latest.localTeam,latest.visitorTeam,latest.round,latest.stage,upcoming.league,upcoming.localTeam,upcoming.visitorTeam,upcoming.round,upcoming.stage', $teamId)->data;
 
         $numberOfMatches = $request->query('matches', 10);
         $lastFixtures = self::addPagination($team->latest->data, $numberOfMatches);
@@ -294,8 +278,8 @@ class SoccerAPIController extends BaseController
      */
     public function countLivescores()
     {
-        $soccerAPI = new SoccerAPI();
-        $livescores = $soccerAPI->livescores()->now();
+
+        $livescores = self::makeCall('livescores/now', null, null, null, null, null, null, false);
 
         $count = 0;
 
@@ -487,5 +471,72 @@ class SoccerAPIController extends BaseController
         }
 
         return Carbon::now()->toDateString();
+    }
+
+    /**
+     * @param string $type
+     * @param string|null $include
+     * @param string|null $id
+     * @param string|null $leagues
+     * @param string|null $date
+     * @param string|null $localteam_id
+     * @param string|null $visitorteam_id
+     * @param bool $abort
+     * @return \Exception|false|ClientException|mixed|\Psr\Http\Message\ResponseInterface|string
+     */
+    public function makeCall(string $type, string $include = null, string $id = null, string $leagues = null, string $date = null, string $localteam_id = null, string $visitorteam_id = null, bool $abort = true)
+    {
+        $soccerAPI = new SoccerAPI();
+        switch($type) {
+            case 'livescores':
+                $response = $soccerAPI->livescores()->setInclude($include)->setLeagues($leagues)->today();
+                break;
+            case 'livescores/now':
+                if ($include && $leagues) {
+                    $response = $soccerAPI->livescores()->setInclude($include)->setLeagues($leagues)->now();
+                    break;
+                }
+                $response = $soccerAPI->livescores()->now();
+                break;
+            case 'leagues':
+                $response = $soccerAPI->leagues()->setInclude($include)->all();
+                break;
+            case 'league_by_id':
+                $response = $soccerAPI->leagues()->setInclude($include)->byId($id);
+                break;
+            case 'standings':
+                $response = $soccerAPI->standings()->setInclude($include)->bySeasonId($id);
+                break;
+            case 'season':
+                $response = $soccerAPI->seasons()->setInclude($include)->byId($id);
+                break;
+            case 'topscorers':
+                $response = $soccerAPI->topscorers()->setInclude($include)->bySeasonId($id);
+                break;
+            case 'fixtures_by_date':
+                $response = $soccerAPI->fixtures()->setInclude($include)->setLeagues($leagues)->byDate($date);
+                break;
+            case 'fixture_by_id':
+                $response = $soccerAPI->fixtures()->setInclude($include)->byMatchId($id);
+                break;
+            case 'h2h':
+                $response = $soccerAPI->head2head()->setInclude($include)->betweenTeams($localteam_id, $visitorteam_id);
+                break;
+            case 'team_by_id':
+                $response = $soccerAPI->teams()->setInclude($include)->byId($id);
+                break;
+            default:
+                $response = array();
+                break;
+        }
+
+        if(isset($response->error_code)) {
+            if ($abort) {
+                abort($response->error_code, $response->error_message);
+            }
+            return [];
+        }
+
+        return $response;
     }
 }
