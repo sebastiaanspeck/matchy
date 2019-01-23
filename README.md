@@ -25,7 +25,7 @@ $ php artisan vendor:publish --provider="Sportmonks\SoccerAPI\SoccerAPIServicePr
 
 **3-** Make a copy of .env.example and rename to .env
 
-**4-** Add your API token in the .env file to `SPORTMONKS_API_TOKEN` and set the current season to `SEASON`
+**4-** Add your API token in the .env file to `SPORTMONKS_API_TOKEN`
 
 ***If you don't have a API-token, you can get a free one [here](https://www.sportmonks.com/register) This should be enough to experiment with the code.***
 
