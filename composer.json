@@ -12,7 +12,8 @@
         "jakeasmith/http_build_url": "^1",
         "kirill-latish/laravel-sportmonks-soccer": "^2.0",
         "laravel/framework": "5.7.*",
-        "laravel/tinker": "^1.0"
+        "laravel/tinker": "^1.0",
+        "phpunit/php-code-coverage": "^6.1"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
