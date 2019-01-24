@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0a730d1532647030417e681e4c0cc8b3",
+    "content-hash": "35dd36b967dfb3d9bcdca0883d411dc3",
     "packages": [
         {
             "name": "arcanedev/laravel-lang",
@@ -835,16 +835,16 @@
         },
         {
             "name": "kirill-latish/laravel-sportmonks-soccer",
-            "version": "v2.0.3",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/kirill-latish/laravel-sportmonks-soccer.git",
-                "reference": "ac3b6b0cc0691facf5a2d4e201b25ab5d0929b90"
+                "url": "https://github.com/sebastiaanspeck/laravel-sportmonks-soccer.git",
+                "reference": "f665e9c8fabee1a68e7ae4190abc93f4b09b46e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kirill-latish/laravel-sportmonks-soccer/zipball/ac3b6b0cc0691facf5a2d4e201b25ab5d0929b90",
-                "reference": "ac3b6b0cc0691facf5a2d4e201b25ab5d0929b90",
+                "url": "https://api.github.com/repos/sebastiaanspeck/laravel-sportmonks-soccer/zipball/f665e9c8fabee1a68e7ae4190abc93f4b09b46e4",
+                "reference": "f665e9c8fabee1a68e7ae4190abc93f4b09b46e4",
                 "shasum": ""
             },
             "require": {
@@ -862,7 +862,11 @@
                     "Sportmonks\\SoccerAPI\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "classmap": [
+                    "tests/"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -890,20 +894,23 @@
                 "live-scores",
                 "soccer"
             ],
-            "time": "2018-10-25T19:33:27+00:00"
+            "support": {
+                "source": "https://github.com/sebastiaanspeck/laravel-sportmonks-soccer/tree/master"
+            },
+            "time": "2019-01-24T08:52:26+00:00"
         },
         {
             "name": "laravel/framework",
-            "version": "v5.7.21",
+            "version": "v5.7.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "25f74458a242b61cc9e9c09d31f94fb13ed805f3"
+                "reference": "64a7749bd9e8df68addce1d01a54bcf606141f29"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/25f74458a242b61cc9e9c09d31f94fb13ed805f3",
-                "reference": "25f74458a242b61cc9e9c09d31f94fb13ed805f3",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/64a7749bd9e8df68addce1d01a54bcf606141f29",
+                "reference": "64a7749bd9e8df68addce1d01a54bcf606141f29",
                 "shasum": ""
             },
             "require": {
@@ -1036,7 +1043,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2019-01-15T15:20:32+00:00"
+            "time": "2019-01-22T15:08:35+00:00"
         },
         {
             "name": "laravel/nexmo-notification-channel",
@@ -1263,7 +1270,7 @@
                 {
                     "name": "Luís Otávio Cobucci Oblonczyk",
                     "email": "lcobucci@gmail.com",
-                    "role": "developer"
+                    "role": "Developer"
                 }
             ],
             "description": "A simple library to work with JSON Web Token and JSON Web Signature",
@@ -1495,16 +1502,16 @@
         },
         {
             "name": "nexmo/client",
-            "version": "1.6.0",
+            "version": "1.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nexmo/nexmo-php.git",
-                "reference": "01809cc1e17a5af275913c49bb5d444eb6cc06d4"
+                "reference": "3dc03ca1dab726a23b757110897740e54304fc65"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nexmo/nexmo-php/zipball/01809cc1e17a5af275913c49bb5d444eb6cc06d4",
-                "reference": "01809cc1e17a5af275913c49bb5d444eb6cc06d4",
+                "url": "https://api.github.com/repos/Nexmo/nexmo-php/zipball/3dc03ca1dab726a23b757110897740e54304fc65",
+                "reference": "3dc03ca1dab726a23b757110897740e54304fc65",
                 "shasum": ""
             },
             "require": {
@@ -1539,7 +1546,7 @@
                 }
             ],
             "description": "PHP Client for using Nexmo's API.",
-            "time": "2018-12-17T10:47:50+00:00"
+            "time": "2019-01-02T09:06:47+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -5186,7 +5193,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "kirill-latish/laravel-sportmonks-soccer": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
