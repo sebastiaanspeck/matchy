@@ -98,7 +98,7 @@ class SoccerAPIController extends BaseController
         $upcomingFixtures = [];
         $numberOfMatches = 10;
 
-        if (count($season) > 0) {
+        if (!empty($season)) {
             $numberOfMatches = $request->query('matches', 10);
 
             $lastFixtures = $season->data->results->data;
