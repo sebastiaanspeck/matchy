@@ -100,7 +100,6 @@
         @php
             $league = $fixture->league->data;
             $homeTeam = $fixture->localTeam->data;
-            $homeTeamId = $homeTeam->id;
             $awayTeam = $fixture->visitorTeam->data;
             
             if($homeTeam->national_team == true) {
@@ -212,7 +211,7 @@
                             @if(in_array($event->type, array("pen_shootout_goal", "pen_shootout_miss")))
                                 @continue
                             @endif
-                            @if($event->team_id == $homeTeamId)
+                            @if($event->team_id == $homeTeam->id)
                                 <div class="row no-gutters justify-content-end justify-content-md-around align-items-start timeline-nodes-left">
                             @else
                                 <div class="row no-gutters justify-content-end justify-content-md-around align-items-start timeline-nodes-right">
@@ -388,108 +387,97 @@
                                 <span>{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Starting lineups") }}</span>
                             </td>
                         </tr>
-                        @for($index = 0; $index < count($lineup)/2; $index++)
-                            @php
-                                $home_player = $lineup[$index];
-                                $away_player = $lineup[$index+count($lineup)/2];
-
-                                $home_player_stats = array();
-                                $away_player_stats = array();
-
-                                if($home_player->stats->goals->scored != 0) {
-                                    for($goals = 0; $goals < $home_player->stats->goals->scored; $goals++) {
-                                        array_push($home_player_stats, "/images/events/goal.svg");
-                                    }
-                                }
-                                if($home_player->stats->cards->yellowcards != 0) {
-                                    for($yellowcards = 0; $yellowcards < $home_player->stats->cards->yellowcards; $yellowcards++) {
-                                        array_push($home_player_stats, "/images/events/yellowcard.svg");
-                                    }
-                                }
-                                if($home_player->stats->cards->redcards != 0) {
-                                    for($redcards = 0; $redcards < $home_player->stats->cards->redcards; $redcards++) {
-                                        array_push($home_player_stats, "/images/events/redcard.svg");
-                                    }
-                                }
-
-                                if($away_player->stats->goals->scored != 0) {
-                                    for($goals = 0; $goals < $away_player->stats->goals->scored; $goals++) {
-                                        array_push($away_player_stats, "/images/events/goal.svg");
-                                    }
-                                }
-                                if($away_player->stats->cards->yellowcards != 0) {
-                                    for($yellowcards = 0; $yellowcards < $away_player->stats->cards->yellowcards; $yellowcards++) {
-                                        array_push($away_player_stats, "/images/events/yellowcard.svg");
-                                    }
-                                }
-                                if($away_player->stats->cards->redcards != 0) {
-                                    for($redcards = 0; $redcards < $away_player->stats->cards->redcards; $redcards++) {
-                                        array_push($away_player_stats, "/images/events/redcard.svg");
-                                    }
-                                }
-
-                                if(isset($home_player->player->data)) {
-                                    $home_player_nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($home_player->player->data->nationality);
-                                    $home_player_common_name = $home_player->player->data->common_name;
+                        @php
+                            $home_lineup_players = new stdClass();
+                            $away_lineup_players = new stdClass();
+                            $counter_h = 0;
+                            $counter_a = 0;
+                            foreach($lineup as $val){
+                                $val->team_id == $homeTeam->id ? $val->team = "home" : $val->team = "away";
+                                if(isset($val->player->data)) {
+                                    $player = ["player_id" => $val->player_id, "number" => $val->number, "common_name" => $val->player->data->common_name, "nationality" => $val->player->data->nationality, "stats" => $val->stats, "events" => array()];
                                 } else {
-                                    $home_player_nationality = "Unknown";
-                                    $home_player_common_name = $home_player->player_name;
-                                }
-
-                                if(isset($away_player->player->data)) {
-                                    $away_player_nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($away_player->player->data->nationality);
-                                    $away_player_common_name = $away_player->player->data->common_name;
-                                } else {
-                                    $away_player_nationality = "Unknown";
-                                    $away_player_common_name = $away_player->player_name;
+                                    $player = ["player_id" => $val->player_id, "number" => $val->number, "common_name" => $val->player_name, "nationality" => "Unknown", "stats" => $val->stats, "events" => array()];
                                 }
                                 
-                                if($home_player_nationality == "Unknown" && !isset($home_player->player->data)) {
-                                    Log::emergency("Missing nationality for player with id: " . $home_player->player_id);
-                                } elseif($away_player_nationality == "Unknown" && !isset($away_player->player->data)){
-                                    Log::emergency("Missing nationality for player with id: " . $away_player->player_id);
+                                if($val->stats->goals->scored != 0) {
+                                    for($goals = 0; $goals < $val->stats->goals->scored; $goals++) {
+                                        array_push($player['events'], "/images/events/goal.svg");
+                                    }
+                                }
+                                if($val->stats->cards->yellowcards != 0) {
+                                    for($yellowcards = 0; $yellowcards < $val->stats->cards->yellowcards; $yellowcards++) {
+                                        array_push($player['events'], "/images/events/yellowcard.svg");
+                                    }
+                                }
+                                if($val->stats->cards->redcards != 0) {
+                                    for($redcards = 0; $redcards < $val->stats->cards->redcards; $redcards++) {
+                                        array_push($player['events'], "/images/events/redcard.svg");
+                                    }
+                                }
+                                $player['nationality'] = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($player['nationality']);
+                                
+                                if($player['nationality'] == "Unknown"){
+                                    Log::emergency("Missing nationality for player with id: {$player['player_id']}");
+                                }
+                                
+                                if($val->team == "home") {
+                                    $home_lineup_players->{$counter_h} = (object) $player;
+                                    $counter_h++;
+                                } else {
+                                    $away_lineup_players->{$counter_a} = (object) $player;
+                                    $counter_a++;
+                                }
+                            }
+                            $home_lineup_players = get_object_vars($home_lineup_players);
+                            $away_lineup_players = get_object_vars($away_lineup_players);
+                            
+                            $counter_h >= $counter_a ? $counter = $counter_h : $counter = $counter_a;
+                        @endphp
+                        @for($index = 0; $index < $counter; $index++)
+                            @php
+                                if(isset($home_lineup_players[$index])) {
+                                    $home_lineup_player = $home_lineup_players[$index];
+                                }
+                                if(isset($away_lineup_players[$index])) {
+                                    $away_lineup_player = $away_lineup_players[$index];
                                 }
                             @endphp
-                            <tr>
-                                @if(isset($home_player) && isset($away_player))
-                                    <td style="width:1%">{{$home_player->number}}</td>
-                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$home_player_nationality}}.png" alt="homePlayer-nationality"></td>
+                            @if(isset($home_lineup_player) && isset($away_lineup_player))
+                                <tr>
+                                    <td style="width:1%">{{$home_lineup_player->number}}</td>
+                                    <td style="width: 1%"><img src="/images/flags/shiny/16/{{$home_lineup_player->nationality}}.png" alt="homePlayer-nationality"></td>
                                     <td style="text-align: left">
-                                        {{$home_player_common_name}}
-                                        @foreach($home_player_stats as $stat)
-                                            <img src="{{$stat}}" alt="stat">
+                                        {{$home_lineup_player->common_name}}
+                                        @foreach($home_lineup_player->events as $event)
+                                            <img src="{{$event}}" alt="stat">
                                         @endforeach
                                     </td>
-                                    <td style="width: 1%"></td>
-                                    <td style="text-align: right">
-                                        @foreach($away_player_stats as $stat)
-                                            <img src="{{$stat}}" alt="stat">
-                                        @endforeach
-                                        {{$away_player_common_name}}
-                                    </td>
-                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$away_player_nationality}}.png" alt="awayPlayer-nationality"></td>
-                                    <td style="width:1%">{{$away_player->number}}</td>
-                                @elseif(isset($home_player) && !isset($away_player))
-                                    <td style="width:1%">{{$home_player->number}}</td>
-                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$home_player_nationality}}.png" alt="homePlayer-nationality"></td>
+                                    <td></td>
+                                    <td style="text-align: right">{{$away_lineup_player->common_name}}</td>
+                                    <td style="width: 1%"><img src="/images/flags/shiny/16/{{$away_lineup_player->nationality}}.png" alt="awayPlayer-nationality"></td>
+                                    <td style="width:1%">{{$away_lineup_player->number}}</td>
+                                </tr>
+                            @elseif(isset($home_lineup_player) && !isset($away_lineup_player))
+                                <tr>
+                                    <td style="width:1%">{{$home_lineup_player->number}}</td>
+                                    <td style="width: 1%"><img src="/images/flags/shiny/16/{{$home_lineup_player->nationality}}.png" alt="homePlayer-nationality"></td>
                                     <td style="text-align: left">
-                                        {{$home_player_common_name}}
-                                        @foreach($home_player_stats as $stat)
-                                            <img src="{{$stat}}" alt="stat">
+                                        {{$home_lineup_player->common_name}}
+                                        @foreach($home_lineup_player->events as $event)
+                                            <img src="{{$event}}" alt="stat">
                                         @endforeach
                                     </td>
-                                @elseif(!isset($home_player) && isset($away_player))
-                                    <td colspan="5"></td>
-                                    <td style="text-align: right">
-                                        @foreach($away_player_stats as $stat)
-                                            <img src="{{$stat}}" alt="stat">
-                                        @endforeach
-                                        {{$away_player_common_name}}
-                                    </td>
-                                    <td style="width:1%"><img src="/images/flags/shiny/16/{{$away_player_nationality}}.png" alt="awayPlayer-nationality"></td>
-                                    <td style="width:1%">{{$away_player->number}}</td>
-                                @endif
-                            </tr>
+                                </tr>
+                            @elseif(!isset($home_lineup_player) && isset($away_lineup_player))
+                                <tr>
+                                    <td colspan="4"></td>
+                                    <td style="text-align: right">{{$away_lineup_player->common_name}}</td>
+                                    <td style="width: 1%"><img src="/images/flags/shiny/16/{{$away_lineup_player->nationality}}.png" alt="awayPlayer-nationality"></td>
+                                    <td style="width:1%">{{$away_lineup_player->number}}</td>
+                                </tr>
+                            @endif
+                            @php unset($home_lineup_player); unset($away_lineup_player) @endphp
                         @endfor
                         @if(count($bench) > 0)
                             <tr style="font-weight: bold; text-align: center; background: #D3D3D3">
@@ -497,107 +485,97 @@
                                     <span>{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Substitutes") }}</span>
                                 </td>
                             </tr>
-                            @for($index = 0; $index < count($bench)/2; $index++)
+                            @php
+                                $home_bench_players = new stdClass();
+                                $away_bench_players = new stdClass();
+                                $counter_h = 0;
+                                $counter_a = 0;
+                                foreach($bench as $val){
+                                    $val->team_id == $homeTeam->id ? $val->team = "home" : $val->team = "away";
+                                    if(isset($val->player->data)) {
+                                        $player = ["player_id" => $val->player_id, "number" => $val->number, "common_name" => $val->player->data->common_name, "nationality" => $val->player->data->nationality, "stats" => $val->stats, "events" => array()];
+                                    } else {
+                                        $player = ["player_id" => $val->player_id, "number" => $val->number, "common_name" => $val->player_name, "nationality" => "Unknown", "stats" => $val->stats, "events" => array()];
+                                    }
+                                    
+                                    if($val->stats->goals->scored != 0) {
+                                        for($goals = 0; $goals < $val->stats->goals->scored; $goals++) {
+                                            array_push($player['events'], "/images/events/goal.svg");
+                                        }
+                                    }
+                                    if($val->stats->cards->yellowcards != 0) {
+                                        for($yellowcards = 0; $yellowcards < $val->stats->cards->yellowcards; $yellowcards++) {
+                                            array_push($player['events'], "/images/events/yellowcard.svg");
+                                        }
+                                    }
+                                    if($val->stats->cards->redcards != 0) {
+                                        for($redcards = 0; $redcards < $val->stats->cards->redcards; $redcards++) {
+                                            array_push($player['events'], "/images/events/redcard.svg");
+                                        }
+                                    }
+                                    $player['nationality'] = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($player['nationality']);
+                                    
+                                    if($player['nationality'] == "Unknown"){
+                                        Log::emergency("Missing nationality for player with id: {$player['player_id']}");
+                                    }
+                                    
+                                    if($val->team == "home") {
+                                        $home_bench_players->{$counter_h} = (object) $player;
+                                        $counter_h++;
+                                    } else {
+                                        $away_bench_players->{$counter_a} = (object) $player;
+                                        $counter_a++;
+                                    }
+                                }
+                                $home_bench_players = get_object_vars($home_bench_players);
+                                $away_bench_players = get_object_vars($away_bench_players);
+                                
+                                $counter_h >= $counter_a ? $counter = $counter_h : $counter = $counter_a;
+                            @endphp
+                            @for($index = 0; $index < $counter; $index++)
                                 @php
-                                    $home_player = $bench[$index];
-                                    $away_player = $bench[$index+count($bench)/2];
-    
-                                    $home_player_stats = array();
-                                    $away_player_stats = array();
-                                    
-                                    if($home_player->stats->goals->scored != 0) {
-                                        for($goals = 0; $goals < $home_player->stats->goals->scored; $goals++) {
-                                            array_push($home_player_stats, "/images/events/goal.svg");
-                                        }
+                                    if(isset($home_bench_players[$index])) {
+                                        $home_bench_player = $home_bench_players[$index];
                                     }
-                                    if($home_player->stats->cards->yellowcards != 0) {
-                                        for($yellowcards = 0; $yellowcards < $home_player->stats->cards->yellowcards; $yellowcards++) {
-                                            array_push($home_player_stats, "/images/events/yellowcard.svg");
-                                        }
-                                    }
-                                    if($home_player->stats->cards->redcards != 0) {
-                                        for($redcards = 0; $redcards < $home_player->stats->cards->redcards; $redcards++) {
-                                            array_push($home_player_stats, "/images/events/redcard.svg");
-                                        }
-                                    }
-    
-                                    if($away_player->stats->goals->scored != 0) {
-                                        for($goals = 0; $goals < $away_player->stats->goals->scored; $goals++) {
-                                            array_push($away_player_stats, "/images/events/goal.svg");
-                                        }
-                                    }
-                                    if($away_player->stats->cards->yellowcards != 0) {
-                                        for($yellowcards = 0; $yellowcards < $away_player->stats->cards->yellowcards; $yellowcards++) {
-                                            array_push($away_player_stats, "/images/events/yellowcard.svg");
-                                        }
-                                    }
-                                    if($away_player->stats->cards->redcards != 0) {
-                                        for($redcards = 0; $redcards < $away_player->stats->cards->redcards; $redcards++) {
-                                            array_push($away_player_stats, "/images/events/redcard.svg");
-                                        }
-                                    }
-                                    if(isset($home_player->player->data)) {
-                                        $home_player_nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($home_player->player->data->nationality);
-                                        $home_player_common_name = $home_player->player->data->common_name;
-                                    } else {
-                                        $home_player_nationality = "Unknown";
-                                        $home_player_common_name = $home_player->player_name;
-                                    }
-    
-                                    if(isset($away_player->player->data)) {
-                                        $away_player_nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($away_player->player->data->nationality);
-                                        $away_player_common_name = $away_player->player->data->common_name;
-                                    } else {
-                                        $away_player_nationality = "Unknown";
-                                        $away_player_common_name = $away_player->player_name;
-                                    }
-                                    
-                                    if($home_player_nationality == "Unknown") {
-                                        Log::emergency("Missing nationality for player with id: " . $home_player->player_id);
-                                    } elseif($away_player_nationality == "Unknown"){
-                                        Log::emergency("Missing nationality for player with id: " . $away_player->player_id);
+                                    if(isset($away_bench_players[$index])) {
+                                        $away_bench_player = $away_bench_players[$index];
                                     }
                                 @endphp
-                                <tr>
-                                    @if(isset($home_player) && isset($away_player))
-                                        <td style="width:1%">{{$home_player->number}}</td>
-                                        <td style="width:1%"><img src="/images/flags/shiny/16/{{$home_player_nationality}}.png" alt="homePlayer-nationality"></td>
-                                        <td style="text-align: left; width:50%">
-                                            {{$home_player_common_name}}
-                                            @foreach($home_player_stats as $stat)
-                                                <img src="{{$stat}}" alt="stat">
+                                @if(isset($home_bench_player) && isset($away_bench_player))
+                                    <tr>
+                                        <td style="width:1%">{{$home_bench_player->number}}</td>
+                                        <td style="width: 1%"><img src="/images/flags/shiny/16/{{$home_bench_player->nationality}}.png" alt="homePlayer-nationality"></td>
+                                        <td style="text-align: left">
+                                            {{$home_bench_player->common_name}}
+                                            @foreach($home_bench_player->events as $event)
+                                                <img src="{{$event}}" alt="stat">
                                             @endforeach
                                         </td>
-                                        <td style="width: 1%"></td>
-                                        <td style="text-align: right; width: 50%">
-                                            @foreach($away_player_stats as $stat)
-                                                <img src="{{$stat}}" alt="stat">
-                                            @endforeach
-                                            {{$away_player_common_name}}
-                                        </td>
-                                        <td style="width:1%"><img src="/images/flags/shiny/16/{{$away_player_nationality}}.png" alt="awayPlayer-nationality"></td>
-                                        <td style="width:1%">{{$away_player->number}}</td>
-                                    @elseif(isset($home_player) && !isset($away_player))
-                                        <td style="width:1%">{{$home_player->number}}</td>
-                                        <td style="width:1%"><img src="/images/flags/shiny/16/{{$home_player_nationality}}.png" alt="homePlayer-nationality"></td>
-                                        <td style="text-align: left; width:50%">
-                                            {{$home_player_common_name}}
-                                            @foreach($home_player_stats as $stat)
-                                                <img src="{{$stat}}" alt="stat">
+                                        <td></td>
+                                        <td style="text-align: right">{{$away_bench_player->common_name}}</td>
+                                        <td style="width: 1%"><img src="/images/flags/shiny/16/{{$away_bench_player->nationality}}.png" alt="awayPlayer-nationality"></td>
+                                        <td style="width:1%">{{$away_bench_player->number}}</td>
+                                    </tr>
+                                @elseif(isset($home_bench_player) && !isset($away_bench_player))
+                                    <tr>
+                                        <td style="width:1%">{{$home_bench_player->number}}</td>
+                                        <td style="width: 1%"><img src="/images/flags/shiny/16/{{$home_bench_player->nationality}}.png" alt="homePlayer-nationality"></td>
+                                        <td style="text-align: left">
+                                            {{$home_bench_player->common_name}}
+                                            @foreach($home_bench_player->events as $event)
+                                                <img src="{{$event}}" alt="stat">
                                             @endforeach
                                         </td>
-                                    @elseif(!isset($home_player) && isset($away_player))
+                                    </tr>
+                                @elseif(!isset($home_bench_player) && isset($away_bench_player))
+                                    <tr>
                                         <td colspan="4"></td>
-                                        <td style="text-align: right; width: 50%">
-                                            @foreach($away_player_stats as $stat)
-                                                <img src="{{$stat}}" alt="stat">
-                                            @endforeach
-                                            {{$away_player_common_name}}
-                                        </td>
-                                        <td style="width:1%"><img src="/images/flags/shiny/16/{{$away_player_nationality}}.png" alt="awayPlayer-nationality"></td>
-                                        <td style="width:1%">{{$away_player->number}}</td>
-                                    @endif
-                                </tr>
+                                        <td style="text-align: right">{{$away_bench_player->common_name}}</td>
+                                        <td style="width: 1%"><img src="/images/flags/shiny/16/{{$away_bench_player->nationality}}.png" alt="awayPlayer-nationality"></td>
+                                        <td style="width:1%">{{$away_bench_player->number}}</td>
+                                    </tr>
+                                @endif
+                                @php unset($home_bench_player); unset($away_bench_player) @endphp
                             @endfor
                         @endif
                         @if(count($sidelined) > 0)
@@ -614,6 +592,13 @@
                                 foreach($sidelined as $val){
                                     $val->team_id == $homeTeam->id ? $val->team = "home" : $val->team = "away";
                                     $player = array("player_id" => $val->player_id, "common_name" => $val->player->data->common_name, "nationality" => $val->player->data->nationality, "reason" => $val->reason);
+                                    
+                                    $player['nationality'] = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($player['nationality']);
+                                    
+                                    if($player['nationality'] == "Unknown"){
+                                        Log::emergency("Missing nationality for player with id: {$player['player_id']}");
+                                    }
+                                    
                                     if($val->team == "home") {
                                         $home_sidelined_players->{$counter_h} = (object) $player;
                                         $counter_h++;
@@ -631,19 +616,9 @@
                                 @php
                                     if(isset($home_sidelined_players[$index])) {
                                         $home_sidelined_player = $home_sidelined_players[$index];
-                                        $home_sidelined_player->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($home_sidelined_player->nationality);
-                                        
-                                        if($home_sidelined_player->nationality == "Unknown") {
-                                            Log::emergency("Missing nationality for player with id: " . $home_sidelined_player->player_id);
-                                        }
                                     }
                                     if(isset($away_sidelined_players[$index])) {
                                         $away_sidelined_player = $away_sidelined_players[$index];
-                                        $away_sidelined_player->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($away_sidelined_player->nationality);
-                                        
-                                        if($away_sidelined_player->nationality == "Unknown"){
-                                            Log::emergency("Missing nationality for player with id: " . $home_sidelined_player->player_id);
-                                        }
                                     }
                                 @endphp
                                 @if(isset($home_sidelined_player) && isset($away_sidelined_player))
@@ -735,25 +710,41 @@
                                 switch($h2h_fixture->time->status) {
                                     case("FT_PEN"):
                                         if($h2h_fixture->scores->localteam_pen_score > $h2h_fixture->scores->visitorteam_pen_score) {
-                                            $winningTeam = $homeTeam->name;
+                                            $homeTeamClass = "won-team";
+                                            $awayTeamClass = "lost-team";
                                         } elseif($h2h_fixture->scores->localteam_pen_score == $h2h_fixture->scores->visitorteam_pen_score) {
-                                            $winningTeam = "draw";
+                                            $homeTeamClass = $awayTeamClass = "draw-team";
                                         } elseif($h2h_fixture->scores->localteam_pen_score < $h2h_fixture->scores->visitorteam_pen_score) {
-                                            $winningTeam = $awayTeam->name;
+                                            $homeTeamClass = "lost-team";
+                                            $awayTeamClass = "won-team";
                                         }
                                         break;
                                     default:
                                         if($h2h_fixture->scores->localteam_score > $h2h_fixture->scores->visitorteam_score) {
-                                            $winningTeam = $homeTeam->name;
+                                            $homeTeamClass = "won-team";
+                                            $awayTeamClass = "lost-team";
                                         } elseif($h2h_fixture->scores->localteam_score == $h2h_fixture->scores->visitorteam_score) {
-                                            $winningTeam = "draw";
+                                            $homeTeamClass = $awayTeamClass = "draw-team";
                                         } elseif($h2h_fixture->scores->localteam_score < $h2h_fixture->scores->visitorteam_score) {
-                                            $winningTeam = $awayTeam->name;
+                                            $homeTeamClass = "lost-team";
+                                            $awayTeamClass = "won-team";
                                         }
                                         break;
                                 }
                             } else {
-                                $winningTeam = "TBD";
+                                $homeTeamClass = $awayTeamClass = "";
+                            }
+                            
+                            switch($h2h_fixture->time->status) {
+                                case("FT_PEN"):
+                                    $scoreLine = $h2h_fixture->scores->localteam_score . " - " . $h2h_fixture->scores->visitorteam_score ."\n(" . $h2h_fixture->scores->localteam_pen_score . " - " . $h2h_fixture->scores->visitorteam_pen_score . ")";
+                                    break;
+                                case("AET"):
+                                    $scoreLine = $h2h_fixture->scores->localteam_score . " - " . $h2h_fixture->scores->visitorteam_score . "\n(ET)";
+                                    break;
+                                default:
+                                    $scoreLine = $h2h_fixture->scores->localteam_score . " - " . $h2h_fixture->scores->visitorteam_score;
+                                    break;
                             }
                         @endphp
                         @if($h2h_fixture->league_id == $last_league_id)
@@ -782,51 +773,14 @@
                                 </tr>
                             @endif
                             <tr>
+                                <td scope="row">{{date($date_format . " H:i", strtotime($h2h_fixture->time->starting_at->date_time))}}</td>
                                 {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
-                                @switch($winningTeam)
-                                    @case($homeTeam->name)
-                                    <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class="won-team">{{$homeTeam->name}}</a></td>
-                                    <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class="lost-team">{{$awayTeam->name}}</a></td>
-                                    @break
-                                    @case($awayTeam->name)
-                                    <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class="lost-team">{{$homeTeam->name}}</a></td>
-                                    <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class="won-team">{{$awayTeam->name}}</a></td>
-                                    @break
-                                    @case("draw")
-                                    <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class="draw-team">{{$homeTeam->name}}</a></td>
-                                    <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class="draw-team">{{$awayTeam->name}}</a></td>
-                                    @break
-                                    @default
-                                    <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}">{{$homeTeam->name}}</a></td>
-                                    <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}">{{$awayTeam->name}}</a></td>
-                                    @break
-                                @endswitch
-                    
+                                <td scope="row" style="text-align: right"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}</a></td>
                                 {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
-                                @switch($h2h_fixture->time->status)
-                                    @case("FT_PEN")
-                                    <td scope="row">{{$h2h_fixture->scores->localteam_score}} - {{$h2h_fixture->scores->visitorteam_score}}
-                                        @if(is_null($h2h_fixture->scores->localteam_pen_score) || is_null($h2h_fixture->scores->visitorteam_pen_score))
-                                            (PEN)
-                                        @else
-                                             ({{$h2h_fixture->scores->localteam_pen_score}} - {{$h2h_fixture->scores->visitorteam_pen_score}})
-                                        @endif
-                                    </td>
-                                    @break
-                                    @case("AET")
-                                    <td scope="row">{{$h2h_fixture->scores->localteam_score}} - {{$h2h_fixture->scores->visitorteam_score}} (ET)</td>
-                                    @break
-                                    @default
-                                    <td scope="row">{{$h2h_fixture->scores->localteam_score}} - {{$h2h_fixture->scores->visitorteam_score}}</td>
-                                    @break
-                                @endswitch
-                    
-                                <td scope="row">{{date($date_format . " H:i", strtotime($h2h_fixture->time->starting_at->date_time))}}
-                                    @if(in_array($h2h_fixture->time->status, array("LIVE", "HT", "ET")))
-                                        <span class="live">{{ $h2h_fixture->time->status }}</span>
-                                    @endif
-                                </td>
-                                <td scope="row"><a href="{{route("fixturesDetails", ["id" => $h2h_fixture->id])}}"><i class="fa fa-info-circle"></i></a></td>
+                                <td scope="row" style="text-align: center">{!! nl2br(e($scoreLine)) !!}</td>
+                                {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
+                                <td scope="row" style="text-align: left"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}>{{$awayTeam->name}}</a></td>
+                                <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $fixture->id])}}"><i class="fa fa-info-circle" style="margin-right: 10px"></i></a></td>
                             </tr>
                         @else
                             @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; @endphp
@@ -859,65 +813,34 @@
                                 @endif
                                 <thead style="visibility: collapse">
                                     <tr>
-                                        <th scope="col" width="35%"></th>
-                                        <th scope="col" width="35%"></th>
+                                        <th scope="col" width="20%"></th>
+                                        <th scope="col" width="20%"></th>
                                         <th scope="col" width="10%"></th>
-                                        <th scope="col" width="17%"></th>
-                                        <th scope="col" width="3%"></th>
+                                        <th scope="col" width="20%"></th>
+                                        <th scope="col" width="20%"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
-                                    @switch($winningTeam)
-                                        @case($homeTeam->name)
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class="won-team">{{$homeTeam->name}}</a></td>
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class="lost-team">{{$awayTeam->name}}</a></td>
-                                        @break
-                                        @case($awayTeam->name)
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class="lost-team">{{$homeTeam->name}}</a></td>
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class="won-team">{{$awayTeam->name}}</a></td>
-                                        @break
-                                        @case("draw")
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class="draw-team">{{$homeTeam->name}}</a></td>
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class="draw-team">{{$awayTeam->name}}</a></td>
-                                        @break
-                                        @default
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}">{{$homeTeam->name}}</a></td>
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}">{{$awayTeam->name}}</a></td>
-                                        @break
-                                    @endswitch
-                        
-                                    {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
-                                    @switch($h2h_fixture->time->status)
-                                        @case("FT_PEN")
-                                        <td scope="row">{{$h2h_fixture->scores->localteam_score}} - {{$h2h_fixture->scores->visitorteam_score}}
-                                            @if(is_null($h2h_fixture->scores->localteam_pen_score) || is_null($h2h_fixture->scores->visitorteam_pen_score))
-                                                (PEN)
-                                            @else
-                                                 ({{$h2h_fixture->scores->localteam_pen_score}} - {{$h2h_fixture->scores->visitorteam_pen_score}})
-                                            @endif
-                                        </td>
-                                        @break
-                                        @case("AET")
-                                        <td scope="row">{{$h2h_fixture->scores->localteam_score}} - {{$h2h_fixture->scores->visitorteam_score}} (ET)</td>
-                                        @break
-                                        @default
-                                        <td scope="row">{{$h2h_fixture->scores->localteam_score}} - {{$h2h_fixture->scores->visitorteam_score}}</td>
-                                        @break
-                                    @endswitch
                                     <td scope="row">{{date($date_format . " H:i", strtotime($h2h_fixture->time->starting_at->date_time))}}</td>
-                                    <td scope="row"><a href="{{route("fixturesDetails", ["id" => $h2h_fixture->id])}}"><i class="fa fa-info-circle"></i></a></td>
+                                    {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
+                                    <td scope="row" style="text-align: right"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}</a></td>
+                                    {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
+                                    <td scope="row" style="text-align: center">{!! nl2br(e($scoreLine)) !!}</td>
+                                    {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
+                                    <td scope="row" style="text-align: left"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}>{{$awayTeam->name}}</a></td>
+                                    <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $fixture->id])}}"><i class="fa fa-info-circle" style="margin-right: 10px"></i></a></td>
                                 </tr>
                                 @endif
                                 @php $last_league_id = $h2h_fixture->league_id; if(isset($h2h_fixture->round)) {$last_round_id = $h2h_fixture->round->data->name;} $last_stage_id = $h2h_fixture->stage->data->name; $last_season_name = $h2h_fixture->season->data->name; @endphp
                     @endforeach
-                                </tbody>
-                            </table>
+                    </tbody>
+                </table>
                 @else
                     <span style="font-weight: bold">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "H2H") }} @choice("application.msg_no_data", 2)</span>
                 @endif
             </div>
+        </div>
         </div>
     </div>
 @endsection

@@ -63,14 +63,45 @@
                                 Log::critical("Missing country translation for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
                             }
                             
-                            if($last_fixture->scores->localteam_score > $last_fixture->scores->visitorteam_score && in_array($last_fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
-                                $winningTeam = $homeTeam->name;
-                            } elseif ($last_fixture->scores->localteam_score == $last_fixture->scores->visitorteam_score && in_array($last_fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
-                                $winningTeam = "draw";
-                            } elseif ($last_fixture->scores->localteam_score < $last_fixture->scores->visitorteam_score && in_array($last_fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
-                                $winningTeam = $awayTeam->name;
+                            if(in_array($last_fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
+                                switch($last_fixture->time->status) {
+                                    case("FT_PEN"):
+                                        if($last_fixture->scores->localteam_pen_score > $last_fixture->scores->visitorteam_pen_score) {
+                                            $homeTeamClass = "won-team";
+                                            $awayTeamClass = "lost-team";
+                                        } elseif($last_fixture->scores->localteam_pen_score == $last_fixture->scores->visitorteam_pen_score) {
+                                            $homeTeamClass = $awayTeamClass = "draw-team";
+                                        } elseif($last_fixture->scores->localteam_pen_score < $last_fixture->scores->visitorteam_pen_score) {
+                                            $homeTeamClass = "lost-team";
+                                            $awayTeamClass = "won-team";
+                                        }
+                                        break;
+                                    default:
+                                        if($last_fixture->scores->localteam_score > $last_fixture->scores->visitorteam_score) {
+                                            $homeTeamClass = "won-team";
+                                            $awayTeamClass = "lost-team";
+                                        } elseif($last_fixture->scores->localteam_score == $last_fixture->scores->visitorteam_score) {
+                                            $homeTeamClass = $awayTeamClass = "draw-team";
+                                        } elseif($last_fixture->scores->localteam_score < $last_fixture->scores->visitorteam_score) {
+                                            $homeTeamClass = "lost-team";
+                                            $awayTeamClass = "won-team";
+                                        }
+                                        break;
+                                }
                             } else {
-                                $winningTeam = "TBD";
+                                $homeTeamClass = $awayTeamClass = "";
+                            }
+                            
+                            switch($last_fixture->time->status) {
+                                case("FT_PEN"):
+                                    $scoreLine = $last_fixture->scores->localteam_score . " - " . $last_fixture->scores->visitorteam_score ."\n(" . $last_fixture->scores->localteam_pen_score . " - " . $last_fixture->scores->visitorteam_pen_score . ")";
+                                    break;
+                                case("AET"):
+                                    $scoreLine = $last_fixture->scores->localteam_score . " - " . $last_fixture->scores->visitorteam_score . "\n(ET)";
+                                    break;
+                                default:
+                                    $scoreLine = $last_fixture->scores->localteam_score . " - " . $last_fixture->scores->visitorteam_score;
+                                    break;
                             }
                         @endphp
                         @if($last_fixture->league_id == $last_league_id)
@@ -90,45 +121,14 @@
                                 </tr>
                             @endif
                             <tr>
+                                <td scope="row">{{date($date_format . " H:i", strtotime($last_fixture->time->starting_at->date_time))}}</td>
                                 {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
-                                @switch($winningTeam)
-                                    @case($homeTeam->name)
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" style="color:green">{{$homeTeam->name}}</a></td>
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" style="color:red">{{$awayTeam->name}}</a></td>
-                                        @break
-                                    @case($awayTeam->name)
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" style="color:red">{{$homeTeam->name}}</a></td>
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" style="color:green">{{$awayTeam->name}}</a></td>
-                                        @break
-                                    @case("draw")
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" style="color:orange">{{$homeTeam->name}}</a></td>
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" style="color:orange">{{$awayTeam->name}}</a></td>
-                                        @break
-                                    @default
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}">{{$homeTeam->name}}</a></td>
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}">{{$awayTeam->name}}</a></td>
-                                        @break
-                                @endswitch
-
+                                <td scope="row" style="text-align: right"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}</a></td>
                                 {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
-                                @switch($last_fixture->time->status)
-                                    @case("FT_PEN")
-                                        <td scope="row">{{$last_fixture->scores->localteam_score}} - {{$last_fixture->scores->visitorteam_score}} ({{$last_fixture->scores->localteam_pen_score}} - {{$last_fixture->scores->visitorteam_pen_score}})</td>
-                                        @break
-                                    @case("AET")
-                                        <td scope="row">{{$last_fixture->scores->localteam_score}} - {{$last_fixture->scores->visitorteam_score}} (ET)</td>
-                                        @break
-                                    @default
-                                        <td scope="row">{{$last_fixture->scores->localteam_score}} - {{$last_fixture->scores->visitorteam_score}}</td>
-                                        @break
-                                @endswitch
-    
-                                <td scope="row">{{date($date_format . " H:i", strtotime($last_fixture->time->starting_at->date_time))}}
-                                    @if(in_array($last_fixture->time->status, array("LIVE", "HT", "ET")))
-                                        <span class="live">{{ $last_fixture->time->status }}</span>
-                                    @endif
-                                </td>
-                                <td scope="row"><a href= {{route("fixturesDetails", ["id" => $last_fixture->id])}}><i class="fa fa-info-circle"></i></a></td>
+                                <td scope="row" style="text-align: center">{!! nl2br(e($scoreLine)) !!}</td>
+                                {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
+                                <td scope="row" style="text-align: left"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}>{{$awayTeam->name}}</a></td>
+                                <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $last_fixture->id])}}"><i class="fa fa-info-circle" style="margin-right: 10px"></i></a></td>
                             </tr>
                         @else
                             <table class="table table-striped table-light table-sm" style="width:100%">
@@ -150,56 +150,23 @@
                                 @endif
                                 <thead style="visibility: collapse">
                                     <tr>
-                                        <th scope="col" width="32%"></th>
-                                        <th scope="col" width="32%"></th>
-                                        <th scope="col" width="11%"></th>
-                                        <th scope="col" width="17%"></th>
-                                        <th scope="col" width="5%"></th>
+                                        <th scope="col" width="20%"></th>
+                                        <th scope="col" width="20%"></th>
+                                        <th scope="col" width="10%"></th>
+                                        <th scope="col" width="20%"></th>
+                                        <th scope="col" width="20%"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
+                                    <td scope="row">{{date($date_format . " H:i", strtotime($last_fixture->time->starting_at->date_time))}}</td>
                                     {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
-                                    @switch($winningTeam)
-                                        @case($homeTeam->name)
-                                            <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" style="color:green">{{$homeTeam->name}}</a></td>
-                                            <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" style="color:red">{{$awayTeam->name}}</a></td>
-                                            @break
-                                        @case($awayTeam->name)
-                                            <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" style="color:red">{{$homeTeam->name}}</a></td>
-                                            <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" style="color:green">{{$awayTeam->name}}</a></td>
-                                            @break
-                                        @case("draw")
-                                            <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" style="color:orange">{{$homeTeam->name}}</a></td>
-                                            <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" style="color:orange">{{$awayTeam->name}}</a></td>
-                                            @break
-                                        @default
-                                            <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}">{{$homeTeam->name}}</a></td>
-                                            <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}">{{$awayTeam->name}}</a></td>
-                                            @break
-                                    @endswitch
-
+                                    <td scope="row" style="text-align: right"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}</a></td>
                                     {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
-                                    @switch($last_fixture->time->status)
-                                        @case("FT_PEN")
-                                            <td scope="row">{{$last_fixture->scores->localteam_score}} - {{$last_fixture->scores->visitorteam_score}} ({{$last_fixture->scores->localteam_pen_score}} - {{$last_fixture->scores->visitorteam_pen_score}}) </td>
-                                            @break
-                                        @case("AET")
-                                            <td scope="row">{{$last_fixture->scores->localteam_score}} - {{$last_fixture->scores->visitorteam_score}} (ET)</td>
-                                            @break
-                                        @default
-                                            <td scope="row">{{$last_fixture->scores->localteam_score}} - {{$last_fixture->scores->visitorteam_score}}</td>
-                                            @break
-                                    @endswitch
-
-                                    {{-- show date_time, if LIVE -> show LIVE after date_time --}}
-                                    <td scope="row">{{date($date_format . " H:i", strtotime($last_fixture->time->starting_at->date_time))}}
-                                        @if(in_array($last_fixture->time->status, array("LIVE", "HT", "ET")))
-                                            <span class="live">{{ $last_fixture->time->status }}</span>
-                                        @endif
-                                    </td>
-                                    {{-- show button to view fixtures-details --}}
-                                    <td scope="row"><a href="{{route("fixturesDetails", ["id" => $last_fixture->id])}}"><i class="fa fa-info-circle"></i></a></td>
+                                    <td scope="row" style="text-align: center">{!! nl2br(e($scoreLine)) !!}</td>
+                                    {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
+                                    <td scope="row" style="text-align: left"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}>{{$awayTeam->name}}</a></td>
+                                    <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $last_fixture->id])}}"><i class="fa fa-info-circle" style="margin-right: 10px"></i></a></td>
                                 </tr>
                         @endif
                         @php $last_league_id = $last_fixture->league_id; if(isset($last_fixture->round)) {$last_round_id = $last_fixture->round->data->name;} $last_stage_id = $last_fixture->stage->data->name; @endphp
@@ -258,44 +225,11 @@
                                 </tr>
                             @endif
                             <tr>
-                                {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
-                                @switch($winningTeam)
-                                    @case($homeTeam->name)
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" style="color:green">{{$homeTeam->name}}</a></td>
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" style="color:red">{{$awayTeam->name}}</a></td>
-                                        @break
-                                    @case($awayTeam->name)
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" style="color:red">{{$homeTeam->name}}</a></td>
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" style="color:green">{{$awayTeam->name}}</a></td>
-                                        @break
-                                    @case("draw")
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" style="color:orange">{{$homeTeam->name}}</a></td>
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" style="color:orange">{{$awayTeam->name}}</a></td>
-                                        @break
-                                    @default
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}">{{$homeTeam->name}}</a></td>
-                                        <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}">{{$awayTeam->name}}</a></td>
-                                        @break
-                                @endswitch
-
-                                {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
-                                @switch($upcoming_fixture->time->status)
-                                    @case("FT_PEN")
-                                        <td scope="row">{{$upcoming_fixture->scores->localteam_score}} - {{$upcoming_fixture->scores->visitorteam_score}} ({{$upcoming_fixture->scores->localteam_pen_score}} - {{$upcoming_fixture->scores->visitorteam_pen_score}})</td>
-                                        @break
-                                    @case("AET")
-                                        <td scope="row">{{$upcoming_fixture->scores->localteam_score}} - {{$upcoming_fixture->scores->visitorteam_score}} (ET)</td>
-                                        @break
-                                    @default
-                                        <td scope="row">{{$upcoming_fixture->scores->localteam_score}} - {{$upcoming_fixture->scores->visitorteam_score}}</td>
-                                    @break
-                                @endswitch
-    
-                                <td scope="row">{{date($date_format . " H:i", strtotime($upcoming_fixture->time->starting_at->date_time))}}
-                                    @if(in_array($upcoming_fixture->time->status, array("LIVE", "HT", "ET")))
-                                        <span class="live">{{ $upcoming_fixture->time->status }}</span>
-                                    @endif
-                                <td scope="row"><a href= {{route("fixturesDetails", ["id" => $upcoming_fixture->id])}}><i class="fa fa-info-circle"></i></a></td>
+                                <td scope="row">{{date($date_format . " H:i", strtotime($upcoming_fixture->time->starting_at->date_time))}}</td>
+                                <td scope="row" style="text-align: right"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}">{{$homeTeam->name}}</a></td>
+                                <td scope="row" style="text-align: center"> - </td>
+                                <td scope="row" style="text-align: left"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}">{{$awayTeam->name}}</a></td>
+                                <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $upcoming_fixture->id])}}"><i class="fa fa-info-circle" style="margin-right: 10px"></i></a></td>
                             </tr>
                         @else
                             <table class="table table-striped table-light table-sm" style="width:100%">
@@ -317,54 +251,20 @@
                                 @endif
                                 <thead style="visibility: collapse">
                                     <tr>
-                                        <th scope="col" width="32%"></th>
-                                        <th scope="col" width="32%"></th>
-                                        <th scope="col" width="11%"></th>
-                                        <th scope="col" width="17%"></th>
-                                        <th scope="col" width="5%"></th>
+                                        <th scope="col" width="20%"></th>
+                                        <th scope="col" width="20%"></th>
+                                        <th scope="col" width="10%"></th>
+                                        <th scope="col" width="20%"></th>
+                                        <th scope="col" width="20%"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
-                                    @switch($winningTeam)
-                                        @case($homeTeam->name)
-                                            <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" style="color:green">{{$homeTeam->name}}</a></td>
-                                            <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" style="color:red">{{$awayTeam->name}}</a></td>
-                                            @break
-                                        @case($awayTeam->name)
-                                            <td scope="row">
-                                            <a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" style="color:red">{{$homeTeam->name}}</a></td>
-                                            <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" style="color:green">{{$awayTeam->name}}</a></td>
-                                            @break
-                                        @case("draw")
-                                            <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" style="color:orange">{{$homeTeam->name}}</a></td>
-                                            <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" style="color:orange">{{$awayTeam->name}}</a></td>
-                                            @break
-                                        @default
-                                            <td scope="row"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}">{{$homeTeam->name}}</a></td>
-                                            <td scope="row"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}">{{$awayTeam->name}}</a></td>
-                                            @break
-                                    @endswitch
-
-                                    {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
-                                    @switch($upcoming_fixture->time->status)
-                                        @case("FT_PEN")
-                                            <td scope="row">{{$upcoming_fixture->scores->localteam_score}} - {{$upcoming_fixture->scores->visitorteam_score}} ({{$upcoming_fixture->scores->localteam_pen_score}} - {{$upcoming_fixture->scores->visitorteam_pen_score}})</td>
-                                            @break
-                                        @case("AET")
-                                            <td scope="row">{{$upcoming_fixture->scores->localteam_score}} - {{$upcoming_fixture->scores->visitorteam_score}} (ET)</td>
-                                            @break
-                                        @default
-                                            <td scope="row">{{$upcoming_fixture->scores->localteam_score}} - {{$upcoming_fixture->scores->visitorteam_score}}</td>
-                                            @break
-                                    @endswitch
-    
-                                    <td scope="row">{{date($date_format . " H:i", strtotime($upcoming_fixture->time->starting_at->date_time))}}
-                                        @if(in_array($upcoming_fixture->time->status, array("LIVE", "HT", "ET")))
-                                            <span class="live">{{ $upcoming_fixture->time->status }}</span>
-                                        @endif
-                                    <td scope="row"><a href="{{route("fixturesDetails", ["id" => $upcoming_fixture->id])}}"><i class="fa fa-info-circle"></i></a></td>
+                                    <td scope="row">{{date($date_format . " H:i", strtotime($upcoming_fixture->time->starting_at->date_time))}}</td>
+                                    <td scope="row" style="text-align: right"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}">{{$homeTeam->name}}</a></td>
+                                    <td scope="row" style="text-align: center"> - </td>
+                                    <td scope="row" style="text-align: left"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}">{{$awayTeam->name}}</a></td>
+                                    <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $upcoming_fixture->id])}}"><i class="fa fa-info-circle" style="margin-right: 10px"></i></a></td>
                                 </tr>
                         @endif
                                 @php $last_league_id = $upcoming_fixture->league_id; if(isset($upcoming_fixture->round)) {$last_round_id = $upcoming_fixture->round->data->name;} $last_stage_id = $upcoming_fixture->stage->data->name; @endphp
