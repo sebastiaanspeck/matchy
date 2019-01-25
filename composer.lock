@@ -839,12 +839,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastiaanspeck/laravel-sportmonks-soccer.git",
-                "reference": "aceb0f6db18ecf5e26e74a037bdc312fe07d6f36"
+                "reference": "1bc36ef47c4bb0e1065203d121511747154c069a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastiaanspeck/laravel-sportmonks-soccer/zipball/aceb0f6db18ecf5e26e74a037bdc312fe07d6f36",
-                "reference": "aceb0f6db18ecf5e26e74a037bdc312fe07d6f36",
+                "url": "https://api.github.com/repos/sebastiaanspeck/laravel-sportmonks-soccer/zipball/1bc36ef47c4bb0e1065203d121511747154c069a",
+                "reference": "1bc36ef47c4bb0e1065203d121511747154c069a",
                 "shasum": ""
             },
             "require": {
@@ -896,9 +896,9 @@
                 "soccer"
             ],
             "support": {
-                "source": "https://github.com/sebastiaanspeck/laravel-sportmonks-soccer/tree/develop"
+                "source": "https://github.com/sebastiaanspeck/laravel-sportmonks-soccer/tree/master"
             },
-            "time": "2019-01-24T19:40:44+00:00"
+            "time": "2019-01-25T09:46:02+00:00"
         },
         {
             "name": "laravel/framework",
@@ -1271,7 +1271,7 @@
                 {
                     "name": "Luís Otávio Cobucci Oblonczyk",
                     "email": "lcobucci@gmail.com",
-                    "role": "developer"
+                    "role": "Developer"
                 }
             ],
             "description": "A simple library to work with JSON Web Token and JSON Web Signature",
