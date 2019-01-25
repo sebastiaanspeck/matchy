@@ -233,6 +233,8 @@
                                 
                         @endforeach
                     </div>
+                @else
+                    <span style="font-weight: bold">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Match Summary") }} @choice("application.msg_no_data", 1)</span>
                 @endif
             </div>
             <div class="tab-pane fade" id="statistics" role="tabpanel" aria-labelledby="statistics-tab">
