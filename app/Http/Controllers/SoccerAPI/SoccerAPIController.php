@@ -75,19 +75,15 @@ class SoccerAPIController extends BaseController
 
         // check if league has topscorer_goals coverage or is a cup (the is_cup, excludes World Cup, Europa League,
         if ($league->coverage->topscorer_goals) {
-            try {
-                $topscorers = self::makeCall('topscorers', 'goalscorers.player,goalscorers.team', $league->current_season_id, null, null, null, null, false)->goalscorers->data;
+            $topscorers = self::makeCall('topscorers', 'goalscorers.player,goalscorers.team', $league->current_season_id, null, null, null, null, false)->goalscorers->data;
 
-                foreach ($topscorers as $key => $topscorer) {
-                    // remove all topscorers where stage_id is not the current_stage_id (like qualifying rounds before the actual season etc)
-                    if ($topscorer->stage_id != $league->current_stage_id) {
-                        unset($topscorers[$key]);
-                    }
+            foreach ($topscorers as $key => $topscorer) {
+                // remove all topscorers where stage_id is not the current_stage_id (like qualifying rounds before the actual season etc)
+                if ($topscorer->stage_id != $league->current_stage_id) {
+                    unset($topscorers[$key]);
                 }
-                $topscorers = self::addPagination($topscorers, 10);
-            } catch (\ErrorException $e) {
-                Log::critical('Insufficient Privileges');
             }
+            $topscorers = self::addPagination($topscorers, 10);
         } else {
             Log::debug('Missing topscorers for: '.$league->name);
         }
