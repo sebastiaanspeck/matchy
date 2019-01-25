@@ -255,7 +255,9 @@ class SoccerAPIController extends BaseController
     {
         $dateFormat = self::getDateFormat();
 
-        $team = self::makeCall('team_by_id', 'squad,coach,latest.league,latest.localTeam,latest.visitorTeam,latest.round,latest.stage,upcoming.league,upcoming.localTeam,upcoming.visitorTeam,upcoming.round,upcoming.stage', $teamId)->data;
+        $team = self::makeCall('team_by_id', 'squad.player,coach,latest.league,latest.localTeam,latest.visitorTeam,latest.round,latest.stage,upcoming.league,upcoming.localTeam,upcoming.visitorTeam,upcoming.round,upcoming.stage', $teamId)->data;
+
+        $coach = $team->coach->data;
 
         $numberOfMatches = $request->query('matches', 10);
         $lastFixtures = self::addPagination($team->latest->data, $numberOfMatches);
@@ -263,6 +265,7 @@ class SoccerAPIController extends BaseController
 
         return view('teams/teams_details', [
             'team'              => $team,
+            'coach'             => $coach,
             'last_fixtures'     => $lastFixtures,
             'upcoming_fixtures' => $upcomingFixtures,
             'date_format'       => $dateFormat,
