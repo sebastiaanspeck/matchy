@@ -524,7 +524,7 @@ class SoccerAPIController extends BaseController
                 $response = $soccerAPI->fixtures()->setInclude($include)->setLeagues($leagues)->byDate($date);
                 break;
             case 'fixture_by_id':
-                $response = $soccerAPI->fixtures()->setInclude($include)->byMatchId($id);
+                $response = $soccerAPI->fixtures()->setInclude($include)->byFixtureId($id);
                 break;
             case 'h2h':
                 $response = $soccerAPI->head2head()->setInclude($include)->betweenTeams($localteam_id, $visitorteam_id);
