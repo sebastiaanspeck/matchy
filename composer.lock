@@ -839,21 +839,22 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastiaanspeck/laravel-sportmonks-soccer.git",
-                "reference": "f665e9c8fabee1a68e7ae4190abc93f4b09b46e4"
+                "reference": "aceb0f6db18ecf5e26e74a037bdc312fe07d6f36"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastiaanspeck/laravel-sportmonks-soccer/zipball/f665e9c8fabee1a68e7ae4190abc93f4b09b46e4",
-                "reference": "f665e9c8fabee1a68e7ae4190abc93f4b09b46e4",
+                "url": "https://api.github.com/repos/sebastiaanspeck/laravel-sportmonks-soccer/zipball/aceb0f6db18ecf5e26e74a037bdc312fe07d6f36",
+                "reference": "aceb0f6db18ecf5e26e74a037bdc312fe07d6f36",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/guzzle": "~6.0",
+                "ext-json": "^1",
+                "guzzlehttp/guzzle": "~6.3",
                 "illuminate/support": "~5.1",
                 "php": ">=5.6.2"
             },
             "require-dev": {
-                "laravel/laravel": "5.4",
+                "laravel/laravel": "^5.4",
                 "phpunit/phpunit": "^5.5"
             },
             "type": "project",
@@ -895,9 +896,9 @@
                 "soccer"
             ],
             "support": {
-                "source": "https://github.com/sebastiaanspeck/laravel-sportmonks-soccer/tree/master"
+                "source": "https://github.com/sebastiaanspeck/laravel-sportmonks-soccer/tree/develop"
             },
-            "time": "2019-01-24T08:52:26+00:00"
+            "time": "2019-01-24T19:40:44+00:00"
         },
         {
             "name": "laravel/framework",
@@ -1270,7 +1271,7 @@
                 {
                     "name": "Luís Otávio Cobucci Oblonczyk",
                     "email": "lcobucci@gmail.com",
-                    "role": "Developer"
+                    "role": "developer"
                 }
             ],
             "description": "A simple library to work with JSON Web Token and JSON Web Signature",
