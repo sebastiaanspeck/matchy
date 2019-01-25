@@ -178,7 +178,7 @@
             @if(isset($venue))
                 <p style="margin: 0;">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Venue") }}: {{$venue->name}} @if($venue->city !== "")- {{$venue->city}}@endif </p>
             @endif
-            @if(isset($referee))
+            @if(isset($referee) && !is_null($referee->fullname))
                 <p>{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Referee") }}: {{$referee->fullname}} </p>
             @endif
         </div>
