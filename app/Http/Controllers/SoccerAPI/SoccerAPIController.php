@@ -523,11 +523,7 @@ class SoccerAPIController extends BaseController
                 $response = SoccerAPI::fixtures()->setInclude($include)->setLeagues($leagues)->byDate($date);
                 break;
             case 'fixture_by_id':
-<<<<<<< HEAD
                 $response = SoccerAPI::fixtures()->setInclude($include)->byFixtureId($id);
-=======
-                $response = $soccerAPI->fixtures()->setInclude($include)->byFixtureId($id);
->>>>>>> 85d0ba09a5c2196457b787406635c57ef3feae8c
                 break;
             case 'h2h':
                 $response = SoccerAPI::head2head()->setInclude($include)->betweenTeams($localteam_id, $visitorteam_id);
