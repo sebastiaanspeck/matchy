@@ -147,43 +147,39 @@
 
             @switch($fixture->time->status)
                 @case("FT_PEN")
-                    <span style="font-size: x-large"> {{$fixture->scores->localteam_score}} - {{$fixture->scores->visitorteam_score}} </span><br>
-                    <span>
+                    <p style="font-size: x-large; margin: 0;"> {{$fixture->scores->localteam_score}} - {{$fixture->scores->visitorteam_score}} </p>
+                    <p>
                     @if(isset($fixture->scores->localteam_pen_score) && isset($fixture->scores->visitorteam_pen_score))
                         ({{$fixture->scores->localteam_pen_score}} - {{$fixture->scores->visitorteam_pen_score}}) {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "penalties") }}
                     @endif
-                    </span>
+                    </p>
                     @break
                 @case("AET")
-                    <span style="font-size: x-large"> {{$fixture->scores->ft_score}} (ET) </span>
+                    <p style="font-size: x-large; margin: 0;"> {{$fixture->scores->ft_score}} (ET) </p>
                     @break
                 @default
-                    <span style="font-size: x-large"> {{$fixture->scores->localteam_score}} - {{$fixture->scores->visitorteam_score}} </span>
+                    <p style="font-size: x-large; margin: 0;"> {{$fixture->scores->localteam_score}} - {{$fixture->scores->visitorteam_score}} </p>
                     @break
             @endswitch
-            <br>
             @if(in_array($fixture->time->status, array("LIVE", "HT", "ET", "PEN_LIVE", "AET", "BREAK")))
                 @if($fixture->time->status == "HT")
-                    <span style="font-size: medium"> {{$fixture->time->status}} </span>
+                    <p style="font-size: medium; margin: 0;"> {{$fixture->time->status}} </p>
                 @elseif($fixture->time->minute == null && $fixture->time->added_time == null)
-                    <span style="font-size: medium"> {{$fixture->time->status}} - 0&apos;</span>
+                    <p style="font-size: medium; margin: 0;"> {{$fixture->time->status}} - 0&apos;</p>
                 @elseif($fixture->time->added_time == null)
-                    <span style="font-size: medium"> {{$fixture->time->status}} - {{$fixture->time->minute}}&apos;</span>
+                    <p style="font-size: medium; margin: 0;"> {{$fixture->time->status}} - {{$fixture->time->minute}}&apos;</p>
                 @elseif(!$fixture->time->added_time == null)
-                    <span style="font-size: medium"> {{$fixture->time->status}} - {{$fixture->time->minute}}+{{$fixture->time->injury_time}}&apos;</span>
+                    <p style="font-size: medium; margin: 0;"> {{$fixture->time->status}} - {{$fixture->time->minute}}+{{$fixture->time->injury_time}}&apos;</p>
                 @endif
             @else
-                <span style="font-size: medium"> {{date($date_format . " H:i", strtotime($fixture->time->starting_at->date_time))}} </span>
+                <p style="font-size: medium; margin: 0;"> {{date($date_format . " H:i", strtotime($fixture->time->starting_at->date_time))}} </p>
             @endif
-            <br>
 
             @if(isset($venue))
-                <span>{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Venue") }}: {{$venue->name}} - {{$venue->city}} </span>
-                <br>
+                <p style="margin: 0;">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Venue") }}: {{$venue->name}} @if($venue->city !== "")- {{$venue->city}}@endif </p>
             @endif
-            @if(isset($referee))
-                <span>{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Referee") }}: {{$referee->fullname}} </span>
-                <br>
+            @if(isset($referee) && !is_null($referee->fullname))
+                <p>{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Referee") }}: {{$referee->fullname}} </p>
             @endif
         </div>
 
@@ -237,6 +233,8 @@
                                 
                         @endforeach
                     </div>
+                @else
+                    <span style="font-weight: bold">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Match Summary") }} @choice("application.msg_no_data", 1)</span>
                 @endif
             </div>
             <div class="tab-pane fade" id="statistics" role="tabpanel" aria-labelledby="statistics-tab">

@@ -14,6 +14,10 @@ use Illuminate\Routing\Controller as BaseController;
 use Log;
 use Sportmonks\SoccerAPI\Facades\SoccerAPI;
 
+/**
+ * Class SoccerAPIController
+ * @package App\Http\Controllers\SoccerAPI
+ */
 class SoccerAPIController extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -22,6 +26,7 @@ class SoccerAPIController extends BaseController
      * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Sportmonks\SoccerAPI\Exceptions\ApiRequestException
      */
     public function allLeagues(Request $request)
     {
@@ -60,6 +65,7 @@ class SoccerAPIController extends BaseController
      * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Sportmonks\SoccerAPI\Exceptions\ApiRequestException
      */
     public function leaguesDetails($leagueId, Request $request)
     {
@@ -75,19 +81,15 @@ class SoccerAPIController extends BaseController
 
         // check if league has topscorer_goals coverage or is a cup (the is_cup, excludes World Cup, Europa League,
         if ($league->coverage->topscorer_goals) {
-            try {
-                $topscorers = self::makeCall('topscorers', 'goalscorers.player,goalscorers.team', $league->current_season_id, null, null, null, null, false)->goalscorers->data;
+            $topscorers = self::makeCall('topscorers', 'goalscorers.player,goalscorers.team', $league->current_season_id, null, null, null, null, false)->goalscorers->data;
 
-                foreach ($topscorers as $key => $topscorer) {
-                    // remove all topscorers where stage_id is not the current_stage_id (like qualifying rounds before the actual season etc)
-                    if ($topscorer->stage_id != $league->current_stage_id) {
-                        unset($topscorers[$key]);
-                    }
+            foreach ($topscorers as $key => $topscorer) {
+                // remove all topscorers where stage_id is not the current_stage_id (like qualifying rounds before the actual season etc)
+                if ($topscorer->stage_id != $league->current_stage_id) {
+                    unset($topscorers[$key]);
                 }
-                $topscorers = self::addPagination($topscorers, 10);
-            } catch (\ErrorException $e) {
-                Log::critical('Insufficient Privileges');
             }
+            $topscorers = self::addPagination($topscorers, 10);
         } else {
             Log::debug('Missing topscorers for: '.$league->name);
         }
@@ -96,7 +98,7 @@ class SoccerAPIController extends BaseController
         $upcomingFixtures = [];
         $numberOfMatches = 10;
 
-        if (count($season) > 0) {
+        if (!empty($season)) {
             $numberOfMatches = $request->query('matches', 10);
 
             $lastFixtures = $season->data->results->data;
@@ -144,6 +146,7 @@ class SoccerAPIController extends BaseController
      * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     * @throws \Sportmonks\SoccerAPI\Exceptions\ApiRequestException
      */
     public function livescores($type, Request $request)
     {
@@ -199,6 +202,7 @@ class SoccerAPIController extends BaseController
      * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Sportmonks\SoccerAPI\Exceptions\ApiRequestException
      */
     public function fixturesByDate(Request $request)
     {
@@ -233,6 +237,7 @@ class SoccerAPIController extends BaseController
      * @param $fixtureId
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Sportmonks\SoccerAPI\Exceptions\ApiRequestException
      */
     public function fixturesDetails($fixtureId)
     {
@@ -240,11 +245,7 @@ class SoccerAPIController extends BaseController
 
         $fixture = self::makeCall('fixture_by_id', 'localTeam,visitorTeam,lineup.player,bench.player,sidelined.player,stats,comments,highlights,league,season,referee,events,venue,localCoach,visitorCoach', $fixtureId)->data;
 
-        try {
-            $h2hFixtures = self::makeCall('h2h', 'localTeam,visitorTeam,league,season,round,stage', null, null, null, $fixture->localteam_id, $fixture->visitorteam_id);
-        } catch (ClientException $exception) {
-            $h2hFixtures = [];
-        }
+        $h2hFixtures = self::makeCall('h2h', 'localTeam,visitorTeam,league,season,round,stage', null, null, null, $fixture->localteam_id, $fixture->visitorteam_id);
 
         return view('fixtures/fixtures_details', ['fixture' => $fixture, 'h2h_fixtures' => $h2hFixtures, 'date_format' => $dateFormat]);
     }
@@ -254,12 +255,15 @@ class SoccerAPIController extends BaseController
      * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Sportmonks\SoccerAPI\Exceptions\ApiRequestException
      */
     public function teamsDetails($teamId, Request $request)
     {
         $dateFormat = self::getDateFormat();
 
-        $team = self::makeCall('team_by_id', 'squad,coach,latest.league,latest.localTeam,latest.visitorTeam,latest.round,latest.stage,upcoming.league,upcoming.localTeam,upcoming.visitorTeam,upcoming.round,upcoming.stage', $teamId)->data;
+        $team = self::makeCall('team_by_id', 'squad.player,coach,latest.league,latest.localTeam,latest.visitorTeam,latest.round,latest.stage,upcoming.league,upcoming.localTeam,upcoming.visitorTeam,upcoming.round,upcoming.stage', $teamId)->data;
+
+        $coach = $team->coach->data;
 
         $numberOfMatches = $request->query('matches', 10);
         $lastFixtures = self::addPagination($team->latest->data, $numberOfMatches);
@@ -267,6 +271,7 @@ class SoccerAPIController extends BaseController
 
         return view('teams/teams_details', [
             'team'              => $team,
+            'coach'             => $coach,
             'last_fixtures'     => $lastFixtures,
             'upcoming_fixtures' => $upcomingFixtures,
             'date_format'       => $dateFormat,
@@ -275,6 +280,7 @@ class SoccerAPIController extends BaseController
 
     /**
      * @return int
+     * @throws \Sportmonks\SoccerAPI\Exceptions\ApiRequestException
      */
     public function countLivescores()
     {
@@ -473,16 +479,17 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param string      $type
+     * @param string $type
      * @param string|null $include
      * @param string|null $id
      * @param string|null $leagues
      * @param string|null $date
      * @param string|null $localteam_id
      * @param string|null $visitorteam_id
-     * @param bool        $abort
+     * @param bool $abort
      *
      * @return \Exception|false|ClientException|mixed|\Psr\Http\Message\ResponseInterface|string
+     * @throws \Sportmonks\SoccerAPI\Exceptions\ApiRequestException
      */
     public function makeCall(string $type, string $include = null, string $id = null, string $leagues = null, string $date = null, string $localteam_id = null, string $visitorteam_id = null, bool $abort = true)
     {
@@ -516,7 +523,11 @@ class SoccerAPIController extends BaseController
                 $response = SoccerAPI::fixtures()->setInclude($include)->setLeagues($leagues)->byDate($date);
                 break;
             case 'fixture_by_id':
+<<<<<<< HEAD
                 $response = SoccerAPI::fixtures()->setInclude($include)->byFixtureId($id);
+=======
+                $response = $soccerAPI->fixtures()->setInclude($include)->byFixtureId($id);
+>>>>>>> 85d0ba09a5c2196457b787406635c57ef3feae8c
                 break;
             case 'h2h':
                 $response = SoccerAPI::head2head()->setInclude($include)->betweenTeams($localteam_id, $visitorteam_id);

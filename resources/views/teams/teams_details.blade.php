@@ -19,6 +19,9 @@
                     @endphp
                     <td style="vertical-align: top"><h3>{{$team->name}}</h3></td>
                 </tr>
+                <tr>
+                    <td><p>{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Coach") }}: {{$coach->firstname}} {{$coach->lastname}}</p></td>
+                </tr>
             </table>
         </div>
 

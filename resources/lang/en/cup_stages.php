@@ -17,6 +17,7 @@ return [
     '2nd Round Qualifying Replays'  => '2nd Round Qualifying Replays',
     '2nd Qualifying Round'          => '2nd Qualifying Round',
     '3rd Round'                     => '3rd Round',
+    '3rd Round Replays'             => '3rd Round Replays',
     '3rd Round Qualifying'          => '3rd Round Qualifying',
     '3rd Round Qualifying Replays'  => '3rd Round Qualifying Replays',
     '3rd Qualifying Round'          => '3rd Qualifying Round',
@@ -31,6 +32,7 @@ return [
 
     'Group Stage'                   => 'Group Stage',
     'Group stage'                   => 'Group stage',
+    '32th Finals'                   => '32th Finals',
     '16th Finals'                   => '16th Finals',
     '8th Finals'                    => '8th Finals',
     'Quarter-finals'                => 'Quarter-finals',
@@ -40,6 +42,8 @@ return [
     'Final'                         => 'Final',
 
     'Play-offs'                     => 'Play-offs',
+    'Play Offs Champions League'    => 'Play Offs Champions League',
+    'Play Offs CL 1st Round'        => 'Play Offs CL 1st Round',
 
     'League A'                      => 'League A',
     'League B'                      => 'League B',
