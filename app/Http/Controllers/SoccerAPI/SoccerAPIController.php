@@ -240,11 +240,7 @@ class SoccerAPIController extends BaseController
 
         $fixture = self::makeCall('fixture_by_id', 'localTeam,visitorTeam,lineup.player,bench.player,sidelined.player,stats,comments,highlights,league,season,referee,events,venue,localCoach,visitorCoach', $fixtureId)->data;
 
-        try {
-            $h2hFixtures = self::makeCall('h2h', 'localTeam,visitorTeam,league,season,round,stage', null, null, null, $fixture->localteam_id, $fixture->visitorteam_id);
-        } catch (ClientException $exception) {
-            $h2hFixtures = [];
-        }
+        $h2hFixtures = self::makeCall('h2h', 'localTeam,visitorTeam,league,season,round,stage', null, null, null, $fixture->localteam_id, $fixture->visitorteam_id);
 
         return view('fixtures/fixtures_details', ['fixture' => $fixture, 'h2h_fixtures' => $h2hFixtures, 'date_format' => $dateFormat]);
     }
