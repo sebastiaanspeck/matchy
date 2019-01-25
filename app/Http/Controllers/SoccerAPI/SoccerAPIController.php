@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller as BaseController;
 use Log;
-use Sportmonks\SoccerAPI\SoccerAPI;
+use Sportmonks\SoccerAPI\Facades\SoccerAPI;
 
 class SoccerAPIController extends BaseController
 {
@@ -486,44 +486,43 @@ class SoccerAPIController extends BaseController
      */
     public function makeCall(string $type, string $include = null, string $id = null, string $leagues = null, string $date = null, string $localteam_id = null, string $visitorteam_id = null, bool $abort = true)
     {
-        $soccerAPI = new SoccerAPI();
         switch ($type) {
             case 'livescores':
-                $response = $soccerAPI->livescores()->setInclude($include)->setLeagues($leagues)->today();
+                $response = SoccerAPI::livescores()->setInclude($include)->setLeagues($leagues)->today();
                 break;
             case 'livescores/now':
                 if ($include && $leagues) {
-                    $response = $soccerAPI->livescores()->setInclude($include)->setLeagues($leagues)->now();
+                    $response = SoccerAPI::livescores()->setInclude($include)->setLeagues($leagues)->now();
                     break;
                 }
-                $response = $soccerAPI->livescores()->now();
+                $response = SoccerAPI::livescores()->now();
                 break;
             case 'leagues':
-                $response = $soccerAPI->leagues()->setInclude($include)->all();
+                $response = SoccerAPI::leagues()->setInclude($include)->all();
                 break;
             case 'league_by_id':
-                $response = $soccerAPI->leagues()->setInclude($include)->byId($id);
+                $response = SoccerAPI::leagues()->setInclude($include)->byId($id);
                 break;
             case 'standings':
-                $response = $soccerAPI->standings()->setInclude($include)->bySeasonId($id);
+                $response = SoccerAPI::standings()->setInclude($include)->bySeasonId($id);
                 break;
             case 'season':
-                $response = $soccerAPI->seasons()->setInclude($include)->byId($id);
+                $response = SoccerAPI::seasons()->setInclude($include)->byId($id);
                 break;
             case 'topscorers':
-                $response = $soccerAPI->topscorers()->setInclude($include)->bySeasonId($id);
+                $response = SoccerAPI::topscorers()->setInclude($include)->bySeasonId($id);
                 break;
             case 'fixtures_by_date':
-                $response = $soccerAPI->fixtures()->setInclude($include)->setLeagues($leagues)->byDate($date);
+                $response = SoccerAPI::fixtures()->setInclude($include)->setLeagues($leagues)->byDate($date);
                 break;
             case 'fixture_by_id':
-                $response = $soccerAPI->fixtures()->setInclude($include)->byMatchId($id);
+                $response = SoccerAPI::fixtures()->setInclude($include)->byFixtureId($id);
                 break;
             case 'h2h':
-                $response = $soccerAPI->head2head()->setInclude($include)->betweenTeams($localteam_id, $visitorteam_id);
+                $response = SoccerAPI::head2head()->setInclude($include)->betweenTeams($localteam_id, $visitorteam_id);
                 break;
             case 'team_by_id':
-                $response = $soccerAPI->teams()->setInclude($include)->byId($id);
+                $response = SoccerAPI::teams()->setInclude($include)->byId($id);
                 break;
             default:
                 $response = [];
