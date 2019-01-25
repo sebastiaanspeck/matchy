@@ -15,8 +15,7 @@ use Log;
 use Sportmonks\SoccerAPI\Facades\SoccerAPI;
 
 /**
- * Class SoccerAPIController
- * @package App\Http\Controllers\SoccerAPI
+ * Class SoccerAPIController.
  */
 class SoccerAPIController extends BaseController
 {
@@ -25,8 +24,9 @@ class SoccerAPIController extends BaseController
     /**
      * @param \Illuminate\Http\Request $request
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Sportmonks\SoccerAPI\Exceptions\ApiRequestException
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function allLeagues(Request $request)
     {
@@ -64,8 +64,9 @@ class SoccerAPIController extends BaseController
      * @param $leagueId
      * @param \Illuminate\Http\Request $request
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Sportmonks\SoccerAPI\Exceptions\ApiRequestException
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function leaguesDetails($leagueId, Request $request)
     {
@@ -145,8 +146,9 @@ class SoccerAPIController extends BaseController
      * @param $type
      * @param \Illuminate\Http\Request $request
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      * @throws \Sportmonks\SoccerAPI\Exceptions\ApiRequestException
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      */
     public function livescores($type, Request $request)
     {
@@ -201,8 +203,9 @@ class SoccerAPIController extends BaseController
     /**
      * @param \Illuminate\Http\Request $request
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Sportmonks\SoccerAPI\Exceptions\ApiRequestException
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function fixturesByDate(Request $request)
     {
@@ -236,8 +239,9 @@ class SoccerAPIController extends BaseController
     /**
      * @param $fixtureId
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Sportmonks\SoccerAPI\Exceptions\ApiRequestException
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function fixturesDetails($fixtureId)
     {
@@ -254,8 +258,9 @@ class SoccerAPIController extends BaseController
      * @param $teamId
      * @param \Illuminate\Http\Request $request
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Sportmonks\SoccerAPI\Exceptions\ApiRequestException
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function teamsDetails($teamId, Request $request)
     {
@@ -279,8 +284,9 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @return int
      * @throws \Sportmonks\SoccerAPI\Exceptions\ApiRequestException
+     *
+     * @return int
      */
     public function countLivescores()
     {
@@ -479,17 +485,18 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param string $type
+     * @param string      $type
      * @param string|null $include
      * @param string|null $id
      * @param string|null $leagues
      * @param string|null $date
      * @param string|null $localteam_id
      * @param string|null $visitorteam_id
-     * @param bool $abort
+     * @param bool        $abort
+     *
+     * @throws \Sportmonks\SoccerAPI\Exceptions\ApiRequestException
      *
      * @return \Exception|false|ClientException|mixed|\Psr\Http\Message\ResponseInterface|string
-     * @throws \Sportmonks\SoccerAPI\Exceptions\ApiRequestException
      */
     public function makeCall(string $type, string $include = null, string $id = null, string $leagues = null, string $date = null, string $localteam_id = null, string $visitorteam_id = null, bool $abort = true)
     {
