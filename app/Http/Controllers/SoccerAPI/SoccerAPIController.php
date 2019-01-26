@@ -24,7 +24,6 @@ class SoccerAPIController extends BaseController
     /**
      * @param \Illuminate\Http\Request $request
      *
-     * @throws \Sportmonks\SoccerAPI\Exceptions\ApiRequestException
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -64,7 +63,6 @@ class SoccerAPIController extends BaseController
      * @param $leagueId
      * @param \Illuminate\Http\Request $request
      *
-     * @throws \Sportmonks\SoccerAPI\Exceptions\ApiRequestException
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -146,7 +144,6 @@ class SoccerAPIController extends BaseController
      * @param $type
      * @param \Illuminate\Http\Request $request
      *
-     * @throws \Sportmonks\SoccerAPI\Exceptions\ApiRequestException
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      */
@@ -203,7 +200,6 @@ class SoccerAPIController extends BaseController
     /**
      * @param \Illuminate\Http\Request $request
      *
-     * @throws \Sportmonks\SoccerAPI\Exceptions\ApiRequestException
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -239,7 +235,6 @@ class SoccerAPIController extends BaseController
     /**
      * @param $fixtureId
      *
-     * @throws \Sportmonks\SoccerAPI\Exceptions\ApiRequestException
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -258,7 +253,6 @@ class SoccerAPIController extends BaseController
      * @param $teamId
      * @param \Illuminate\Http\Request $request
      *
-     * @throws \Sportmonks\SoccerAPI\Exceptions\ApiRequestException
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -284,7 +278,6 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @throws \Sportmonks\SoccerAPI\Exceptions\ApiRequestException
      *
      * @return int
      */
@@ -494,7 +487,6 @@ class SoccerAPIController extends BaseController
      * @param string|null $visitorteam_id
      * @param bool        $abort
      *
-     * @throws \Sportmonks\SoccerAPI\Exceptions\ApiRequestException
      *
      * @return \Exception|false|ClientException|mixed|\Psr\Http\Message\ResponseInterface|string
      */
