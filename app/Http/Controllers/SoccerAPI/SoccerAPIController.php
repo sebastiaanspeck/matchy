@@ -76,6 +76,16 @@ class SoccerAPIController extends BaseController
 
         $season = self::makeCall('season', 'upcoming.localTeam,upcoming.visitorTeam,upcoming.league,upcoming.stage,upcoming.round,results:order(starting_at|desc),results.localTeam,results.visitorTeam,results.league,results.round,results.stage', $league->current_season_id);
 
+        $teams = self::makeCall('teams_by_season_id', 'country,coach,stats,venue', $league->current_season_id);
+
+        usort($teams, function ($item1, $item2) {
+            if ($item1->country->data->name == $item2->country->data->name) {
+                return $item1->name <=> $item2->name;
+            }
+
+            return $item1->country->data->name <=> $item2->country->data->name;
+        });
+
         $topscorers = [];
 
         // check if league has topscorer_goals coverage or is a cup (the is_cup, excludes World Cup, Europa League,
