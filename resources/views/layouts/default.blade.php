@@ -48,22 +48,22 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownFixtures" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Fixtures") }}</a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownFixtures">
-                            <a class="dropdown-item" href="{{route("fixturesByDate", ["day" => "yesterday"])}}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Yesterday") }}</a>
-                            <a class="dropdown-item" href="{{route("fixturesByDate", ["day" => "tomorrow"])}}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Tomorrow") }}</a>
+                            <a class="dropdown-item" href="{{ route("fixturesByDate", ["day" => "yesterday"]) }}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Yesterday") }}</a>
+                            <a class="dropdown-item" href="{{ route("fixturesByDate", ["day" => "tomorrow"]) }}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Tomorrow") }}</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownLivescores" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Livescores") }}</a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownLivescores">
-                            <a class="dropdown-item" href="{{route("livescores", ["type" => "now"])}}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Livescores") }} -  {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "now") }} <span class="badge badge-danger">{{$live}}</span></a>
+                            <a class="dropdown-item" href="{{ route("livescores", ["type" => "now"]) }}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Livescores") }} -  {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "now") }} <span class="badge badge-danger">{{$live}}</span></a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{{route("livescores", ["type" => "today"])}}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Livescores") }} - {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "today") }}</a>
+                            <a class="dropdown-item" href="{{ route("livescores", ["type" => "today"]) }}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Livescores") }} - {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "today") }}</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownLeagues" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Leagues") }}</a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownLeagues">
-                            <a class="dropdown-item" href="{{route("leagues")}}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "All leagues") }}</a>
+                            <a class="dropdown-item" href="{{ route("leagues") }}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "All leagues") }}</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
