@@ -373,7 +373,7 @@
                                             Log::critical("Missing country translation for: " . str_replace("countries.", "", $team->name) . " in " . app()->getLocale() . "/countries.php");
                                         }
                                     @endphp
-                                    <td scope="row"><img src="/images/flags/shiny/16/{{$player->nationality}}.png">&nbsp;&nbsp;{{$player->common_name}}</td>
+                                    <td scope="row"><img src="/images/flags/shiny/16/{{$player->nationality}}.png" alt="countryflag">&nbsp;&nbsp;{{$player->common_name}}</td>
                                     <td scope="row"><a href ="{{route("teamsDetails", ["id" => $team->id])}}">{{$team->name}}</a></td>
                                     <td scope="row">{{$topscorer->goals}}</td>
                                 </tr>
