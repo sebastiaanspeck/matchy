@@ -272,7 +272,7 @@ class SoccerAPIController extends BaseController
 
         $team = self::makeCall('team_by_id', 'squad.player,coach,latest.league,latest.localTeam,latest.visitorTeam,latest.round,latest.stage,upcoming.league,upcoming.localTeam,upcoming.visitorTeam,upcoming.round,upcoming.stage', $teamId)->data;
 
-        $coach = $team->coach->data;
+        isset($team->coach) ? $coach = $team->coach->data : $coach = null;
 
         $numberOfMatches = $request->query('matches', 10);
         $lastFixtures = self::addPagination($team->latest->data, $numberOfMatches);
