@@ -44,7 +44,7 @@ class SoccerAPIController extends BaseController
 
         usort($leagues, function ($item1, $item2) {
             if ($item1->country->data->name == $item2->country->data->name) {
-                return $item1->id <=> $item2->id;
+                return $item1->name <=> $item2->name;
             }
 
             return $item1->country->data->name <=> $item2->country->data->name;
