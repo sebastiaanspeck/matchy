@@ -540,6 +540,9 @@ class SoccerAPIController extends BaseController
             case 'team_by_id':
                 $response = SoccerAPI::teams()->setInclude($include)->byId($id);
                 break;
+            case 'teams_by_season_id':
+                $response = SoccerAPI::teams()->setInclude($include)->allBySeasonId($id);
+                break;
             default:
                 $response = [];
                 break;
