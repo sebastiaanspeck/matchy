@@ -558,4 +558,59 @@ class SoccerAPIController extends BaseController
 
         return $response;
     }
+
+    /**
+     * @param $file
+     * @param $new_width
+     * @param $new_height
+     * @param $image_name
+     * @return string
+     */
+    public static function createThumbnail($file, $image_name, $new_width, $new_height)
+    {
+        $mime = getimagesize($file);
+
+        if($mime['mime']=='image/png') {
+            $src_img = imagecreatefrompng($file);
+        } else if($mime['mime']=='image/jpg' || $mime['mime']=='image/jpeg' || $mime['mime']=='image/pjpeg') {
+            $src_img = imagecreatefromjpeg($file);
+        } else {
+            return $file;
+        }
+
+        $old_x          =   imagesx($src_img);
+        $old_y          =   imagesy($src_img);
+
+        if($old_x > $old_y) {
+            $thumb_w    =   $new_width;
+            $thumb_h    =   $old_y*($new_height/$old_x);
+        } else if($old_x < $old_y) {
+            $thumb_w    =   $old_x*($new_width/$old_y);
+            $thumb_h    =   $new_height;
+        } else {
+            $thumb_w    =   $new_width;
+            $thumb_h    =   $new_height;
+        }
+
+        $dst_img        =   imagecreatetruecolor($thumb_w, $thumb_h);
+
+        imagealphablending($dst_img, false);
+        imagesavealpha($dst_img, true);
+        $transparent = imagecolorallocatealpha($dst_img, 255, 255, 255, 127);
+        imagefilledrectangle($dst_img, 0, 0, $thumb_w, $thumb_h, $transparent);
+
+        imagecopyresampled($dst_img,$src_img,0,0,0,0,$thumb_w,$thumb_h,$old_x,$old_y);
+
+        // New save location
+        $new_thumb_loc = "images/team_logos/{$new_height}/{$image_name}";
+
+        if($mime['mime']=='image/png') {
+            imagepng($dst_img,$new_thumb_loc,9);
+        }
+
+        imagedestroy($dst_img);
+        imagedestroy($src_img);
+
+        return $new_thumb_loc;
+    }
 }
