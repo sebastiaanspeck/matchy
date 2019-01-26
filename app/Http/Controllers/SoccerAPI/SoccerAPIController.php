@@ -288,6 +288,45 @@ class SoccerAPIController extends BaseController
     }
 
     /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function favoriteTeams(Request $request)
+    {
+        $favorite_teams = (config('preferences.favorite_teams'));
+
+        if(count($favorite_teams) == 1) {
+            return redirect()->route('teamsDetails', ['id' => $favorite_teams[0]]);
+        }
+
+        $teams = array();
+
+        foreach($favorite_teams as $teamId) {
+            $teams[] = self::makeCall('team_by_id', 'country,coach,venue', $teamId)->data;
+        }
+
+        usort($teams, function ($item1, $item2) {
+            if ($item1->country->data->name == $item2->country->data->name) {
+                return $item1->name <=> $item2->name;
+            }
+
+            return $item1->country->data->name <=> $item2->country->data->name;
+        });
+
+        $paginatedData = self::addPagination($teams, 20);
+
+        $url = self::removePageParameter($request);
+
+        $paginatedData->setPath($url);
+
+        return view('teams/favorite_teams', [
+            'teams' => $paginatedData,
+        ]);
+
+
+    }
+
+    /**
      *
      * @return int
      */

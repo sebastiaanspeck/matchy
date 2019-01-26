@@ -81,6 +81,7 @@ return [
     'msg_no_livescores_today' => 'No livescores for today.',
     'msg_no_matches_found'    => 'No matches found for :date.',
     'msg_no_data'             => 'is not (yet) available for this fixture|are not (yet) available for this fixture',
+    'msg_no_favorite_teams'   => 'No favorite teams found or set.',
     'version'                 => 'version',
     'Created with'            => 'Created with',
     'H2H'                     => 'H2H',

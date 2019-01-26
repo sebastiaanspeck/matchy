@@ -66,6 +66,14 @@
                             <a class="dropdown-item" href="{{route("leagues")}}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "All leagues") }}</a>
                         </div>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownFavorites" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Favorites") }}</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownFavorites">
+                            <a class="dropdown-item" href="{{ route('favoriteTeams') }}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "My favorite teams") }}</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "My favorite leagues") }}</a>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </nav>

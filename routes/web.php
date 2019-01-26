@@ -28,3 +28,6 @@ Route::get('/fixtures/{id}', 'SoccerAPI\SoccerAPIController@fixturesDetails')->n
 
 // Teams
 Route::get('/teams/{id}', 'SoccerAPI\SoccerAPIController@teamsDetails')->name('teamsDetails');
+
+// Favorites
+Route::get('/favorite_teams', 'SoccerAPI\SoccerAPIController@favoriteTeams')->name('favoriteTeams');
