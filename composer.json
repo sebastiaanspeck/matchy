@@ -23,6 +23,7 @@
         "phpunit/php-code-coverage": "^6.1"
     },
     "require-dev": {
+        "beyondcode/laravel-dump-server": "^1.0",
         "barryvdh/laravel-ide-helper": "^2.5",
         "filp/whoops": "^2.0",
         "fzaninotto/faker": "^1.4",
