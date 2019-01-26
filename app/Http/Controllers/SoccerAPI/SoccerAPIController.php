@@ -527,15 +527,14 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param string      $type
+     * @param string $type
      * @param string|null $include
      * @param string|null $id
      * @param string|null $leagues
      * @param string|null $date
      * @param string|null $localteam_id
      * @param string|null $visitorteam_id
-     * @param bool        $abort
-     *
+     * @param bool $abort
      *
      * @return \Exception|false|ClientException|mixed|\Psr\Http\Message\ResponseInterface|string
      */
