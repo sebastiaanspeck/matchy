@@ -19,7 +19,7 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
@@ -38,7 +38,7 @@
         <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark p-1">
         <!--<nav class="navbar navbar-expand-md navbar-light navbar-laravel fixed-top">-->
             <a class="navbar-brand" href="{{ url("/") }}">
-                <i class="fa fa-futbol-o fa-fw" aria-hidden="true"></i>&nbsp;{{ config("app.name") }}
+                <i class="fas fa-futbol fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;{{ config("app.name") }}
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -84,12 +84,12 @@
     </main>
     
     <footer class="main-footer">
-        <div class="container-fluid">
-            <p class="text-muted pull-left">
-                Matchy - <span class="badge badge-success"> {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "version") }} 1.5.0</span> - <a href="https://github.com/sebastiaanspeck/matchy" class="text-muted" target="_blank">Github Repo <i class="fa fa-github" aria-hidden="true"></i></a>
+        <div style="overflow: hidden">
+            <p class="text-muted" style="float: left; margin-left: 2rem;">
+                Matchy - <span class="badge badge-success"> {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "version") }} 2.0.1</span> - <a href="https://github.com/sebastiaanspeck/matchy" class="text-muted" target="_blank">Github Repo&nbsp;&nbsp;<i class="fab fa-github" aria-hidden="true"></i></a>
             </p>
-            <p class="text-muted pull-right">
-                {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Created with") }} <i class="fa fa-code" aria-hidden="true"></i> & <i class="fa fa-coffee" aria-hidden="true"></i>
+            <p class="text-muted" style="float: right; margin-right: 2rem;">
+                {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Created with") }}&nbsp;&nbsp;<i class="fa fa-code fa-fw"></i>&nbsp;&nbsp;&&nbsp;&nbsp;<i class="fa fa-coffee fa-fw"></i>
             </p>
         </div>
     </footer>

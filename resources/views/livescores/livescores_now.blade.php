@@ -6,7 +6,7 @@
 
 @section("content")
     <div class = "container">
-        <h1 style="text-align: center">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Livescores") }} - {{date($date_format)}} </h1>
+        <h3 style="text-align: center">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Livescores") }} - {{date($date_format)}} </h3>
         <p style="text-align: center">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Last update") }} {{date($date_format . " H:i:s")}} </p>
 
         @if(isset($livescores))

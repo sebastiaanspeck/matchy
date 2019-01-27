@@ -2,7 +2,7 @@
 
 @section("content")
     <div class = "container">
-        <h1>{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Leagues") }}</h1>
+        <h3>{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Leagues") }}</h3>
 
         @if(count($leagues) >= 1)
             @php $favorite_leagues = Config::get('preferences.favorite_leagues'); @endphp

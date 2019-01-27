@@ -2,7 +2,7 @@
 
 @section("content")
     <div class = "container">
-        <h1 style="text-align: center">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Fixtures") }} - {{date($date_format)}} </h1>
+        <h3 style="text-align: center">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Fixtures") }} - {{date($date_format)}} </h3>
 
         @if(isset($livescores))
             @if(count($livescores) >= 1 && gettype($livescores) == "array")
