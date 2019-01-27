@@ -2,10 +2,18 @@
 
 @section("content")
     <div class="container">
+        @php
+            $favorite_leagues = Config::get('preferences.favorite_leagues');
+            $favorite_league = "far";
+            if (in_array($league->id, $favorite_leagues)) {
+                $favorite_league = "fas";
+            }
+        @endphp
+
         <div id="heading" style="text-align: center">
             <table width="100%">
                 <tr>
-                    <td><h1>{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }} - {{$league->season->data->name}}</h1></td>
+                    <td><h3><i class="{{ $favorite_league }} fa-star fa-fw"></i>&nbsp;&nbsp;{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }} - {{$league->season->data->name}}</h3></td>
                 </tr>
             </table>
         </div>

@@ -71,7 +71,7 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownFavorites">
                             <a class="dropdown-item" href="{{ route('favoriteTeams') }}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "My favorite teams") }}</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "My favorite leagues") }}</a>
+                            <a class="dropdown-item" href="{{ route('favoriteLeagues') }}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "My favorite leagues") }}</a>
                         </div>
                     </li>
                 </ul>

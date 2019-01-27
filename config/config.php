@@ -6,7 +6,7 @@ return [
 
     'show_inactive_leagues' => false,
 
-    'favorite_leagues' => [],
-
     'favorite_teams' => [],
+
+    'favorite_leagues' => [],
 ];

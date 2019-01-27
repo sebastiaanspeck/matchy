@@ -322,8 +322,55 @@ class SoccerAPIController extends BaseController
         return view('teams/favorite_teams', [
             'teams' => $paginatedData,
         ]);
+    }
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function favoriteLeagues(Request $request)
+    {
+        $favorite_leagues = config('preferences.favorite_leagues');
 
+        if(count($favorite_leagues) == 1) {
+            return redirect()->route('leaguesDetails', ['id' => $favorite_leagues[0]]);
+        }
 
+        $leagues= array();
+
+        foreach($favorite_leagues as $leagueId) {
+            $leagues[] = self::makeCall('league_by_id', 'country,season', $leagueId)->data;
+        }
+
+        if (!config('preferences.show_inactive_leagues')) {
+            $currentYear = Carbon::now()->year;
+            $season = config('preferences.season');
+
+            foreach ($leagues as $key => $league) {
+                if (!in_array($league->season->data->name, [$season, $currentYear])) {
+                    unset($leagues[$key]);
+                }
+            }
+        }
+
+        if(count($leagues) == 1) {
+            return redirect()->route('leaguesDetails', ['id' => $leagues[0]->id]);
+        }
+
+        usort($leagues, function ($item1, $item2) {
+            if ($item1->country->data->name == $item2->country->data->name) {
+                return $item1->name <=> $item2->name;
+            }
+
+            return $item1->country->data->name <=> $item2->country->data->name;
+        });
+
+        $paginatedData = self::addPagination($leagues, 20);
+
+        $url = self::removePageParameter($request);
+
+        $paginatedData->setPath($url);
+
+        return view('leagues/leagues', ['leagues' => $paginatedData]);
     }
 
     /**

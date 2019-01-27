@@ -31,3 +31,4 @@ Route::get('/teams/{id}', 'SoccerAPI\SoccerAPIController@teamsDetails')->name('t
 
 // Favorites
 Route::get('/favorite_teams', 'SoccerAPI\SoccerAPIController@favoriteTeams')->name('favoriteTeams');
+Route::get('/favorite_leagues', 'SoccerAPI\SoccerAPIController@favoriteLeagues')->name('favoriteLeagues');
