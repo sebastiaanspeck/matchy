@@ -69,6 +69,9 @@
                                 $scoreLine = $livescore->scores->localteam_score . " - " . $livescore->scores->visitorteam_score;
                                 break;
                         }
+
+                        $homeTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($homeTeam->logo_path);
+                        $awayTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($awayTeam->logo_path);
                     @endphp
                     @if($livescore->league_id == $last_league_id)
                         @if(isset($livescore->round))
@@ -93,10 +96,10 @@
                                 @endif
                             </td>
                             {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
-                            <td scope="row" style="text-align: right"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}</a></td>
+                            <td scope="row" style="text-align: right"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}&nbsp;&nbsp;<img src="{{ $homeTeamLogo }}" alt="team_logo"></a></td>
                             {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
                             <td scope="row" style="text-align: center">{!! nl2br(e($scoreLine)) !!}</td>
-                            <td scope="row" style="text-align: left"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}>{{$awayTeam->name}}</a></td>
+                            <td scope="row" style="text-align: left"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}><img src="{{ $awayTeamLogo }}" alt="team_logo">&nbsp;&nbsp;{{$awayTeam->name}}</a></td>
                             <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $livescore->id])}}"><i class="fa fa-info-circle" style="margin-right: 10px"></i></a></td>
                         </tr>
                     @else
@@ -121,9 +124,9 @@
                             <thead style="visibility: collapse">
                                 <tr>
                                     <th scope="col" width="20%"></th>
-                                    <th scope="col" width="20%"></th>
-                                    <th scope="col" width="10%"></th>
-                                    <th scope="col" width="20%"></th>
+                                    <th scope="col" width="26.25%"></th>
+                                    <th scope="col" width="7.5%"></th>
+                                    <th scope="col" width="26.25%"></th>
                                     <th scope="col" width="20%"></th>
                                 </tr>
                             </thead>
@@ -135,10 +138,10 @@
                                     @endif
                                 </td>
                                 {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
-                                <td scope="row" style="text-align: right"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}</a></td>
+                                <td scope="row" style="text-align: right"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}&nbsp;&nbsp;<img src="{{ $homeTeamLogo }}" alt="team_logo"></a></td>
                                 {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
                                 <td scope="row" style="text-align: center">{!! nl2br(e($scoreLine)) !!}</td>
-                                <td scope="row" style="text-align: left"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}>{{$awayTeam->name}}</a></td>
+                                <td scope="row" style="text-align: left"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}><img src="{{ $awayTeamLogo }}" alt="team_logo">&nbsp;&nbsp;{{$awayTeam->name}}</a></td>
                                 <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $livescore->id])}}"><i class="fa fa-info-circle" style="margin-right: 10px"></i></a></td>
                             </tr>
                     @endif

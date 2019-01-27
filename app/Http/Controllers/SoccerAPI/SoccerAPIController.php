@@ -646,12 +646,29 @@ class SoccerAPIController extends BaseController
 
     /**
      * @param $file
+     * @return string
+     */
+    public static function getTeamLogo($file)
+    {
+        if ($file !== null) {
+            preg_match('/.*\/(.*)/', $file, $matches);
+            $image_name = $matches[1];
+
+            !file_exists("images/team_logos/16/{$image_name}") ? $team_logo = self::resizeTeamLogo($file, $image_name, 16, 16) : $team_logo = "/images/team_logos/16/{$image_name}";
+
+            return $team_logo;
+        }
+        return "/images/team_logos/16/Unknown.png";
+    }
+
+    /**
+     * @param $file
      * @param $new_width
      * @param $new_height
      * @param $image_name
      * @return string
      */
-    public static function createThumbnail($file, $image_name, $new_width, $new_height)
+    public static function resizeTeamLogo($file, $image_name, $new_width, $new_height)
     {
         $mime = getimagesize($file);
 
