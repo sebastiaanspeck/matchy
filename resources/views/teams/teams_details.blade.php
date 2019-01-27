@@ -16,8 +16,14 @@
                         if(strpos($team->name, "countries") !== false) {
                             Log::critical("Missing country translation for: " . str_replace("countries.", "", $team->name) . " in " . app()->getLocale() . "/countries.php");
                         }
+
+                        $favorite_teams = Config::get('preferences.favorite_teams');
+                        $favorite_team = "far";
+                        if (in_array($team->id, $favorite_teams)) {
+                            $favorite_team = "fas";
+                        }
                     @endphp
-                    <td style="vertical-align: top"><h3>{{$team->name}}</h3></td>
+                    <td style="vertical-align: top"><h3><i class="{{ $favorite_team }} fa-star fa-fw"></i>&nbsp;&nbsp;{{$team->name}}</h3></td>
                 </tr>
                 @if(isset($coach))
                     <tr>
