@@ -27,8 +27,9 @@ config/soccerapi.php
 
 # Mac file
 .DS_Store
+
+# Application files
 /config/preferences.php
-/public/images/team_logos
 /config/laravel-lang.php
 /_ide_helper.php
 /config/ide-helper.php
