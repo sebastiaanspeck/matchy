@@ -366,7 +366,7 @@ class SoccerAPIController extends BaseController
 
         $paginatedData->setPath($url);
 
-        return view('leagues/leagues', ['leagues' => $paginatedData]);
+        return view('leagues/favorite_leagues', ['leagues' => $paginatedData]);
     }
 
     /**
