@@ -4,171 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7b89bd3e2875a3dad1db0500947d40a7",
+    "content-hash": "bbe330d9eb37a3d8927f52fd69c82ade",
     "packages": [
-        {
-            "name": "arcanedev/laravel-lang",
-            "version": "5.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ARCANEDEV/LaravelLang.git",
-                "reference": "20d70ac58e300b603d1925439f9b8f0c999613fc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ARCANEDEV/LaravelLang/zipball/20d70ac58e300b603d1925439f9b8f0c999613fc",
-                "reference": "20d70ac58e300b603d1925439f9b8f0c999613fc",
-                "shasum": ""
-            },
-            "require": {
-                "arcanedev/support": "~4.4.0",
-                "caouecs/laravel-lang": "~3.0",
-                "php": ">=7.1.3"
-            },
-            "require-dev": {
-                "mockery/mockery": "~1.1",
-                "orchestra/testbench": "~3.7.0",
-                "phpunit/phpcov": "~5.0",
-                "phpunit/phpunit": "~7.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Arcanedev\\LaravelLang\\LaravelLangServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Arcanedev\\LaravelLang\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "ARCANEDEV",
-                    "email": "arcanedev.maroc@gmail.com",
-                    "homepage": "https://github.com/arcanedev-maroc",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Translations manager and checker for Laravel 5 based on 'caouecs/laravel4-lang' package.",
-            "homepage": "https://github.com/ARCANEDEV/LaravelLang",
-            "keywords": [
-                "arcanedev",
-                "lang",
-                "languages",
-                "laravel",
-                "localisation",
-                "localization",
-                "trans",
-                "translations",
-                "validations"
-            ],
-            "time": "2018-09-13T12:06:50+00:00"
-        },
-        {
-            "name": "arcanedev/support",
-            "version": "4.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ARCANEDEV/Support.git",
-                "reference": "9f4d9947563c6bec10ea7fa7954129e012216af9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ARCANEDEV/Support/zipball/9f4d9947563c6bec10ea7fa7954129e012216af9",
-                "reference": "9f4d9947563c6bec10ea7fa7954129e012216af9",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/filesystem": "~5.7.0",
-                "illuminate/support": "~5.7.0",
-                "php": ">=7.1.3"
-            },
-            "require-dev": {
-                "orchestra/testbench": "~3.7.0",
-                "phpunit/phpcov": "~5.0",
-                "phpunit/phpunit": "~7.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Arcanedev\\Support\\": "src/"
-                },
-                "files": [
-                    "constants.php",
-                    "helpers.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "ARCANEDEV",
-                    "email": "arcanedev.maroc@gmail.com",
-                    "homepage": "https://github.com/arcanedev-maroc"
-                }
-            ],
-            "description": "ARCANEDEV Support Helpers",
-            "homepage": "https://github.com/ARCANEDEV/Support",
-            "keywords": [
-                "arcanedev",
-                "arcanesoft",
-                "laravel",
-                "support"
-            ],
-            "time": "2018-09-04T17:19:43+00:00"
-        },
-        {
-            "name": "caouecs/laravel-lang",
-            "version": "3.0.59",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/caouecs/Laravel-lang.git",
-                "reference": "c74446c1253e2a48541cb6cc5d9e2ea008f16634"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/caouecs/Laravel-lang/zipball/c74446c1253e2a48541cb6cc5d9e2ea008f16634",
-                "reference": "c74446c1253e2a48541cb6cc5d9e2ea008f16634",
-                "shasum": ""
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.10"
-            },
-            "suggest": {
-                "ablunier/laravel-lang-installer": "Command for easily add languages to a Laravel project",
-                "andrey-helldar/laravel-lang-publisher": "Easy installation and update of translation files for your project",
-                "arcanedev/laravel-lang": "Translations manager and checker for Laravel 5",
-                "overtrue/laravel-lang": "Command to add languages in your project"
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "caouecs",
-                    "email": "caouecs@caouecs.net"
-                }
-            ],
-            "description": "Languages for Laravel",
-            "keywords": [
-                "lang",
-                "languages",
-                "laravel",
-                "lpm"
-            ],
-            "time": "2018-11-22T19:30:58+00:00"
-        },
         {
             "name": "dnoegel/php-xdg-base-dir",
             "version": "0.1",
@@ -839,12 +676,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastiaanspeck/laravel-sportmonks-soccer.git",
-                "reference": "077c3e46b6e941278c4cbeadd1082cd5b10b85ac"
+                "reference": "e715a8e36491605fb37d85e18df5f95dd2fe823e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastiaanspeck/laravel-sportmonks-soccer/zipball/077c3e46b6e941278c4cbeadd1082cd5b10b85ac",
-                "reference": "077c3e46b6e941278c4cbeadd1082cd5b10b85ac",
+                "url": "https://api.github.com/repos/sebastiaanspeck/laravel-sportmonks-soccer/zipball/e715a8e36491605fb37d85e18df5f95dd2fe823e",
+                "reference": "e715a8e36491605fb37d85e18df5f95dd2fe823e",
                 "shasum": ""
             },
             "require": {
@@ -898,7 +735,7 @@
             "support": {
                 "source": "https://github.com/sebastiaanspeck/laravel-sportmonks-soccer/tree/master"
             },
-            "time": "2019-01-26T14:39:22+00:00"
+            "time": "2019-01-26T16:26:22+00:00"
         },
         {
             "name": "laravel/framework",
@@ -3815,6 +3652,126 @@
     ],
     "packages-dev": [
         {
+            "name": "arcanedev/laravel-lang",
+            "version": "5.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ARCANEDEV/LaravelLang.git",
+                "reference": "20d70ac58e300b603d1925439f9b8f0c999613fc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ARCANEDEV/LaravelLang/zipball/20d70ac58e300b603d1925439f9b8f0c999613fc",
+                "reference": "20d70ac58e300b603d1925439f9b8f0c999613fc",
+                "shasum": ""
+            },
+            "require": {
+                "arcanedev/support": "~4.4.0",
+                "caouecs/laravel-lang": "~3.0",
+                "php": ">=7.1.3"
+            },
+            "require-dev": {
+                "mockery/mockery": "~1.1",
+                "orchestra/testbench": "~3.7.0",
+                "phpunit/phpcov": "~5.0",
+                "phpunit/phpunit": "~7.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Arcanedev\\LaravelLang\\LaravelLangServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Arcanedev\\LaravelLang\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "ARCANEDEV",
+                    "email": "arcanedev.maroc@gmail.com",
+                    "homepage": "https://github.com/arcanedev-maroc",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Translations manager and checker for Laravel 5 based on 'caouecs/laravel4-lang' package.",
+            "homepage": "https://github.com/ARCANEDEV/LaravelLang",
+            "keywords": [
+                "arcanedev",
+                "lang",
+                "languages",
+                "laravel",
+                "localisation",
+                "localization",
+                "trans",
+                "translations",
+                "validations"
+            ],
+            "time": "2018-09-13T12:06:50+00:00"
+        },
+        {
+            "name": "arcanedev/support",
+            "version": "4.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ARCANEDEV/Support.git",
+                "reference": "9f4d9947563c6bec10ea7fa7954129e012216af9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ARCANEDEV/Support/zipball/9f4d9947563c6bec10ea7fa7954129e012216af9",
+                "reference": "9f4d9947563c6bec10ea7fa7954129e012216af9",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/filesystem": "~5.7.0",
+                "illuminate/support": "~5.7.0",
+                "php": ">=7.1.3"
+            },
+            "require-dev": {
+                "orchestra/testbench": "~3.7.0",
+                "phpunit/phpcov": "~5.0",
+                "phpunit/phpunit": "~7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Arcanedev\\Support\\": "src/"
+                },
+                "files": [
+                    "constants.php",
+                    "helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "ARCANEDEV",
+                    "email": "arcanedev.maroc@gmail.com",
+                    "homepage": "https://github.com/arcanedev-maroc"
+                }
+            ],
+            "description": "ARCANEDEV Support Helpers",
+            "homepage": "https://github.com/ARCANEDEV/Support",
+            "keywords": [
+                "arcanedev",
+                "arcanesoft",
+                "laravel",
+                "support"
+            ],
+            "time": "2018-09-04T17:19:43+00:00"
+        },
+        {
             "name": "barryvdh/laravel-ide-helper",
             "version": "v2.5.3",
             "source": {
@@ -3997,6 +3954,49 @@
                 "laravel-dump-server"
             ],
             "time": "2018-10-04T07:22:24+00:00"
+        },
+        {
+            "name": "caouecs/laravel-lang",
+            "version": "3.0.59",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/caouecs/Laravel-lang.git",
+                "reference": "c74446c1253e2a48541cb6cc5d9e2ea008f16634"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/caouecs/Laravel-lang/zipball/c74446c1253e2a48541cb6cc5d9e2ea008f16634",
+                "reference": "c74446c1253e2a48541cb6cc5d9e2ea008f16634",
+                "shasum": ""
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.10"
+            },
+            "suggest": {
+                "ablunier/laravel-lang-installer": "Command for easily add languages to a Laravel project",
+                "andrey-helldar/laravel-lang-publisher": "Easy installation and update of translation files for your project",
+                "arcanedev/laravel-lang": "Translations manager and checker for Laravel 5",
+                "overtrue/laravel-lang": "Command to add languages in your project"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "caouecs",
+                    "email": "caouecs@caouecs.net"
+                }
+            ],
+            "description": "Languages for Laravel",
+            "keywords": [
+                "lang",
+                "languages",
+                "laravel",
+                "lpm"
+            ],
+            "time": "2018-11-22T19:30:58+00:00"
         },
         {
             "name": "composer/ca-bundle",
@@ -5774,6 +5774,68 @@
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
             "time": "2019-01-03T09:07:35+00:00"
+        },
+        {
+            "name": "themsaid/laravel-langman",
+            "version": "v1.3.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/themsaid/laravel-langman.git",
+                "reference": "27cdaa7eca53a0fe7a54c413285de6112f3166de"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/themsaid/laravel-langman/zipball/27cdaa7eca53a0fe7a54c413285de6112f3166de",
+                "reference": "27cdaa7eca53a0fe7a54c413285de6112f3166de",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/console": "~5.1",
+                "illuminate/filesystem": "~5.1",
+                "illuminate/support": "~5.1",
+                "php": "^5.5.9 || ^7.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "~0.9.4",
+                "orchestra/database": "~3.0",
+                "orchestra/testbench": "~3.0",
+                "phpunit/phpunit": "^4.8 || ^5.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Themsaid\\Langman\\LangmanServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Themsaid\\Langman\\": "src"
+                },
+                "classmap": [
+                    "tests"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mohamed Said",
+                    "email": "theMohamedSaid@gmail.com",
+                    "homepage": "https://themsaid.github.io"
+                }
+            ],
+            "description": "Manage language files with ease.",
+            "homepage": "https://github.com/themsaid/laravel-langman",
+            "keywords": [
+                "laravel",
+                "localization",
+                "multilingual"
+            ],
+            "time": "2017-08-06T15:02:00+00:00"
         },
         {
             "name": "webmozart/assert",
