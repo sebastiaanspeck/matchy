@@ -65,6 +65,9 @@
                             case("AET"):
                                 $scoreLine = $livescore->scores->localteam_score . " - " . $livescore->scores->visitorteam_score . "\n(ET)";
                                 break;
+                            case("NS"):
+                                $scoreLine = " - ";
+                                break;
                             default:
                                 $scoreLine = $livescore->scores->localteam_score . " - " . $livescore->scores->visitorteam_score;
                                 break;

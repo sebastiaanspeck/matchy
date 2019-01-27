@@ -67,6 +67,9 @@
                         case("AET"):
                             $scoreLine = $fixture->scores->localteam_score . " - " . $fixture->scores->visitorteam_score . "\n(ET)";
                             break;
+                        case("NS"):
+                            $scoreLine = " - ";
+                            break;
                         default:
                             $scoreLine = $fixture->scores->localteam_score . " - " . $fixture->scores->visitorteam_score;
                             break;

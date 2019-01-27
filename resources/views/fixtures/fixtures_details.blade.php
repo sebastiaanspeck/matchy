@@ -744,6 +744,9 @@
                                 case("AET"):
                                     $scoreLine = $h2h_fixture->scores->localteam_score . " - " . $h2h_fixture->scores->visitorteam_score . "\n(ET)";
                                     break;
+                                case("NS"):
+                                    $scoreLine = " - ";
+                                    break;
                                 default:
                                     $scoreLine = $h2h_fixture->scores->localteam_score . " - " . $h2h_fixture->scores->visitorteam_score;
                                     break;
