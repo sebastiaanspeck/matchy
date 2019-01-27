@@ -79,11 +79,7 @@ class SoccerAPIController extends BaseController
         $teams = self::makeCall('teams_by_season_id', 'country,coach,stats,venue', $league->current_season_id);
 
         usort($teams, function ($item1, $item2) {
-            if ($item1->country->data->name == $item2->country->data->name) {
-                return $item1->name <=> $item2->name;
-            }
-
-            return $item1->country->data->name <=> $item2->country->data->name;
+            return $item1->name <=> $item2->name;
         });
 
         $topscorers = [];
@@ -174,7 +170,7 @@ class SoccerAPIController extends BaseController
                 usort($livescores, function ($item1, $item2) {
                     if ($item1->league_id == $item2->league_id) {
                         if ($item1->time->starting_at->date_time == $item2->time->starting_at->date_time) {
-                            return $item2->time->minute <=> $item1->time->minute;
+                            return $item1->id <=> $item2->id;
                         }
 
                         return $item1->time->starting_at->date_time <=> $item2->time->starting_at->date_time;
@@ -191,7 +187,7 @@ class SoccerAPIController extends BaseController
                 usort($livescores, function ($item1, $item2) {
                     if ($item1->league_id == $item2->league_id) {
                         if ($item1->time->starting_at->date_time == $item2->time->starting_at->date_time) {
-                            return $item2->time->minute <=> $item1->time->minute;
+                            return $item2->id <=> $item1->id;
                         }
 
                         return $item1->time->starting_at->date_time <=> $item2->time->starting_at->date_time;
@@ -293,7 +289,7 @@ class SoccerAPIController extends BaseController
      */
     public function favoriteTeams(Request $request)
     {
-        $favorite_teams = (config('preferences.favorite_teams'));
+        $favorite_teams = config('preferences.favorite_teams');
 
         if(count($favorite_teams) == 1) {
             return redirect()->route('teamsDetails', ['id' => $favorite_teams[0]]);
