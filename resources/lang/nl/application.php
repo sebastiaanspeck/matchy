@@ -85,4 +85,8 @@ return [
     'H2H' => 'H2H',
     'Coach' => 'Coach',
     'msg_no_favorite_teams' => 'Geen favoriete teams gevonden of ingesteld.',
+    'msg_no_favorite_leagues' => 'Geen favoriete competities gevonden of ingesteld.',
+    'Favorites' => 'Favorieten',
+    'My favorite teams' => 'Mijn favoriete teams',
+    'My favorite leagues' => 'Mijn favoriete competities',
 ];
