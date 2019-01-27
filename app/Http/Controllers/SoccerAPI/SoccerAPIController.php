@@ -588,11 +588,7 @@ class SoccerAPIController extends BaseController
                 $response = SoccerAPI::livescores()->setInclude($include)->setLeagues($leagues)->today();
                 break;
             case 'livescores/now':
-                if ($include && $leagues) {
-                    $response = SoccerAPI::livescores()->setInclude($include)->setLeagues($leagues)->now();
-                    break;
-                }
-                $response = SoccerAPI::livescores()->now();
+                $response = SoccerAPI::livescores()->setInclude($include)->setLeagues($leagues)->now();
                 break;
             case 'leagues':
                 $response = SoccerAPI::leagues()->setInclude($include)->all();
