@@ -11,9 +11,9 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller as BaseController;
+use Jenssegers\Agent\Agent;
 use Log;
 use Sportmonks\SoccerAPI\Facades\SoccerAPI;
-use Jenssegers\Agent\Agent;
 
 /**
  * Class SoccerAPIController.
@@ -24,7 +24,6 @@ class SoccerAPIController extends BaseController
 
     /**
      * @param \Illuminate\Http\Request $request
-     *
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -66,7 +65,6 @@ class SoccerAPIController extends BaseController
     /**
      * @param $leagueId
      * @param \Illuminate\Http\Request $request
-     *
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -155,7 +153,6 @@ class SoccerAPIController extends BaseController
      * @param $type
      * @param \Illuminate\Http\Request $request
      *
-     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      */
     public function livescores($type, Request $request)
@@ -212,7 +209,6 @@ class SoccerAPIController extends BaseController
     /**
      * @param \Illuminate\Http\Request $request
      *
-     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function fixturesByDate(Request $request)
@@ -248,7 +244,6 @@ class SoccerAPIController extends BaseController
     /**
      * @param $fixtureId
      *
-     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function fixturesDetails($fixtureId)
@@ -266,7 +261,6 @@ class SoccerAPIController extends BaseController
     /**
      * @param $teamId
      * @param \Illuminate\Http\Request $request
-     *
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -294,6 +288,7 @@ class SoccerAPIController extends BaseController
 
     /**
      * @param Request $request
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function favoriteTeams(Request $request)
@@ -301,13 +296,13 @@ class SoccerAPIController extends BaseController
         $deviceType = self::getDeviceType();
         $favorite_teams = config('preferences.favorite_teams');
 
-        if(count($favorite_teams) == 1) {
+        if (count($favorite_teams) == 1) {
             return redirect()->route('teamsDetails', ['id' => $favorite_teams[0]]);
         }
 
-        $teams = array();
+        $teams = [];
 
-        foreach($favorite_teams as $teamId) {
+        foreach ($favorite_teams as $teamId) {
             $teams[] = self::makeCall('team_by_id', 'country,coach,venue', $teamId)->data;
         }
 
@@ -329,8 +324,10 @@ class SoccerAPIController extends BaseController
             'teams' => $paginatedData,
         ]);
     }
+
     /**
      * @param Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function favoriteLeagues(Request $request)
@@ -338,13 +335,13 @@ class SoccerAPIController extends BaseController
         $deviceType = self::getDeviceType();
         $favorite_leagues = config('preferences.favorite_leagues');
 
-        if(count($favorite_leagues) == 1) {
+        if (count($favorite_leagues) == 1) {
             return redirect()->route('leaguesDetails', ['id' => $favorite_leagues[0]]);
         }
 
-        $leagues= array();
+        $leagues = [];
 
-        foreach($favorite_leagues as $leagueId) {
+        foreach ($favorite_leagues as $leagueId) {
             $leagues[] = self::makeCall('league_by_id', 'country,season', $leagueId)->data;
         }
 
@@ -359,7 +356,7 @@ class SoccerAPIController extends BaseController
             }
         }
 
-        if(count($leagues) == 1) {
+        if (count($leagues) == 1) {
             return redirect()->route('leaguesDetails', ['id' => $leagues[0]->id]);
         }
 
@@ -381,7 +378,6 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     *
      * @return int
      */
     public function countLivescores()
@@ -581,14 +577,14 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param string $type
+     * @param string      $type
      * @param string|null $include
      * @param string|null $id
      * @param string|null $leagues
      * @param string|null $date
      * @param string|null $localteam_id
      * @param string|null $visitorteam_id
-     * @param bool $abort
+     * @param bool        $abort
      *
      * @return \Exception|false|ClientException|mixed|\Psr\Http\Message\ResponseInterface|string
      */
@@ -649,6 +645,7 @@ class SoccerAPIController extends BaseController
 
     /**
      * @param $file
+     *
      * @return string
      */
     public static function getTeamLogo($file)
@@ -661,7 +658,8 @@ class SoccerAPIController extends BaseController
 
             return $team_logo;
         }
-        return "/images/team_logos/16/Unknown.png";
+
+        return '/images/team_logos/16/Unknown.png';
     }
 
     /**
@@ -669,48 +667,49 @@ class SoccerAPIController extends BaseController
      * @param $new_width
      * @param $new_height
      * @param $image_name
+     *
      * @return string
      */
     public static function resizeTeamLogo($file, $image_name, $new_width, $new_height)
     {
         $mime = getimagesize($file);
 
-        if($mime['mime']=='image/png') {
+        if ($mime['mime'] == 'image/png') {
             $src_img = imagecreatefrompng($file);
-        } else if($mime['mime']=='image/jpg' || $mime['mime']=='image/jpeg' || $mime['mime']=='image/pjpeg') {
+        } elseif ($mime['mime'] == 'image/jpg' || $mime['mime'] == 'image/jpeg' || $mime['mime'] == 'image/pjpeg') {
             $src_img = imagecreatefromjpeg($file);
         } else {
             return $file;
         }
 
-        $old_x          =   imagesx($src_img);
-        $old_y          =   imagesy($src_img);
+        $old_x = imagesx($src_img);
+        $old_y = imagesy($src_img);
 
-        if($old_x > $old_y) {
-            $thumb_w    =   $new_width;
-            $thumb_h    =   $old_y*($new_height/$old_x);
-        } else if($old_x < $old_y) {
-            $thumb_w    =   $old_x*($new_width/$old_y);
-            $thumb_h    =   $new_height;
+        if ($old_x > $old_y) {
+            $thumb_w = $new_width;
+            $thumb_h = $old_y * ($new_height / $old_x);
+        } elseif ($old_x < $old_y) {
+            $thumb_w = $old_x * ($new_width / $old_y);
+            $thumb_h = $new_height;
         } else {
-            $thumb_w    =   $new_width;
-            $thumb_h    =   $new_height;
+            $thumb_w = $new_width;
+            $thumb_h = $new_height;
         }
 
-        $dst_img        =   imagecreatetruecolor($thumb_w, $thumb_h);
+        $dst_img = imagecreatetruecolor($thumb_w, $thumb_h);
 
         imagealphablending($dst_img, false);
         imagesavealpha($dst_img, true);
         $transparent = imagecolorallocatealpha($dst_img, 255, 255, 255, 127);
         imagefilledrectangle($dst_img, 0, 0, $thumb_w, $thumb_h, $transparent);
 
-        imagecopyresampled($dst_img,$src_img,0,0,0,0,$thumb_w,$thumb_h,$old_x,$old_y);
+        imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $thumb_w, $thumb_h, $old_x, $old_y);
 
         // New save location
         $new_thumb_loc = "images/team_logos/{$new_height}/{$image_name}";
 
-        if($mime['mime']=='image/png') {
-            imagepng($dst_img,$new_thumb_loc,9);
+        if ($mime['mime'] == 'image/png') {
+            imagepng($dst_img, $new_thumb_loc, 9);
         }
 
         imagedestroy($dst_img);

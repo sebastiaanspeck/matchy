@@ -44,12 +44,17 @@ class FilebaseSetup extends Command
     {
         $db = new \Filebase\Database(['dir' => 'database/filebase']);
 
-        $item = $db->get('preferences');
+        $preferences = $db->get('preferences');
 
-        $item->save();
+        $preferences->season = '2018/2019';
+        $preferences->show_inactive_leagues = false;
+        $preferences->favorite_teams = [];
+        $preferences->favorite_leagues = [];
+
+        $preferences->save();
 
         dump($db);
-        dump($item);
+        dump($preferences);
 
         return;
     }
