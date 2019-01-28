@@ -16,6 +16,7 @@
         "ext-json": "^1",
         "fideloper/proxy": "^4.0",
         "jakeasmith/http_build_url": "^1",
+        "jenssegers/agent": "^2.6",
         "kirill-latish/laravel-sportmonks-soccer": "dev-master",
         "laravel/framework": "5.7.*",
         "laravel/tinker": "^1.0",

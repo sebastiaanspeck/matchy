@@ -1,5 +1,7 @@
 <?php
 
+use Jenssegers\Agent\Agent;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,7 +14,11 @@
 */
 
 Route::get('/', function () {
-    return view('home');
+    $agent = new Agent();
+
+    $deviceType = $agent->deviceType();
+
+    return view("{$deviceType}/home");
 });
 
 // Leagues

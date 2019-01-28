@@ -13,6 +13,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller as BaseController;
 use Log;
 use Sportmonks\SoccerAPI\Facades\SoccerAPI;
+use Jenssegers\Agent\Agent;
 
 /**
  * Class SoccerAPIController.
@@ -29,6 +30,8 @@ class SoccerAPIController extends BaseController
      */
     public function allLeagues(Request $request)
     {
+        $deviceType = self::getDeviceType();
+
         $leagues = self::makeCall('leagues', 'country,season');
 
         if (!config('preferences.show_inactive_leagues')) {
@@ -56,7 +59,7 @@ class SoccerAPIController extends BaseController
 
         $paginatedData->setPath($url);
 
-        return view('leagues/leagues', ['leagues' => $paginatedData]);
+        return view("{$deviceType}/leagues/leagues", ['leagues' => $paginatedData]);
     }
 
     /**
@@ -68,6 +71,7 @@ class SoccerAPIController extends BaseController
      */
     public function leaguesDetails($leagueId, Request $request)
     {
+        $deviceType = self::getDeviceType();
         $dateFormat = self::getDateFormat();
 
         $league = self::makeCall('league_by_id', 'country,season', $leagueId)->data;
@@ -135,7 +139,7 @@ class SoccerAPIController extends BaseController
             $upcomingFixtures = self::addPagination($upcomingFixtures, $numberOfMatches);
         }
 
-        return view('leagues/leagues_details', [
+        return view("{$deviceType}/leagues/leagues_details", [
             'league'            => $league,
             'standings_raw'     => $standingsRaw,
             'last_fixtures'     => $lastFixtures,
@@ -155,6 +159,7 @@ class SoccerAPIController extends BaseController
      */
     public function livescores($type, Request $request)
     {
+        $deviceType = self::getDeviceType();
         $dateFormat = self::getDateFormat();
 
         $leagues = '';
@@ -179,7 +184,7 @@ class SoccerAPIController extends BaseController
                     return $item1->league_id <=> $item2->league_id;
                 });
 
-                return view('livescores/livescores_today', ['livescores' => $livescores, 'date_format' => $dateFormat]);
+                return view("{$deviceType}/livescores/livescores_today", ['livescores' => $livescores, 'date_format' => $dateFormat]);
                 break;
             case 'now':
                 $livescores = self::makeCall('livescores/now', 'league,localTeam,visitorTeam,round,stage', $leagues);
@@ -196,7 +201,7 @@ class SoccerAPIController extends BaseController
                     return $item1->league_id <=> $item2->league_id;
                 });
 
-                return view('livescores/livescores_now', ['livescores' => $livescores, 'date_format' => $dateFormat]);
+                return view("{$deviceType}/livescores/livescores_now", ['livescores' => $livescores, 'date_format' => $dateFormat]);
                 break;
             default:
                 return '';
@@ -211,6 +216,7 @@ class SoccerAPIController extends BaseController
      */
     public function fixturesByDate(Request $request)
     {
+        $deviceType = self::getDeviceType();
         $dateFormat = self::getDateFormat();
 
         $date = self::getDateFromRequest($request);
@@ -235,7 +241,7 @@ class SoccerAPIController extends BaseController
             return $item1->league_id <=> $item2->league_id;
         });
 
-        return view('fixtures/fixtures_by_date', ['fixtures' => $fixtures, 'date' => $date, 'date_format' => $dateFormat]);
+        return view("{$deviceType}/fixtures/fixtures_by_date", ['fixtures' => $fixtures, 'date' => $date, 'date_format' => $dateFormat]);
     }
 
     /**
@@ -246,13 +252,14 @@ class SoccerAPIController extends BaseController
      */
     public function fixturesDetails($fixtureId)
     {
+        $deviceType = self::getDeviceType();
         $dateFormat = self::getDateFormat();
 
         $fixture = self::makeCall('fixture_by_id', 'localTeam,visitorTeam,lineup.player,bench.player,sidelined.player,stats,comments,highlights,league,season,referee,events,venue,localCoach,visitorCoach', $fixtureId)->data;
 
         $h2hFixtures = self::makeCall('h2h', 'localTeam,visitorTeam,league,season,round,stage', null, null, null, $fixture->localteam_id, $fixture->visitorteam_id);
 
-        return view('fixtures/fixtures_details', ['fixture' => $fixture, 'h2h_fixtures' => $h2hFixtures, 'date_format' => $dateFormat]);
+        return view("{$deviceType}/fixtures/fixtures_details", ['fixture' => $fixture, 'h2h_fixtures' => $h2hFixtures, 'date_format' => $dateFormat]);
     }
 
     /**
@@ -264,6 +271,7 @@ class SoccerAPIController extends BaseController
      */
     public function teamsDetails($teamId, Request $request)
     {
+        $deviceType = self::getDeviceType();
         $dateFormat = self::getDateFormat();
 
         $team = self::makeCall('team_by_id', 'squad.player,coach,latest.league,latest.localTeam,latest.visitorTeam,latest.round,latest.stage,upcoming.league,upcoming.localTeam,upcoming.visitorTeam,upcoming.round,upcoming.stage', $teamId)->data;
@@ -274,7 +282,7 @@ class SoccerAPIController extends BaseController
         $lastFixtures = self::addPagination($team->latest->data, $numberOfMatches);
         $upcomingFixtures = self::addPagination($team->upcoming->data, $numberOfMatches);
 
-        return view('teams/teams_details', [
+        return view("{$deviceType}/teams/teams_details", [
             'team'              => $team,
             'coach'             => $coach,
             'last_fixtures'     => $lastFixtures,
@@ -289,6 +297,7 @@ class SoccerAPIController extends BaseController
      */
     public function favoriteTeams(Request $request)
     {
+        $deviceType = self::getDeviceType();
         $favorite_teams = config('preferences.favorite_teams');
 
         if(count($favorite_teams) == 1) {
@@ -315,7 +324,7 @@ class SoccerAPIController extends BaseController
 
         $paginatedData->setPath($url);
 
-        return view('teams/favorite_teams', [
+        return view("{$deviceType}/teams/favorite_teams", [
             'teams' => $paginatedData,
         ]);
     }
@@ -325,6 +334,7 @@ class SoccerAPIController extends BaseController
      */
     public function favoriteLeagues(Request $request)
     {
+        $deviceType = self::getDeviceType();
         $favorite_leagues = config('preferences.favorite_leagues');
 
         if(count($favorite_leagues) == 1) {
@@ -366,7 +376,7 @@ class SoccerAPIController extends BaseController
 
         $paginatedData->setPath($url);
 
-        return view('leagues/favorite_leagues', ['leagues' => $paginatedData]);
+        return view("{$deviceType}/leagues/favorite_leagues", ['leagues' => $paginatedData]);
     }
 
     /**
@@ -706,5 +716,15 @@ class SoccerAPIController extends BaseController
         imagedestroy($src_img);
 
         return $new_thumb_loc;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getDeviceType()
+    {
+        $agent = new Agent();
+
+        return $agent->deviceType();
     }
 }
