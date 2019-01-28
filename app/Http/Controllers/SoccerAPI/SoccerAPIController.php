@@ -31,6 +31,7 @@ class SoccerAPIController extends BaseController
     public function allLeagues(Request $request)
     {
         $deviceType = self::getDeviceType();
+        self::getDatabase();
 
         $leagues = self::makeCall('leagues', 'country,season');
 
@@ -725,6 +726,23 @@ class SoccerAPIController extends BaseController
     {
         $agent = new Agent();
 
-        return $agent->deviceType();
+        if ($agent->isDesktop()) {
+            return "desktop";
+        } elseif ($agent->isPhone()) {
+            return "phone";
+        } elseif ($agent->isTablet()) {
+            return "tablet";
+        } elseif ($agent->isRobot()) {
+            return "robot";
+        }
+
+        return "other";
+    }
+
+    public static function getDatabase()
+    {
+        $db = new \Filebase\Database(['dir' => base_path() . '/database/filebase']);
+
+        dump($db);
     }
 }
