@@ -11,7 +11,7 @@
                 <p style="color:red">@lang("application.msg_too_much_results", ["count" => count($fixtures)])</p>
             @endif
 
-            @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; @endphp
+            @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; $favorite_leagues = \App\Http\Controllers\Filebase\FilebaseController::getField('favorite_leagues'); @endphp
             @foreach($fixtures as $fixture)
                 @php
                     $league = $fixture->league->data;
@@ -77,6 +77,11 @@
 
                     $homeTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($homeTeam->logo_path);
                     $awayTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($awayTeam->logo_path);
+
+                    $favorite_league = "far";
+                    if (in_array($league->id, $favorite_leagues)) {
+                        $favorite_league = "fas";
+                    }
                 @endphp
                 @if($fixture->league_id == $last_league_id)
                     @if(isset($fixture->round))
@@ -115,6 +120,7 @@
                             @if($last_round_id !== $fixture->round->data->name)
                                 <tr>
                                     <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">
+                                        <a href="{{ route("setFavoriteLeagues", ["id" => $league->id]) }}"><i class="{{ $favorite_league }} fa-star fa-fw" aria-hidden="true"></i></a>&nbsp;&nbsp;
                                         <a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }}</a> -
                                         @if($fixture->stage->data->name !== "Regular Season")
                                             {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $fixture->stage->data->name) }} -
@@ -124,7 +130,11 @@
                             @endif
                         @elseif($last_stage_id !== $fixture->stage->data->name)
                             <tr>
-                                <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }}</a> - {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $fixture->stage->data->name) }}</td>
+                                <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">
+                                    <a href="{{ route("setFavoriteLeagues", ["id" => $league->id]) }}"><i class="{{ $favorite_league }} fa-star fa-fw" aria-hidden="true"></i></a>&nbsp;&nbsp;
+                                    <a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }}</a> -
+                                    {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $fixture->stage->data->name) }}
+                                </td>
                             </tr>
                         @endif
                         <thead style="visibility: collapse">

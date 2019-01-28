@@ -125,9 +125,20 @@
 
             isset($fixture->referee->data) ? $referee = $fixture->referee->data : $referee = null;
             isset($fixture->venue->data) ? $venue = $fixture->venue->data : $venue = null;
+
+            $favorite_teams = \App\Http\Controllers\Filebase\FilebaseController::getField('favorite_teams');
+            $favorite_homeTeam = "far";
+            /** @var array $favorite_teams */
+            if (in_array($homeTeam->id, $favorite_teams)) {
+                $favorite_homeTeam = "fas";
+            }
+
+            $favorite_awayTeam = "far";
+            /** @var array $favorite_teams */
+            if (in_array($awayTeam->id, $favorite_teams)) {
+                $favorite_awayTeam = "fas";
+            }
         @endphp
-
-
         <div id="heading" style="text-align: center">
             <h3><a href=" {{ route("leaguesDetails", ["id" => $league->id]) }} "> {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }} </a></h3>
                 <table style="width:100%">
@@ -140,9 +151,9 @@
                     @endif
                     <tr style="height: 10px"></tr>
                     <tr>
-                        <td width="49%" style="vertical-align: top"><h5><a href =" {{route("teamsDetails", ["id" => $homeTeam->id])}} "> {{$homeTeam->name}} </a></h5></td>
+                        <td width="49%" style="vertical-align: top"><h5><a href="{{ route("setFavoriteTeams", ["id" => $homeTeam->id]) }}"><i class="{{ $favorite_homeTeam }} fa-star fa-fw" aria-hidden="true"></i></a>&nbsp;&nbsp;<a href="{{ route("teamsDetails", ["id" => $homeTeam->id]) }}">{{ $homeTeam->name }}</a></h5></td>
                         <td></td>
-                        <td width="49%" style="vertical-align: top"><h5><a href =" {{route("teamsDetails", ["id" => $awayTeam->id])}} "> {{$awayTeam->name}} </a></h5></td>
+                        <td width="49%" style="vertical-align: top"><h5><i class="{{ $favorite_awayTeam }} fa-star fa-fw"></i>&nbsp;&nbsp;<a href =" {{route("teamsDetails", ["id" => $awayTeam->id])}} ">{{ $awayTeam->name }}</a></h5></td>
                     </tr>
                 </table>
 

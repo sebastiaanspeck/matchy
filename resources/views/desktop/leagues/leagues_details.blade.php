@@ -3,7 +3,7 @@
 @section("content")
     <div class="container">
         @php
-            $favorite_leagues = Config::get('preferences.favorite_leagues');
+            $favorite_leagues = \App\Http\Controllers\Filebase\FilebaseController::getField('favorite_leagues');
             $favorite_league = "far";
             if (in_array($league->id, $favorite_leagues)) {
                 $favorite_league = "fas";
@@ -13,7 +13,7 @@
         <div id="heading" style="text-align: center">
             <table width="100%">
                 <tr>
-                    <td><h3><i class="{{ $favorite_league }} fa-star fa-fw"></i>&nbsp;&nbsp;{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }} - {{$league->season->data->name}}</h3></td>
+                    <td><h3><a href="{{ route("setFavoriteLeagues", ["id" => $league->id]) }}"><i class="{{ $favorite_league }} fa-star fa-fw fa-xs" aria-hidden="true"></i></a>&nbsp;&nbsp;{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }} - {{$league->season->data->name}}</h3></td>
                 </tr>
             </table>
         </div>

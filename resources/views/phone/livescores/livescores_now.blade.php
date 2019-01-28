@@ -14,7 +14,7 @@
                 @if(count($livescores) >= 100)
                     <p style="color:red">@lang("application.msg_too_much_results", ["count" => count($livescores)])</p>
                 @endif
-                @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; @endphp
+                @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; $favorite_leagues = \App\Http\Controllers\Filebase\FilebaseController::getField('favorite_leagues'); @endphp
                 @foreach($livescores as $livescore)
                     @if(in_array($livescore->time->status, array("NS", "FT", "FT_PEN", "AET", "CANCL", "POSTP", "INT", "ABAN", "SUSP", "AWARDED", "DELAYED", "TBA", "WO", "AU")))
                         @continue
@@ -55,6 +55,11 @@
 
                         $homeTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($homeTeam->logo_path);
                         $awayTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($awayTeam->logo_path);
+
+                        $favorite_league = "far";
+                        if (in_array($league->id, $favorite_leagues)) {
+                            $favorite_league = "fas";
+                        }
                     @endphp
                     @if($livescore->league_id == $last_league_id)
                         @if(isset($livescore->round))
@@ -88,6 +93,7 @@
                                 @if($last_round_id !== $livescore->round->data->name)
                                     <tr>
                                         <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">
+                                            <a href="{{ route("setFavoriteLeagues", ["id" => $league->id]) }}"><i class="{{ $favorite_league }} fa-star fa-fw" aria-hidden="true"></i></a>
                                             <a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{ Lang::has("leagues." . $league->name) ? trans("leagues." . $league->name) : Log::critical("Missing league translation for: " . $league->name)   . $league->name }}</a> -
                                             @if($livescore->stage->data->name !== "Regular Season")
                                                 {{ Lang::has("cup_stages.". $livescore->stage->data->name) ? trans("cup_stages.". $livescore->stage->data->name) : Log::critical("Missing cup-stage translation for: " . $livescore->stage->data->name) . $livescore->stage->data->name }} -
@@ -97,7 +103,11 @@
                                 @endif
                             @elseif($last_stage_id !== $livescore->stage->data->name)
                                 <tr>
-                                    <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{ Lang::has("leagues." . $league->name) ? trans("leagues." . $league->name) : Log::critical("Missing league translation for: " . $league->name)   . $league->name }}</a> - {{ Lang::has("cup_stages.". $livescore->stage->data->name) ? trans("cup_stages.". $livescore->stage->data->name) : Log::critical("Missing cup-stage translation for: " . $livescore->stage->data->name) . $livescore->stage->data->name }}</td>
+                                    <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">
+                                        <a href="{{ route("setFavoriteLeagues", ["id" => $league->id]) }}"><i class="{{ $favorite_league }} fa-star fa-fw" aria-hidden="true"></i></a>
+                                        <a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{ Lang::has("leagues." . $league->name) ? trans("leagues." . $league->name) : Log::critical("Missing league translation for: " . $league->name)   . $league->name }}</a> -
+                                        {{ Lang::has("cup_stages.". $livescore->stage->data->name) ? trans("cup_stages.". $livescore->stage->data->name) : Log::critical("Missing cup-stage translation for: " . $livescore->stage->data->name) . $livescore->stage->data->name }}
+                                    </td>
                                 </tr>
                             @endif
                             <thead style="visibility: collapse">
