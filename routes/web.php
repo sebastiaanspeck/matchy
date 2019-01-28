@@ -14,7 +14,18 @@ use Jenssegers\Agent\Agent;
 */
 
 Route::get('/', function () {
-    $deviceType = self::getDeviceType();
+    $agent = new Agent();
+    if ($agent->isDesktop()) {
+        $deviceType = "desktop";
+    } elseif ($agent->isPhone()) {
+        $deviceType = "phone";
+    } elseif ($agent->isTablet()) {
+        $deviceType = "tablet";
+    } elseif ($agent->isRobot()) {
+        $deviceType = "robot";
+    } else {
+        $deviceType = "other";
+    }
 
     return view("{$deviceType}/home");
 });
@@ -37,16 +48,3 @@ Route::get('/teams/{id}', 'SoccerAPI\SoccerAPIController@teamsDetails')->name('t
 Route::get('/favorite_teams', 'SoccerAPI\SoccerAPIController@favoriteTeams')->name('favoriteTeams');
 Route::get('/favorite_leagues', 'SoccerAPI\SoccerAPIController@favoriteLeagues')->name('favoriteLeagues');
 
-public static function getDeviceType() {
-    $agent = new Agent();
-    if ($agent->isDesktop()) {
-        return "desktop";
-    } elseif ($agent->isPhone()) {
-        return "phone";
-    } elseif ($agent->isTablet()) {
-        return "tablet";
-    } elseif ($agent->isRobot()) {
-        return "robot";
-    }
-    return "other";    
-}    
