@@ -151,6 +151,7 @@ return [
          * Package Service Providers...
          */
         Sportmonks\SoccerAPI\SoccerAPIServiceProvider::class,
+        Jenssegers\Agent\AgentServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -160,8 +161,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\MatchyServiceProvider::class,
 
+        App\Providers\MatchyServiceProvider::class,
         App\Providers\LiveServiceProvider::class,
 
     ],
@@ -213,6 +214,7 @@ return [
         'URL'          => Illuminate\Support\Facades\URL::class,
         'Validator'    => Illuminate\Support\Facades\Validator::class,
         'View'         => Illuminate\Support\Facades\View::class,
+        'Agent'        => Jenssegers\Agent\Facades\Agent::class,
 
     ],
 
