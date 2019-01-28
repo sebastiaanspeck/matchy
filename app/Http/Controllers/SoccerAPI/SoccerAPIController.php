@@ -14,6 +14,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Jenssegers\Agent\Agent;
 use Log;
 use Sportmonks\SoccerAPI\Facades\SoccerAPI;
+use App\Http\Controllers\Filebase\FilebaseController;
 
 /**
  * Class SoccerAPIController.
@@ -30,13 +31,12 @@ class SoccerAPIController extends BaseController
     public function allLeagues(Request $request)
     {
         $deviceType = self::getDeviceType();
-        self::getDatabase();
 
         $leagues = self::makeCall('leagues', 'country,season');
 
-        if (!config('preferences.show_inactive_leagues')) {
+        if (!FilebaseController::getField('show_inactive_leagues')) {
             $currentYear = Carbon::now()->year;
-            $season = config('preferences.season');
+            $season = FilebaseController::getField('season');
 
             foreach ($leagues as $key => $league) {
                 if (!in_array($league->season->data->name, [$season, $currentYear])) {
@@ -290,11 +290,16 @@ class SoccerAPIController extends BaseController
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Filebase\Filesystem\FilesystemException
      */
     public function favoriteTeams(Request $request)
     {
         $deviceType = self::getDeviceType();
-        $favorite_teams = config('preferences.favorite_teams');
+        $favorite_teams = FilebaseController::getField('favorite_teams');
+
+        if ($favorite_teams[0] === "") {
+            return view("{$deviceType}/teams/favorite_leagues", ['teams' => []]);
+        }
 
         if (count($favorite_teams) == 1) {
             return redirect()->route('teamsDetails', ['id' => $favorite_teams[0]]);
@@ -329,11 +334,16 @@ class SoccerAPIController extends BaseController
      * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Filebase\Filesystem\FilesystemException
      */
     public function favoriteLeagues(Request $request)
     {
         $deviceType = self::getDeviceType();
-        $favorite_leagues = config('preferences.favorite_leagues');
+        $favorite_leagues = FilebaseController::getField('favorite_leagues');
+
+        if ($favorite_leagues[0] === "") {
+            return view("{$deviceType}/leagues/favorite_leagues", ['leagues' => []]);
+        }
 
         if (count($favorite_leagues) == 1) {
             return redirect()->route('leaguesDetails', ['id' => $favorite_leagues[0]]);
@@ -345,9 +355,9 @@ class SoccerAPIController extends BaseController
             $leagues[] = self::makeCall('league_by_id', 'country,season', $leagueId)->data;
         }
 
-        if (!config('preferences.show_inactive_leagues')) {
+        if (!FilebaseController::getField('show_inactive_leagues')) {
             $currentYear = Carbon::now()->year;
-            $season = config('preferences.season');
+            $season = FilebaseController::getField('season');
 
             foreach ($leagues as $key => $league) {
                 if (!in_array($league->season->data->name, [$season, $currentYear])) {
@@ -736,12 +746,5 @@ class SoccerAPIController extends BaseController
         }
 
         return "other";
-    }
-
-    public static function getDatabase()
-    {
-        $db = new \Filebase\Database(['dir' => base_path() . '/database/filebase']);
-
-        dump($db);
     }
 }
