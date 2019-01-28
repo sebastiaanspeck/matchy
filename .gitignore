@@ -34,3 +34,4 @@ config/soccerapi.php
 /_ide_helper.php
 /config/ide-helper.php
 /config/debug-server.php
+/database/filebase/preferences.json
