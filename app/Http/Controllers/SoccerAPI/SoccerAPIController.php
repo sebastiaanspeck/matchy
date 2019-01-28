@@ -298,7 +298,7 @@ class SoccerAPIController extends BaseController
         $favorite_teams = FilebaseController::getField('favorite_teams');
 
         if ($favorite_teams[0] === "") {
-            return view("{$deviceType}/teams/favorite_leagues", ['teams' => []]);
+            return view("{$deviceType}/teams/favorite_teams", ['teams' => []]);
         }
 
         if (count($favorite_teams) == 1) {
