@@ -109,8 +109,8 @@
                                     break;
                             }
 
-                            $homeTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($homeTeam->logo_path);
-                            $awayTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($awayTeam->logo_path);
+                            $homeTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($homeTeam->logo_path, 16, 16);
+                            $awayTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($awayTeam->logo_path, 16, 16);
                         @endphp
                         @if($last_fixture->league_id == $last_league_id)
                             @if(isset($last_fixture->round))
@@ -204,8 +204,8 @@
                                 Log::critical("Missing country translation for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
                             }
 
-                            $homeTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($homeTeam->logo_path);
-                            $awayTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($awayTeam->logo_path);
+                            $homeTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($homeTeam->logo_path, 16, 16);
+                            $awayTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($awayTeam->logo_path, 16, 16);
                         @endphp
                         @if($upcoming_fixture->league_id == $last_league_id)
                             @if(isset($upcoming_fixture->round))
@@ -276,7 +276,7 @@
                 @if(count($standings_raw) > 0)
                     @foreach($standings_raw as $standings)
                         @php $standing = $standings->standings->data; @endphp
-                        <table class="table table-light table-sm" style="width:100%">
+                        <table class="table table-light table-sm table-responsive">
                             @if(count($standings_raw) > 1)
                                 <caption>
                                 @if(strpos($standings->name, "Group") !== false)
@@ -288,15 +288,15 @@
                             @endif
                             <thead class="thead-dark">
                                 <tr>
-                                    <th scope="col" width="1%">@lang("application.No.")</th>
-                                    <th scope="col" width="35%">@lang("application.Team")</th>
-                                    <th scope="col">@lang("application.Played")</th>
-                                    <th scope="col">@lang("application.Won")</th>
-                                    <th scope="col">@lang("application.Draw")</th>
-                                    <th scope="col">@lang("application.Lost")</th>
-                                    <th scope="col" colspan="2">@lang("application.Goals")</th>
-                                    <th scope="col">@lang("application.Points")</th>
-                                    <th scope="col" width="13%">@lang("application.Form")</th>
+                                    <th scope="col" width="1%">#</th>
+                                    <th scope="col">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Team") }}</th>
+                                    <th scope="col">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "MP") }}</th>
+                                    <th scope="col">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "W") }}</th>
+                                    <th scope="col">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "D") }}</th>
+                                    <th scope="col">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "L") }}</th>
+                                    <th scope="col">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "G") }}</th>
+                                    <th scope="col">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Pts") }}</th>
+                                    <th scope="col" width="13%">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Form") }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -310,7 +310,7 @@
                                                 Log::critical("Missing country translation for: " . str_replace("countries.", "", $team->team_name) . " in " . app()->getLocale() . "/countries.php");
                                             }
 
-                                            $teamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($team->team->data->logo_path);
+                                            $teamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($team->team->data->logo_path, 16, 16);
                                         @endphp
                                         <tr>
                                             <td scope="row">{{$team->position}}</td>
@@ -320,7 +320,6 @@
                                             <td scope="row">{{$team->overall->draw}}</td>
                                             <td scope="row">{{$team->overall->lost}}</td>
                                             <td scope="row">{{$team->overall->goals_scored}}:{{$team->overall->goals_against}}</td>
-                                            <td scope="row">({{$team->total->goal_difference}})</td>
                                             <td scope="row">{{$team->points}}</td>
                                             @php $recent_forms = str_split($team->recent_form); @endphp
                                             <td scope="row">
@@ -389,7 +388,7 @@
                                             Log::critical("Missing country translation for: " . str_replace("countries.", "", $team->name) . " in " . app()->getLocale() . "/countries.php");
                                         }
 
-                                        $teamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($team->logo_path);
+                                        $teamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($team->logo_path, 16, 16);
                                     @endphp
                                     <td scope="row"><img src="/images/flags/shiny/16/{{$player->nationality}}.png" alt="countryflag">&nbsp;&nbsp;{{$player->common_name}}</td>
                                     <td scope="row"><a href ="{{route("teamsDetails", ["id" => $team->id])}}"><img src="{{ $teamLogo }}" alt="team_logo">&nbsp;&nbsp;{{$team->name}}</a></td>

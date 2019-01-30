@@ -53,8 +53,8 @@
                             $timeLine = date($date_format . " H:i", strtotime($livescore->time->starting_at->date_time));
                         }
 
-                        $homeTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($homeTeam->logo_path);
-                        $awayTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($awayTeam->logo_path);
+                        $homeTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($homeTeam->logo_path, 16, 16);
+                        $awayTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($awayTeam->logo_path, 16, 16);
 
                         $favorite_league = "far";
                         if (in_array($league->id, $favorite_leagues)) {

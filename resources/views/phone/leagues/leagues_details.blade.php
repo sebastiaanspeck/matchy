@@ -109,8 +109,8 @@
                                     break;
                             }
 
-                            $homeTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($homeTeam->logo_path);
-                            $awayTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($awayTeam->logo_path);
+                            $homeTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($homeTeam->logo_path, 16, 16);
+                            $awayTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($awayTeam->logo_path, 16, 16);
                         @endphp
                         @if($last_fixture->league_id == $last_league_id)
                             @if(isset($last_fixture->round))
@@ -204,8 +204,8 @@
                                 Log::critical("Missing country translation for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
                             }
 
-                            $homeTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($homeTeam->logo_path);
-                            $awayTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($awayTeam->logo_path);
+                            $homeTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($homeTeam->logo_path, 16, 16);
+                            $awayTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($awayTeam->logo_path, 16, 16);
                         @endphp
                         @if($upcoming_fixture->league_id == $last_league_id)
                             @if(isset($upcoming_fixture->round))
@@ -389,7 +389,7 @@
                                             Log::critical("Missing country translation for: " . str_replace("countries.", "", $team->name) . " in " . app()->getLocale() . "/countries.php");
                                         }
 
-                                        $teamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($team->logo_path);
+                                        $teamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($team->logo_path, 16, 16);
                                     @endphp
                                     <td scope="row"><img src="/images/flags/shiny/16/{{$player->nationality}}.png" alt="countryflag">&nbsp;&nbsp;{{$player->common_name}}</td>
                                     <td scope="row"><a href ="{{route("teamsDetails", ["id" => $team->id])}}"><img src="{{ $teamLogo }}" alt="team_logo">&nbsp;&nbsp;{{$team->name}}</a></td>
