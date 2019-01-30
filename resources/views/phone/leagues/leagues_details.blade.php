@@ -288,67 +288,32 @@
                             @endif
                             <thead class="thead-dark">
                                 <tr>
-                                    <th scope="col" width="1%">@lang("application.No.")</th>
-                                    <th scope="col" width="35%">@lang("application.Team")</th>
-                                    <th scope="col">@lang("application.Played")</th>
-                                    <th scope="col">@lang("application.Won")</th>
-                                    <th scope="col">@lang("application.Draw")</th>
-                                    <th scope="col">@lang("application.Lost")</th>
-                                    <th scope="col" colspan="2">@lang("application.Goals")</th>
-                                    <th scope="col">@lang("application.Points")</th>
-                                    <th scope="col" width="13%">@lang("application.Form")</th>
+                                    <th scope="col" width="1%">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "No.") }}</th>
+                                    <th scope="col" width="60%">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Team") }}</th>
+                                    <th scope="col">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "MP") }}</th>
+                                    <th scope="col" style="text-align: center">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "G") }}</th>
+                                    <th scope="col">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "P") }}</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                    @foreach($standing as $team)
-                                        @php
-                                            if($team->team->data->national_team == true) {
-                                                $team->team_name = trans("countries." . $team->team_name);
-                                            }
-                                            
-                                            if(strpos($team->team_name, "countries") !== false) {
-                                                Log::critical("Missing country translation for: " . str_replace("countries.", "", $team->team_name) . " in " . app()->getLocale() . "/countries.php");
-                                            }
+                                @foreach($standing as $team)
+                                    @php
+                                        if($team->team->data->national_team == true) {
+                                            $team->team_name = trans("countries." . $team->team_name);
+                                        }
 
-                                            $teamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($team->team->data->logo_path);
-                                        @endphp
-                                        <tr>
-                                            <td scope="row">{{$team->position}}</td>
-                                            <td scope="row"><a href ="{{route("teamsDetails", ["id" => $team->team_id])}}"><img src="{{ $teamLogo }}" alt="team_logo">&nbsp;&nbsp;{{$team->team_name}}</a></td>
-                                            <td scope="row">{{$team->overall->games_played}}</td>
-                                            <td scope="row">{{$team->overall->won}}</td>
-                                            <td scope="row">{{$team->overall->draw}}</td>
-                                            <td scope="row">{{$team->overall->lost}}</td>
-                                            <td scope="row">{{$team->overall->goals_scored}}:{{$team->overall->goals_against}}</td>
-                                            <td scope="row">({{$team->total->goal_difference}})</td>
-                                            <td scope="row">{{$team->points}}</td>
-                                            @php $recent_forms = str_split($team->recent_form); @endphp
-                                            <td scope="row">
-                                                @foreach($recent_forms as $recent_form)
-                                                    @switch($recent_form)
-                                                        @case("W")
-                                                            <span class="result-icon result-icon-w">@lang("application." . $recent_form)</span>
-                                                            @break
-                                                        @case("D")
-                                                            <span class="result-icon result-icon-d">@lang("application." . $recent_form)</span>
-                                                            @break
-                                                        @case("L")
-                                                            <span class="result-icon result-icon-l">@lang("application." . $recent_form)</span>
-                                                            @break
-                                                    @endswitch
-                                                @endforeach
-                                                @switch($team->status)
-                                                    @case("same")
-                                                        &nbsp;<i class="fa fa-caret-left"></i>
-                                                        @break
-                                                    @case("down")
-                                                        &nbsp;<i class="fa fa-caret-down"></i>
-                                                        @break
-                                                    @case("up")
-                                                        &nbsp;<i class="fa fa-caret-up"></i>
-                                                        @break
-                                                @endswitch
-                                            </td>
+                                        if(strpos($team->team_name, "countries") !== false) {
+                                            Log::critical("Missing country translation for: " . str_replace("countries.", "", $team->team_name) . " in " . app()->getLocale() . "/countries.php");
+                                        }
+
+                                        $teamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($team->team->data->logo_path, 16, 16);
+                                    @endphp
+                                    <tr>
+                                        <td scope="row">{{$team->position}}</td>
+                                        <td scope="row"><a href ="{{route("teamsDetails", ["id" => $team->team_id])}}"><img src="{{ $teamLogo }}" alt="team_logo">&nbsp;&nbsp;{{$team->team_name}}</a></td>
+                                        <td scope="row">{{$team->overall->games_played}}</td>
+                                        <td scope="row">{{$team->overall->goals_scored}}:{{$team->overall->goals_against}}</td>
+                                        <td scope="row">{{$team->points}}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
