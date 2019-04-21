@@ -13,22 +13,17 @@
 
     <title>{{ config("app.name") }}</title>
 
-    <!-- Scripts -->
-    <script src="{{ asset("js/app.js") }}" defer></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
     <!-- Fonts -->
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-    
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
     <!-- Styles -->
     <link href="{{ asset("css/app.css") }}" rel="stylesheet">
     <link href="{{ asset("css/style.css") }}" rel="stylesheet">
-    
+
     <style>
         @yield("style")
     </style>
@@ -36,9 +31,8 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark p-1">
-        <!--<nav class="navbar navbar-expand-md navbar-light navbar-laravel fixed-top">-->
             <a class="navbar-brand" href="{{ url("/") }}">
-                <i class="fas fa-futbol fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;{{ config("app.name") }}
+                <i class="fas fa-futbol fa-fw" aria-hidden="true"></i>&nbsp;{{ config("app.name") }}
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -49,6 +43,9 @@
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownFixtures" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Fixtures") }}</a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownFixtures">
                             <a class="dropdown-item" href="{{ route("fixturesByDate", ["day" => "yesterday"]) }}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Yesterday") }}</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{{ route("fixturesByDate", ["day" => "today"]) }}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Today") }}</a>
+                            <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ route("fixturesByDate", ["day" => "tomorrow"]) }}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Tomorrow") }}</a>
                         </div>
                     </li>
@@ -78,21 +75,23 @@
             </div>
         </nav>
     </header>
-    
+
     <main role="main" class="container-fluid main-container">
         @yield("content")
     </main>
-    
+
     <footer class="main-footer">
         <div style="overflow: hidden">
             <p class="text-muted" style="float: left; margin-left: 2rem;">
-                Matchy - <span class="badge badge-success"> {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "version") }} 2.0.1</span> - <a href="https://github.com/sebastiaanspeck/matchy" class="text-muted" target="_blank">Github Repo&nbsp;&nbsp;<i class="fab fa-github" aria-hidden="true"></i></a>
+                Matchy - <span class="badge badge-success"> {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "version") }} 2.0.1</span> - <a href="https://github.com/sebastiaanspeck/matchy" class="text-muted" target="_blank">Github Repo&nbsp;<i class="fab fa-github fa-fw"></i></a>
             </p>
             <p class="text-muted" style="float: right; margin-right: 2rem;">
-                {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Created with") }}&nbsp;&nbsp;<i class="fa fa-code fa-fw"></i>&nbsp;&nbsp;&&nbsp;&nbsp;<i class="fa fa-coffee fa-fw"></i>
+                {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Created with") }}&nbsp;<i class="fa fa-code fa-fw" aria-hidden="true"></i>&nbsp;&&nbsp;<i class="fa fa-coffee fa-fw" aria-hidden="true"></i>
             </p>
         </div>
     </footer>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 </body>
 </html>
