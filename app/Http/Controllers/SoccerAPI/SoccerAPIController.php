@@ -4,15 +4,23 @@ namespace App\Http\Controllers\SoccerAPI;
 
 use Carbon\Carbon;
 use DateTime;
+use Exception;
+use Filebase\Filesystem\FilesystemException;
 use GuzzleHttp\Exception\ClientException;
+use Illuminate\Contracts\Translation\Translator;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\View\View;
 use Jenssegers\Agent\Agent;
+use Lang;
 use Log;
+use Psr\Http\Message\ResponseInterface;
 use Sportmonks\SoccerAPI\Facades\SoccerAPI;
 use App\Http\Controllers\Filebase\FilebaseController;
 
@@ -24,9 +32,10 @@ class SoccerAPIController extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
+     * @throws FilesystemException
      */
     public function allLeagues(Request $request)
     {
@@ -64,9 +73,9 @@ class SoccerAPIController extends BaseController
 
     /**
      * @param $leagueId
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function leaguesDetails($leagueId, Request $request)
     {
@@ -151,9 +160,9 @@ class SoccerAPIController extends BaseController
 
     /**
      * @param $type
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     * @return Factory|View|string
      */
     public function livescores($type, Request $request)
     {
@@ -207,9 +216,9 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function fixturesByDate(Request $request)
     {
@@ -244,7 +253,7 @@ class SoccerAPIController extends BaseController
     /**
      * @param $fixtureId
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function fixturesDetails($fixtureId)
     {
@@ -260,9 +269,9 @@ class SoccerAPIController extends BaseController
 
     /**
      * @param $teamId
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function teamsDetails($teamId, Request $request)
     {
@@ -289,8 +298,8 @@ class SoccerAPIController extends BaseController
     /**
      * @param Request $request
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Filebase\Filesystem\FilesystemException
+     * @return Factory|View
+     * @throws FilesystemException
      */
     public function favoriteTeams(Request $request)
     {
@@ -333,8 +342,8 @@ class SoccerAPIController extends BaseController
     /**
      * @param Request $request
      *
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Filebase\Filesystem\FilesystemException
+     * @return RedirectResponse
+     * @throws FilesystemException
      */
     public function favoriteLeagues(Request $request)
     {
@@ -411,7 +420,7 @@ class SoccerAPIController extends BaseController
      * @param $data
      * @param $perPage
      *
-     * @return \Illuminate\Pagination\LengthAwarePaginator
+     * @return LengthAwarePaginator
      */
     public function addPagination($data, $perPage)
     {
@@ -427,7 +436,7 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return mixed|string
      */
@@ -452,7 +461,7 @@ class SoccerAPIController extends BaseController
      * @param $date
      * @param string $format
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @return bool
      */
@@ -469,12 +478,12 @@ class SoccerAPIController extends BaseController
      * @param $transType
      * @param $transString
      *
-     * @return array|\Illuminate\Contracts\Translation\Translator|null|string
+     * @return array|Translator|null|string
      */
     public static function translateString($transType, $transString)
     {
         $logString = $transType.'.'.$transString;
-        if (\Lang::has($logString) && trans($logString) !== '') {
+        if (Lang::has($logString) && trans($logString) !== '') {
             if (trans($logString) == trans($logString, [], 'en') && app()->getLocale() !== 'en') {
                 switch ($transType) {
                     case 'application':
@@ -565,7 +574,7 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array|null|string
      */
@@ -596,7 +605,7 @@ class SoccerAPIController extends BaseController
      * @param string|null $visitorteam_id
      * @param bool        $abort
      *
-     * @return \Exception|false|ClientException|mixed|\Psr\Http\Message\ResponseInterface|string
+     * @return Exception|false|ClientException|mixed|ResponseInterface|string
      */
     public function makeCall(string $type, string $include = null, string $id = null, string $leagues = null, string $date = null, string $localteam_id = null, string $visitorteam_id = null, bool $abort = true)
     {
@@ -656,12 +665,13 @@ class SoccerAPIController extends BaseController
     /**
      * @param $file
      *
+     * @param $height
+     * @param $width
      * @return string
      */
     public static function getTeamLogo($file, $height, $width)
     {
         if ($file !== null) {
-
             $file = preg_replace("/cdn\.sportmonks/", "sportmonks.gumlet", $file) . "?height={$height}&width={$width}";
             $headers=get_headers($file);
             stripos($headers[0],"200 OK")? $team_logo = $file : $team_logo = "/images/team_logos/16/Unknown";

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Filebase\Filesystem\FilesystemException;
 use App\Http\Controllers\Filebase\FilebaseController;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -19,7 +19,7 @@ class PreferencesController extends BaseController
     /**
      * @param $teamId
      * @return back
-     * @throws \Filebase\Filesystem\FilesystemException
+     * @throws FilesystemException
      */
     public function setFavoriteTeams($teamId)
     {
@@ -48,7 +48,7 @@ class PreferencesController extends BaseController
 
     /**
      * @return array
-     * @throws \Filebase\Filesystem\FilesystemException
+     * @throws FilesystemException
      */
     public function getFavoriteTeams()
     {
@@ -58,7 +58,7 @@ class PreferencesController extends BaseController
     /**
      * @param $leagueId
      * @return back
-     * @throws \Filebase\Filesystem\FilesystemException
+     * @throws FilesystemException
      */
     public function setFavoriteLeagues($leagueId)
     {
@@ -86,7 +86,7 @@ class PreferencesController extends BaseController
 
     /**
      * @return array
-     * @throws \Filebase\Filesystem\FilesystemException
+     * @throws FilesystemException
      */
     public function getFavoriteLeagues()
     {

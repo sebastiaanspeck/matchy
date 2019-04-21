@@ -6,6 +6,10 @@ use App\Http\Controllers\SoccerAPI\SoccerAPIController;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Class LiveServiceProvider
+ * @package App\Providers
+ */
 class LiveServiceProvider extends ServiceProvider
 {
     /**
