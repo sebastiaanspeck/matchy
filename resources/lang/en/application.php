@@ -19,11 +19,14 @@ return [
     'No.'                     => 'No.',
     'Team'                    => 'Team',
     'Played'                  => 'Played',
+    'MP'                      => 'MP',
     'Won'                     => 'Won',
     'Draw'                    => 'Draw',
     'Lost'                    => 'Lost',
     'Goals'                   => 'Goals',
+    'G'                       => 'G',
     'Points'                  => 'Points',
+    'Pts'                     => 'Pts',
     'Form'                    => 'Form',
     'W'                       => 'W',
     'D'                       => 'D',
@@ -86,4 +89,7 @@ return [
     'version'                 => 'version',
     'Created with'            => 'Created with',
     'H2H'                     => 'H2H',
+    'My favorite leagues'     => 'My favorite leagues',
+    'My favorite teams'       => 'My favorite teams',
+    'Favorites'               => 'Favorites'
 ];

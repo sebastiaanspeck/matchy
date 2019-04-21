@@ -18,6 +18,7 @@ return [
     'Eerste Divisie'                => 'Eerste Divisie',
     'KNVB Beker'                    => 'KNVB Beker',
     'Bundesliga'                    => 'Bundesliga',
+    '2. Bundesliga'                 => '2. Bundesliga',
     'DFB Pokal'                     => 'DFB Pokal',
     'Play-offs 1/2'                 => 'Play-offs 1/2',
     'Play-offs 2/3'                 => 'Play-offs 2/3',
