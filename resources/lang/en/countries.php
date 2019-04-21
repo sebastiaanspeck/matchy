@@ -26,6 +26,7 @@ return [
     'Ghana'                  => 'Ghana',
     'Greece'                 => 'Greece',
     'Iceland'                => 'Iceland',
+    'International'          => 'International',
     'Iran'                   => 'Iran',
     'Iraq'                   => 'Iraq',
     'Italy'                  => 'Italy',
