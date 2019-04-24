@@ -674,7 +674,7 @@ class SoccerAPIController extends BaseController
         if ($file !== null) {
             $file = preg_replace("/cdn\.sportmonks/", "sportmonks.gumlet", $file) . "?height={$height}&width={$width}";
             $headers=get_headers($file);
-            stripos($headers[0],"200 OK")? $team_logo = $file : $team_logo = "/images/team_logos/16/Unknown";
+            stripos($headers[0],"200 OK")? $team_logo = $file : $team_logo = "/images/team_logos/16/Unknown.png";
 
             return $team_logo;
         }
