@@ -1,6 +1,5 @@
 <?php
 
-
 return [
     'Argentina'              => 'Argentinien',
     'Australia'              => 'Australien',

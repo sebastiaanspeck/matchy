@@ -1,6 +1,5 @@
 <?php
 
-
 return [
     'Albania'                => 'Albanië',
     'Andorra'                => 'Andorra',

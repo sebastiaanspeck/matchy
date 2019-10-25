@@ -1,6 +1,5 @@
 <?php
 
-
 return [
     'league'                  => 'ligue',
     'leagues'                 => 'ligues',

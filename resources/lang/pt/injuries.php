@@ -1,6 +1,5 @@
 <?php
 
-
 return [
     'Unknown'                  => '',
     'Ankle/Foot Injury'        => '',
