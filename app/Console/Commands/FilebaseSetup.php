@@ -5,8 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 
 /**
- * Class FilebaseSetup
- * @package App\Console\Commands
+ * Class FilebaseSetup.
  */
 class FilebaseSetup extends Command
 {
@@ -37,8 +36,9 @@ class FilebaseSetup extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
      * @throws \Filebase\Filesystem\FilesystemException
+     *
+     * @return mixed
      */
     public function handle()
     {
@@ -55,7 +55,5 @@ class FilebaseSetup extends Command
 
         dump($db);
         dump($preferences);
-
-        return;
     }
 }

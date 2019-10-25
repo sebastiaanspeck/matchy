@@ -725,17 +725,17 @@ class SoccerAPIController extends BaseController
         $agent = new Agent();
 
         if ($agent->isDesktop()) {
-            return "desktop";
+            return 'desktop';
         } elseif ($agent->isPhone()) {
-            return "phone";
+            return 'phone';
         } elseif ($agent->isTablet()) {
-            return "tablet";
+            return 'tablet';
         } elseif ($agent->isRobot()) {
-            return "robot";
+            return 'robot';
         }
 
-        return "other";
+        return 'other';
 
-        # return $agent->deviceType(); // WHILE deviceType ISN'T IMPLEMENTED IN AGENT, WE USE THE CODE ABOVE
+        // return $agent->deviceType(); // WHILE deviceType ISN'T IMPLEMENTED IN AGENT, WE USE THE CODE ABOVE
     }
 }

@@ -1,6 +1,5 @@
 <?php
 
-
 return [
     'Champions League'             => 'Champions League',
     'Europa League'                => 'Europa League',
