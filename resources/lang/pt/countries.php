@@ -1,6 +1,5 @@
 <?php
 
-
 return [
     'Egypt'                  => '',
     'Morocco'                => '',

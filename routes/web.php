@@ -15,16 +15,17 @@ use Jenssegers\Agent\Agent;
 
 Route::get('/', function () {
     $agent = new Agent();
+
     if ($agent->isDesktop()) {
-        $deviceType = "desktop";
+        $deviceType = 'desktop';
     } elseif ($agent->isPhone()) {
-        $deviceType = "phone";
+        $deviceType = 'phone';
     } elseif ($agent->isTablet()) {
-        $deviceType = "tablet";
+        $deviceType = 'tablet';
     } elseif ($agent->isRobot()) {
-        $deviceType = "robot";
+        $deviceType = 'robot';
     } else {
-        $deviceType = "other";
+        $deviceType = 'other';
     }
 
     return view("{$deviceType}/home");

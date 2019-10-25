@@ -4,7 +4,7 @@
     .progress {
         margin-bottom: 0 !important;
     }
-    
+
     .timeline {
         padding: 20px 0;
         position: relative;
@@ -101,21 +101,21 @@
             $league = $fixture->league->data;
             $homeTeam = $fixture->localTeam->data;
             $awayTeam = $fixture->visitorTeam->data;
-            
+
             if($homeTeam->national_team == true) {
                 $homeTeam->name = \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("countries", $homeTeam->name);
             }
             if($awayTeam->national_team == true) {
                 $awayTeam->name = \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("countries", $awayTeam->name);
             }
-            
+
             isset($fixture->lineup->data) ? $lineup = $fixture->lineup->data : $lineup = null;
-            
+
             isset($fixture->bench->data) ? $bench = $fixture->bench->data : $bench = null;
             isset($fixture->sidelined->data) ? $sidelined = $fixture->sidelined->data : $sidelined = null;
-            
+
             isset($fixture->events->data) ? $events = $fixture->events->data : $events = null;
-            
+
             isset($fixture->localCoach->data) ? $localCoach = $fixture->localCoach->data : $localCoach = null;
             isset($fixture->visitorCoach->data) ? $visitorCoach = $fixture->visitorCoach->data : $localCoach = null;
 
@@ -247,7 +247,7 @@
                                     </div>
                                     <div class="col-10 col-md-5 order-1"></div>
                                 </div>
-                                
+
                         @endforeach
                     </div>
                 @else
@@ -267,6 +267,9 @@
                         foreach($stats as $stat) {
                             foreach($stat as $key=>$value) {
                                 if($key == "fixture_id") {
+                                    continue;
+                                } elseif(!array_key_exists($key, $stats_keys)) {
+                                    Log::alert("Missing statistics key for: {$key}");
                                     continue;
                                 }
                                 if(is_object($value)) {
@@ -417,7 +420,7 @@
                                 } else {
                                     $player = ["player_id" => $val->player_id, "number" => $val->number, "common_name" => $val->player_name, "nationality" => "Unknown", "stats" => $val->stats, "events" => array()];
                                 }
-                                
+
                                 if($val->stats->goals->scored != 0) {
                                     for($goals = 0; $goals < $val->stats->goals->scored; $goals++) {
                                         array_push($player['events'], "/images/events/goal.svg");
@@ -434,11 +437,11 @@
                                     }
                                 }
                                 $player['nationality'] = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($player['nationality']);
-                                
+
                                 if($player['nationality'] == "Unknown"){
                                     Log::emergency("Missing nationality for player with id: {$player['player_id']}");
                                 }
-                                
+
                                 if($val->team == "home") {
                                     $home_lineup_players->{$counter_h} = (object) $player;
                                     $counter_h++;
@@ -449,7 +452,7 @@
                             }
                             $home_lineup_players = get_object_vars($home_lineup_players);
                             $away_lineup_players = get_object_vars($away_lineup_players);
-                            
+
                             $counter_h >= $counter_a ? $counter = $counter_h : $counter = $counter_a;
                         @endphp
                         @for($index = 0; $index < $counter; $index++)
@@ -515,7 +518,7 @@
                                     } else {
                                         $player = ["player_id" => $val->player_id, "number" => $val->number, "common_name" => $val->player_name, "nationality" => "Unknown", "stats" => $val->stats, "events" => array()];
                                     }
-                                    
+
                                     if($val->stats->goals->scored != 0) {
                                         for($goals = 0; $goals < $val->stats->goals->scored; $goals++) {
                                             array_push($player['events'], "/images/events/goal.svg");
@@ -532,11 +535,11 @@
                                         }
                                     }
                                     $player['nationality'] = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($player['nationality']);
-                                    
+
                                     if($player['nationality'] == "Unknown"){
                                         Log::emergency("Missing nationality for player with id: {$player['player_id']}");
                                     }
-                                    
+
                                     if($val->team == "home") {
                                         $home_bench_players->{$counter_h} = (object) $player;
                                         $counter_h++;
@@ -547,7 +550,7 @@
                                 }
                                 $home_bench_players = get_object_vars($home_bench_players);
                                 $away_bench_players = get_object_vars($away_bench_players);
-                                
+
                                 $counter_h >= $counter_a ? $counter = $counter_h : $counter = $counter_a;
                             @endphp
                             @for($index = 0; $index < $counter; $index++)
@@ -610,13 +613,13 @@
                                 foreach($sidelined as $val){
                                     $val->team_id == $homeTeam->id ? $val->team = "home" : $val->team = "away";
                                     $player = array("player_id" => $val->player_id, "common_name" => $val->player->data->common_name, "nationality" => $val->player->data->nationality, "reason" => $val->reason);
-                                    
+
                                     $player['nationality'] = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($player['nationality']);
-                                    
+
                                     if($player['nationality'] == "Unknown"){
                                         Log::emergency("Missing nationality for player with id: {$player['player_id']}");
                                     }
-                                    
+
                                     if($val->team == "home") {
                                         $home_sidelined_players->{$counter_h} = (object) $player;
                                         $counter_h++;
@@ -668,11 +671,11 @@
                             @php
                                 $localCoach->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($localCoach->nationality);
                                 $visitorCoach->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($visitorCoach->nationality);
-                            
+
                                 if($localCoach->nationality == "Unknown") {
                                     Log::emergency("Missing nationality for coach with id: " . $localCoach->coach_id);
                                 }
-                                
+
                                 if($visitorCoach->nationality == "Unknown") {
                                     Log::emergency("Missing nationality for coach with id: " . $visitorCoach->coach_id);
                                 }
@@ -716,14 +719,14 @@
                             $league = $h2h_fixture->league->data;
                             $homeTeam = $h2h_fixture->localTeam->data;
                             $awayTeam = $h2h_fixture->visitorTeam->data;
-                            
+
                             if($homeTeam->national_team == true) {
                                 $homeTeam->name = \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("countries", $homeTeam->name);
                             }
                             if($awayTeam->national_team == true) {
                                 $awayTeam->name = \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("countries", $awayTeam->name);
                             }
-                            
+
                             if(in_array($h2h_fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
                                 switch($h2h_fixture->time->status) {
                                     case("FT_PEN"):
@@ -752,7 +755,7 @@
                             } else {
                                 $homeTeamClass = $awayTeamClass = "";
                             }
-                            
+
                             switch($h2h_fixture->time->status) {
                                 case("FT_PEN"):
                                     $scoreLine = $h2h_fixture->scores->localteam_score . " - " . $h2h_fixture->scores->visitorteam_score ."\n(" . $h2h_fixture->scores->localteam_pen_score . " - " . $h2h_fixture->scores->visitorteam_pen_score . ")";
