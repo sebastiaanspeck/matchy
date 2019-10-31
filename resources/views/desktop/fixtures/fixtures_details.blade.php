@@ -257,6 +257,7 @@
             <div class="tab-pane fade" id="statistics" role="tabpanel" aria-labelledby="statistics-tab">
                 @if(count($stats) > 0)
                     @php
+                        $value_as_percentage = array('passes-percentage', 'possessiontime');
                         $stats_array = array();
                         foreach($stats as $stat) {
                             foreach($stat as $key=>$value) {
@@ -348,12 +349,6 @@
                                     }
                                 @endphp
                                     <tr>
-                                        @if(in_array($label, array("Ball possession", "Passing percentage", "Balbezit")))
-                                            @php
-                                                $home_stat = $home_stat . "%";
-                                                $away_stat = $away_stat . "%";
-                                            @endphp
-                                        @endif
                                         <td colspan="2" style="text-align: left">
                                             <span>{{$home_stat}}</span>
                                         </td>
@@ -773,8 +768,7 @@
                             $awayTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($awayTeam->logo_path, 16, 16);
                         @endphp
                         @if($h2h_fixture->league_id == $last_league_id)
-                            @if(isset($h2h_fixture->round))
-                                @if($last_round_id !== $h2h_fixture->round->data->name)
+                            @if(isset($h2h_fixture->round) and $last_round_id !== $h2h_fixture->round->data->name)
                                     <tr>
                                         <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
                                             @if($h2h_fixture->stage->data->name !== "Regular Season")
@@ -786,8 +780,7 @@
                                             @endif
                                         </td>
                                     </tr>
-                                @endif
-                            @elseif($last_stage_id !== $h2h_fixture->stage->data->name)
+                            @elseif(isset($h2h_fixture->round) and $last_stage_id !== $h2h_fixture->stage->data->name)
                                 <tr>
                                     <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
                                         {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $h2h_fixture->stage->data->name) }}
@@ -857,7 +850,7 @@
                                     <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $fixture->id])}}"><i class="fa fa-info-circle" aria-hidden="true" style="margin-right: 10px"></i></a></td>
                                 </tr>
                                 @endif
-                                @php $last_league_id = $h2h_fixture->league_id; if(isset($h2h_fixture->round)) {$last_round_id = $h2h_fixture->round->data->name;} $last_stage_id = $h2h_fixture->stage->data->name; $last_season_name = $h2h_fixture->season->data->name; @endphp
+                                @php $last_league_id = $h2h_fixture->league_id; if(isset($h2h_fixture->round)) {$last_round_id = $h2h_fixture->round->data->name;} if(isset($h2h_fixture->stage)) {$last_stage_id = $h2h_fixture->stage->data->name;} $last_season_name = $h2h_fixture->season->data->name; @endphp
                     @endforeach
                     </tbody>
                 </table>
