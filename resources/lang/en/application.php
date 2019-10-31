@@ -65,7 +65,8 @@ return [
     'version'                 => 'version',
     'Created with'            => 'Created with',
     'H2H'                     => 'H2H',
-    'My favorite leagues'     => 'My favorite leagues',
-    'My favorite teams'       => 'My favorite teams',
     'Favorites'               => 'Favorites',
+    'Favorite teams'          => 'Favorite teams',
+    'My favorite teams'       => 'My favorite teams',
+    'My favorite leagues'     => 'My favorite leagues',
 ];
