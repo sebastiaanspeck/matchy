@@ -51,4 +51,3 @@ Route::get('/favorite_leagues', 'SoccerAPI\SoccerAPIController@favoriteLeagues')
 
 Route::get('/update_favorite_teams/{id}', 'PreferencesController@setFavoriteTeams')->name('setFavoriteTeams');
 Route::get('/update_favorite_leagues/{id}', 'PreferencesController@setFavoriteLeagues')->name('setFavoriteLeagues');
-
