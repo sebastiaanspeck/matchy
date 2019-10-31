@@ -780,7 +780,6 @@
                                             @endif
                                         </td>
                                     </tr>
-                                @endif
                             @elseif(isset($h2h_fixture->round) and $last_stage_id !== $h2h_fixture->stage->data->name)
                                 <tr>
                                     <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
