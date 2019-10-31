@@ -67,5 +67,5 @@ return [
     'H2H'                     => 'H2H',
     'My favorite leagues'     => 'My favorite leagues',
     'My favorite teams'       => 'My favorite teams',
-    'Favorites'               => 'Favorites'
+    'Favorites'               => 'Favorites',
 ];

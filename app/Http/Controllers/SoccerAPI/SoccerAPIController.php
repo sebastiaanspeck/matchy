@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\SoccerAPI;
 
+use App\Http\Controllers\Filebase\FilebaseController;
 use Carbon\Carbon;
 use DateTime;
 use Exception;
@@ -22,7 +23,6 @@ use Lang;
 use Log;
 use Psr\Http\Message\ResponseInterface;
 use Sportmonks\SoccerAPI\Facades\SoccerAPI;
-use App\Http\Controllers\Filebase\FilebaseController;
 
 /**
  * Class SoccerAPIController.
@@ -34,8 +34,9 @@ class SoccerAPIController extends BaseController
     /**
      * @param Request $request
      *
-     * @return Factory|View
      * @throws FilesystemException
+     *
+     * @return Factory|View
      */
     public function allLeagues(Request $request)
     {
@@ -298,15 +299,16 @@ class SoccerAPIController extends BaseController
     /**
      * @param Request $request
      *
-     * @return Factory|View
      * @throws FilesystemException
+     *
+     * @return Factory|View
      */
     public function favoriteTeams(Request $request)
     {
         $deviceType = self::getDeviceType();
         $favorite_teams = FilebaseController::getField('favorite_teams');
 
-        if ($favorite_teams[0] === "") {
+        if ($favorite_teams[0] === '') {
             return view("{$deviceType}/teams/favorite_teams", ['teams' => []]);
         }
 
@@ -342,15 +344,16 @@ class SoccerAPIController extends BaseController
     /**
      * @param Request $request
      *
-     * @return RedirectResponse
      * @throws FilesystemException
+     *
+     * @return RedirectResponse
      */
     public function favoriteLeagues(Request $request)
     {
         $deviceType = self::getDeviceType();
         $favorite_leagues = FilebaseController::getField('favorite_leagues');
 
-        if ($favorite_leagues[0] === "") {
+        if ($favorite_leagues[0] === '') {
             return view("{$deviceType}/leagues/favorite_leagues", ['leagues' => []]);
         }
 
@@ -668,17 +671,17 @@ class SoccerAPIController extends BaseController
 
     /**
      * @param $file
-     *
      * @param $height
      * @param $width
+     *
      * @return string
      */
     public static function getTeamLogo($file, $height, $width)
     {
         if ($file !== null) {
-            $file = preg_replace("/cdn\.sportmonks/", "sportmonks.gumlet", $file) . "?height={$height}&width={$width}";
-            $headers=get_headers($file);
-            stripos($headers[0],"200 OK")? $team_logo = $file : $team_logo = "/images/team_logos/16/Unknown.png";
+            $file = preg_replace("/cdn\.sportmonks/", 'sportmonks.gumlet', $file)."?height={$height}&width={$width}";
+            $headers = get_headers($file);
+            stripos($headers[0], '200 OK') ? $team_logo = $file : $team_logo = '/images/team_logos/16/Unknown.png';
 
             return $team_logo;
         }

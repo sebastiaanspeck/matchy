@@ -48,8 +48,8 @@ class FilebaseSetup extends Command
 
         $preferences->season = '2018/2019';
         $preferences->show_inactive_leagues = false;
-        $preferences->favorite_teams = "";
-        $preferences->favorite_leagues = "";
+        $preferences->favorite_teams = '';
+        $preferences->favorite_leagues = '';
 
         $preferences->save();
 

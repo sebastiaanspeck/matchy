@@ -39,5 +39,5 @@ return [
     'UEFA Europa League Play-offs'  => 'UEFA Europa League Play-offs',
     'UEFA Nations League'           => 'UEFA Nations League',
     'Friendly International'        => 'Friendly International',
-    'Club Friendlies'               => 'Club Friendlies'
+    'Club Friendlies'               => 'Club Friendlies',
 ];

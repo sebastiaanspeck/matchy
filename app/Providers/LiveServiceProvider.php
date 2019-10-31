@@ -7,8 +7,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 /**
- * Class LiveServiceProvider
- * @package App\Providers
+ * Class LiveServiceProvider.
  */
 class LiveServiceProvider extends ServiceProvider
 {
