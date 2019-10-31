@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Filebase\Filesystem\FilesystemException;
 use App\Http\Controllers\Filebase\FilebaseController;
-use Illuminate\Routing\Controller as BaseController;
+use Filebase\Filesystem\FilesystemException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Routing\Controller as BaseController;
 
 /**
- * Class PreferencesController
+ * Class PreferencesController.
  */
 class PreferencesController extends BaseController
 {
@@ -18,14 +18,16 @@ class PreferencesController extends BaseController
 
     /**
      * @param $teamId
-     * @return back
+     *
      * @throws FilesystemException
+     *
+     * @return back
      */
     public function setFavoriteTeams($teamId)
     {
         $favorite_teams = $this->getFavoriteTeams();
 
-        if(in_array($teamId, $favorite_teams)) {
+        if (in_array($teamId, $favorite_teams)) {
             if (($key = array_search($teamId, $favorite_teams)) !== false) {
                 unset($favorite_teams[$key]);
             }
@@ -33,8 +35,8 @@ class PreferencesController extends BaseController
             $favorite_teams[] = $teamId;
         }
 
-        if(array_key_exists(0, $favorite_teams)) {
-            if($favorite_teams[0] === "") {
+        if (array_key_exists(0, $favorite_teams)) {
+            if ($favorite_teams[0] === '') {
                 unset($favorite_teams[0]);
             }
         }
@@ -47,8 +49,9 @@ class PreferencesController extends BaseController
     }
 
     /**
-     * @return array
      * @throws FilesystemException
+     *
+     * @return array
      */
     public function getFavoriteTeams()
     {
@@ -57,14 +60,16 @@ class PreferencesController extends BaseController
 
     /**
      * @param $leagueId
-     * @return back
+     *
      * @throws FilesystemException
+     *
+     * @return back
      */
     public function setFavoriteLeagues($leagueId)
     {
         $favorite_leagues = $this->getFavoriteLeagues();
 
-        if(in_array($leagueId, $favorite_leagues)) {
+        if (in_array($leagueId, $favorite_leagues)) {
             if (($key = array_search($leagueId, $favorite_leagues)) !== false) {
                 unset($favorite_leagues[$key]);
             }
@@ -72,8 +77,8 @@ class PreferencesController extends BaseController
             $favorite_leagues[] = $leagueId;
         }
 
-        if(array_key_exists(0, $favorite_leagues)) {
-            if($favorite_leagues[0] === "") {
+        if (array_key_exists(0, $favorite_leagues)) {
+            if ($favorite_leagues[0] === '') {
                 unset($favorite_leagues[0]);
             }
         }
@@ -85,8 +90,9 @@ class PreferencesController extends BaseController
     }
 
     /**
-     * @return array
      * @throws FilesystemException
+     *
+     * @return array
      */
     public function getFavoriteLeagues()
     {

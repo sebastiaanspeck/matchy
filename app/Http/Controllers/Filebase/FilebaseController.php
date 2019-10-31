@@ -2,34 +2,38 @@
 
 namespace App\Http\Controllers\Filebase;
 
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
 class FilebaseController extends BaseController
 {
     /**
-     * @return \Filebase\Database
      * @throws \Filebase\Filesystem\FilesystemException
+     *
+     * @return \Filebase\Database
      */
     public static function getDB()
     {
-        return new \Filebase\Database(['dir' => base_path() . '/database/filebase']);
+        return new \Filebase\Database(['dir' => base_path().'/database/filebase']);
     }
 
     /**
-     * @return \Filebase\Document
      * @throws \Filebase\Filesystem\FilesystemException
+     *
+     * @return \Filebase\Document
      */
     public static function getPreferences()
     {
         $db = self::getDB();
+
         return $db->get('preferences');
     }
 
     /**
      * @param $field
-     * @return array|string|bool
+     *
      * @throws \Filebase\Filesystem\FilesystemException
+     *
+     * @return array|string|bool
      */
     public static function getField($field)
     {
@@ -40,10 +44,9 @@ class FilebaseController extends BaseController
         if (\strpos($field, 'favorite') !== false) {
             $data = explode(',', $data);
 
-            if ($data === "") {
+            if ($data === '') {
                 $data = [];
             }
-
         }
 
         return $data;
@@ -52,6 +55,7 @@ class FilebaseController extends BaseController
     /**
      * @param $field
      * @param $value
+     *
      * @throws \Filebase\Filesystem\FilesystemException
      */
     public static function setField($field, $value)
