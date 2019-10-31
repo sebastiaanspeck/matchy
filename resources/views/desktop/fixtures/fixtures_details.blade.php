@@ -257,19 +257,10 @@
             <div class="tab-pane fade" id="statistics" role="tabpanel" aria-labelledby="statistics-tab">
                 @if(count($stats) > 0)
                     @php
-                        $stats_keys = array("team_id" => "team_id", "shots-total" => trans("application.Total shots"), "shots-ongoal" => trans("application.Shots on goal"), "shots-offgoal" => trans("application.Shots of goal"), "shots-blocked" => trans("application.Blocked shots"), "shots-insidebox" => trans("application.Shots inside box"), "shots-outsidebox" => trans("application.Shots outside box"),
-                        "passes-total" => trans("application.Total passes"), "passes-accurate" => trans("application.Accurate passes"), "passes-percentage" => trans("application.Passing percentage"),
-                        "attacks-attacks" => trans("application.Total attacks"), "attacks-dangerous_attacks" => trans("application.Dangerous attacks"),
-                        "fouls" => trans("application.Fouls"), "corners" => trans("application.Corners"), "offsides" => trans("application.Offside"), "possessiontime" => trans("application.Ball possession"),
-                        "yellowcards" => trans("application.Yellow cards"), "redcards" => trans("application.Red cards"), "saves" => trans("application.Saves"), "substitutions" => trans("application.Substitutions"),
-                        "goal_kick" => trans("application.Goal kicks"), "goal_attempts" => trans("application.Goal attempts"), "free_kick" => trans("application.Free kicks"), "throw_in" => trans("application.Throw-ins"), "ball_safe" => trans("application.Ball safe"));
                         $stats_array = array();
                         foreach($stats as $stat) {
                             foreach($stat as $key=>$value) {
                                 if($key == "fixture_id") {
-                                    continue;
-                                } elseif(!array_key_exists($key, $stats_keys)) {
-                                    Log::alert("Missing statistics key for: {$key}");
                                     continue;
                                 }
                                 if(is_object($value)) {
@@ -277,7 +268,11 @@
                                         if(is_null($stat_value)) {
                                             continue;
                                         } else {
-                                            $k = $stats_keys[$key . "-" . $stat_key];
+                                            $search_key = $key . "-" . $stat_key;
+                                            $k = \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("statistics", $search_key);
+                                            if(in_array($search_key, $value_as_percentage)) {
+                                                $stat_value = $stat_value . '%';
+                                            }
                                             if(!isset($stats_array[$k])) {
                                                 $stats_array[$k] = $stat_value;
                                             } elseif (is_array($stats_array[$k])) {
@@ -292,7 +287,10 @@
                                     if(is_null($value)) {
                                         continue;
                                     } else {
-                                        $k = $stats_keys[$key];
+                                        $k = \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("statistics", $key);
+                                        if(in_array($key, $value_as_percentage)) {
+                                            $stat_value = $stat_value . '%';
+                                        }
                                         if(!isset($stats_array[$k])) {
                                             $stats_array[$k] = $value;
                                         } elseif (is_array($stats_array[$k])) {

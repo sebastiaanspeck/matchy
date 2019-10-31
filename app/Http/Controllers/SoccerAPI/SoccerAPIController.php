@@ -501,21 +501,25 @@ class SoccerAPIController extends BaseController
             return trans($logString);
         }
 
+        $logString = 'Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php';
         switch ($transType) {
             case 'application':
-                Log::alert('Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php');
+                Log::alert($logString);
                 break;
             case 'countries':
-                Log::critical('Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php');
+                Log::critical($logString);
                 break;
             case 'cup_stages':
-                Log::warning('Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php');
+                Log::warning($logString);
                 break;
             case 'injuries':
-                Log::notice('Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php');
+                Log::notice($logString);
                 break;
             case 'leagues':
-                Log::info('Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php');
+                Log::info($logString);
+                break;
+            case 'statistics':
+                Log::debug($logString);
                 break;
             default:
                 Log::error('Missing error-level for: '.$transString);
