@@ -51,20 +51,20 @@
                         @php
                             $homeTeam = $last_fixture->localTeam->data;
                             $awayTeam = $last_fixture->visitorTeam->data;
-                            
+
                             if($homeTeam->national_team == true) {
                                 $homeTeam->name = trans("countries." . $homeTeam->name);
                             }
                             if($awayTeam->national_team == true) {
                                 $awayTeam->name = trans("countries." . $awayTeam->name);
                             }
-                            
+
                             if(strpos($homeTeam->name, "countries") !== false) {
                                 Log::critical("Missing country translation for: " . str_replace("countries.", "", $homeTeam->name) . " in " . app()->getLocale() . "/countries.php");
                             } elseif(strpos($awayTeam->name, "countries") !== false) {
                                 Log::critical("Missing country translation for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
                             }
-                            
+
                             if(in_array($last_fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
                                 switch($last_fixture->time->status) {
                                     case("FT_PEN"):
@@ -93,7 +93,7 @@
                             } else {
                                 $homeTeamClass = $awayTeamClass = "";
                             }
-                            
+
                             switch($last_fixture->time->status) {
                                 case("FT_PEN"):
                                     $scoreLine = $last_fixture->scores->localteam_score . " - " . $last_fixture->scores->visitorteam_score ."\n(" . $last_fixture->scores->localteam_pen_score . " - " . $last_fixture->scores->visitorteam_pen_score . ")";
@@ -125,7 +125,7 @@
                                 @endif
                             @elseif($last_stage_id !== $last_fixture->stage->data->name)
                                 <tr>
-                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang("cup_stages." . $last_fixture->stage->data->name)</td>
+                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $last_fixture->stage->data->name) }}</td>
                                 </tr>
                             @endif
                             <tr>
@@ -163,7 +163,7 @@
                                         @endif
                                     @elseif($last_stage_id !== $last_fixture->stage->data->name)
                                         <tr>
-                                            <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang("cup_stages." . $last_fixture->stage->data->name)</td>
+                                            <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $last_fixture->stage->data->name) }}</td>
                                         </tr>
                                     @endif
                                     <tr>
@@ -190,14 +190,14 @@
                         @php
                             $homeTeam = $upcoming_fixture->localTeam->data;
                             $awayTeam = $upcoming_fixture->visitorTeam->data;
-                            
+
                             if($homeTeam->national_team == true) {
                                 $homeTeam->name = trans("countries." . $homeTeam->name);
                             }
                             if($awayTeam->national_team == true) {
                                 $awayTeam->name = trans("countries." . $awayTeam->name);
                             }
-                            
+
                             if(strpos($homeTeam->name, "countries") !== false) {
                                 Log::critical("Missing country translation for: " . str_replace("countries.", "", $homeTeam->name) . " in " . app()->getLocale() . "/countries.php");
                             } elseif(strpos($awayTeam->name, "countries") !== false) {
@@ -220,7 +220,7 @@
                                 @endif
                             @elseif($last_stage_id !== $upcoming_fixture->stage->data->name)
                                 <tr>
-                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">@lang("cup_stages." . $upcoming_fixture->stage->data->name)</td>
+                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $last_fixture->stage->data->name) }}</td>
                                 </tr>
                             @endif
                             <tr>
@@ -305,7 +305,7 @@
                                             if($team->team->data->national_team == true) {
                                                 $team->team_name = trans("countries." . $team->team_name);
                                             }
-                                            
+
                                             if(strpos($team->team_name, "countries") !== false) {
                                                 Log::critical("Missing country translation for: " . str_replace("countries.", "", $team->team_name) . " in " . app()->getLocale() . "/countries.php");
                                             }
@@ -373,17 +373,17 @@
                                     @php
                                         $team = $topscorer->team->data;
                                         $player = $topscorer->player->data;
-                                        
+
                                         if(isset($player->nationality)) {
                                             $player->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($player->nationality);
                                         } else {
                                             $player->nationality = "Unknown";
                                         }
-                                        
+
                                         if($team->national_team == true) {
                                             $team->name = trans("countries." . $team->name);
                                         }
-                                        
+
                                         if(strpos($team->name, "countries") !== false) {
                                             Log::critical("Missing country translation for: " . str_replace("countries.", "", $team->name) . " in " . app()->getLocale() . "/countries.php");
                                         }
