@@ -30,12 +30,12 @@
                     <a class="nav-link" id="upcoming_fixtures-tab" data-toggle="tab" href="#upcoming_fixtures" role="tab" aria-controls="upcoming_fixtures" aria-selected="false">@choice("application.upcoming fixtures", $upcoming_fixtures->count())</a>
                 </li>
             @endif
-            @if(count($standings_raw) > 0)
+            @if(!empty($standings_raw))
                 <li class="nav-item">
                     <a class="nav-link" id="standings-tab" data-toggle="tab" href="#standings" role="tab" aria-controls="standings" aria-selected="false">@lang("application.Standings")</a>
                 </li>
             @endif
-            @if(count($topscorers) > 0)
+            @if(!empty($topscorers))
                 <li class="nav-item">
                     <a class="nav-link" id="topscorers-tab" data-toggle="tab" href="#topscorers" role="tab" aria-controls="topscorers" aria-selected="false">@lang("application.Top Scorers")</a>
                 </li>
@@ -273,7 +273,7 @@
                 @endif
             </div>
             <div class="tab-pane fade" id="standings" role="tabpanel" aria-labelledby="standings-tab">
-                @if(count($standings_raw) > 0)
+                @if(!empty($standings_raw))
                     @foreach($standings_raw as $standings)
                         @php $standing = $standings->standings->data; @endphp
                         <table class="table table-light table-sm" style="width:100%">
@@ -322,7 +322,7 @@
                 @endif
             </div>
             <div class="tab-pane fade" id="topscorers" role="tabpanel" aria-labelledby="topscorers-tab">
-                @if(count($topscorers) > 0)
+                @if(!empty($topscorers))
                     <table class="table table-light table-striped table-sm" style="width: 100%">
                         <thead class="thead-dark">
                             <tr>

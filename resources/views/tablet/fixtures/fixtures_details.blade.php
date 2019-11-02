@@ -213,7 +213,7 @@
                     <a class="nav-link" id="lineups-tab" data-toggle="tab" href="#lineups" role="tab" aria-controls="lineups" aria-selected="true">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Lineups") }}</a>
                 </li>
             @endif
-            @if(count($h2h_fixtures) > 0)
+            @if(!empty($h2h_fixtures))
                 <li class="nav-item">
                     <a class="nav-link" id="head2head-tab" data-toggle="tab" href="#head2head" role="tab" aria-controls="head2head" aria-selected="true">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "H2H") }}</a>
                 </li>
@@ -223,7 +223,7 @@
         {{-- Tab panes --}}
         <div class="tab-content" id="tab_content">
             <div class="tab-pane fade show active" id="match_summary" role="tabpanel" aria-labelledby="match_summary-tab">
-                @if(count($events) > 0)
+                @if(!empty($events))
                     <div class="timeline">
                         @foreach($events as $event)
                             @if(in_array($event->type, array("pen_shootout_goal", "pen_shootout_miss")))
@@ -255,7 +255,7 @@
                 @endif
             </div>
             <div class="tab-pane fade" id="statistics" role="tabpanel" aria-labelledby="statistics-tab">
-                @if(count($stats) > 0)
+                @if(!empty($stats))
                     @php
                         $stats_keys = array("team_id" => "team_id", "shots-total" => trans("application.Total shots"), "shots-ongoal" => trans("application.Shots on goal"), "shots-offgoal" => trans("application.Shots of goal"), "shots-blocked" => trans("application.Blocked shots"), "shots-insidebox" => trans("application.Shots inside box"), "shots-outsidebox" => trans("application.Shots outside box"),
                         "passes-total" => trans("application.Total passes"), "passes-accurate" => trans("application.Accurate passes"), "passes-percentage" => trans("application.Passing percentage"),
@@ -385,7 +385,7 @@
                 @endif
             </div>
             <div class="tab-pane fade" id="lineups" role="tabpanel" aria-labelledby="lineups-tab">
-                @if(count($lineup) > 0)
+                @if(!empty($lineup))
                     <table class="table table-borderless table-sm">
                         @if($fixture->formations->localteam_formation && $fixture->formations->visitorteam_formation)
                         <tr style="text-align: center">
@@ -497,7 +497,7 @@
                             @endif
                             @php unset($home_lineup_player); unset($away_lineup_player) @endphp
                         @endfor
-                        @if(count($bench) > 0)
+                        @if(!empty($bench))
                             <tr style="font-weight: bold; text-align: center; background: #D3D3D3">
                                 <td colspan="7">
                                     <span>{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Substitutes") }}</span>
@@ -596,7 +596,7 @@
                                 @php unset($home_bench_player); unset($away_bench_player) @endphp
                             @endfor
                         @endif
-                        @if(count($sidelined) > 0)
+                        @if(!empty($sidelined))
                             <tr style="font-weight: bold; text-align: center; background: #D3D3D3">
                                 <td colspan="7">
                                     <span>{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Missing players") }}</span>
@@ -709,7 +709,7 @@
                 @endif
             </div>
             <div class="tab-pane fade" id="head2head" role="tabpanel" aria-labelledby="head2head-tab">
-                @if(count($h2h_fixtures) > 0)
+                @if(!empty($h2h_fixtures))
                     @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; $last_season_name = ''; @endphp
                     @foreach($h2h_fixtures as $h2h_fixture)
                         @php
