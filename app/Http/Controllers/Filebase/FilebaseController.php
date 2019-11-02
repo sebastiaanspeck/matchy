@@ -37,9 +37,7 @@ class FilebaseController extends BaseController
      */
     public static function getField($field)
     {
-        $db = self::getDB();
-
-        $data = $db->get('preferences')->field($field);
+        $data = self::getPreferences()->field($field);
 
         if (\strpos($field, 'favorite') !== false) {
             $data = explode(',', $data);
