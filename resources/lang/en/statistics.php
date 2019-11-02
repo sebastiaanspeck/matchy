@@ -38,5 +38,5 @@ return [
     'ball_safe'                 => 'Ball safe',
     'injuries'                  => 'Injuries',
     'goals'                     => 'Goals',
-    'penalties'                 => 'Penalties'
+    'penalties'                 => 'Penalties',
 ];
