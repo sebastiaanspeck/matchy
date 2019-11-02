@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\SoccerAPI;
 
 use App\Http\Controllers\Filebase\FilebaseController;
+use App\Http\Controllers\PreferencesController;
 use Carbon\Carbon;
 use DateTime;
 use Exception;
@@ -306,7 +307,7 @@ class SoccerAPIController extends BaseController
     public function favoriteTeams(Request $request)
     {
         $deviceType = self::getDeviceType();
-        $favorite_teams = FilebaseController::getField('favorite_teams');
+        $favorite_teams = PreferencesController::getFavoriteTeams();
 
         if ($favorite_teams[0] === '') {
             return view("{$deviceType}/teams/favorite_teams", ['teams' => []]);
@@ -351,7 +352,7 @@ class SoccerAPIController extends BaseController
     public function favoriteLeagues(Request $request)
     {
         $deviceType = self::getDeviceType();
-        $favorite_leagues = FilebaseController::getField('favorite_leagues');
+        $favorite_leagues = PreferencesController::getFavoriteLeagues();
 
         if ($favorite_leagues[0] === '') {
             return view("{$deviceType}/leagues/favorite_leagues", ['leagues' => []]);

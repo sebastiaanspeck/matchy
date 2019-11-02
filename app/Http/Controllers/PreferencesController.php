@@ -18,18 +18,13 @@ class PreferencesController extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
-     * @param $teamId
-     *
-     * @return RedirectResponse
+     * @param $key
+     * @return array
      * @throws FilesystemException
      */
-    public function setFavoriteTeams($teamId)
+    public static function getFavorite($key)
     {
-        $favorite_teams = $this->setFavorite($teamId, $this->getFavoriteTeams());
-
-        FilebaseController::setField('favorite_teams', $favorite_teams);
-
-        return back();
+        return FilebaseController::getField($key);
     }
 
     /**
@@ -37,24 +32,9 @@ class PreferencesController extends BaseController
      *
      * @return array
      */
-    public function getFavoriteTeams()
+    public static function getFavoriteTeams()
     {
-        return FilebaseController::getField('favorite_teams');
-    }
-
-    /**
-     * @param $leagueId
-     *
-     * @return RedirectResponse
-     * @throws FilesystemException
-     */
-    public function setFavoriteLeagues($leagueId)
-    {
-        $favorite_leagues = $this->setFavorite($leagueId, $this->getFavoriteLeagues());
-
-        FilebaseController::setField('favorite_leagues', $favorite_leagues);
-
-        return back();
+        return self::getFavorite('favorite_teams');
     }
 
     /**
@@ -62,10 +42,11 @@ class PreferencesController extends BaseController
      *
      * @return array
      */
-    public function getFavoriteLeagues()
+    public static function getFavoriteLeagues()
     {
-        return FilebaseController::getField('favorite_leagues');
+        return self::getFavorite('favorite_leagues');
     }
+
 
     public function setFavorite($id, $favorites)
     {
@@ -84,5 +65,35 @@ class PreferencesController extends BaseController
         }
 
         return implode(',', $favorites);
+    }
+
+    /**
+     * @param $teamId
+     *
+     * @return RedirectResponse
+     * @throws FilesystemException
+     */
+    public function setFavoriteTeams($teamId)
+    {
+        $favorite_teams = $this->setFavorite($teamId, $this->getFavoriteTeams());
+
+        FilebaseController::setField('favorite_teams', $favorite_teams);
+
+        return back();
+    }
+
+    /**
+     * @param $leagueId
+     *
+     * @return RedirectResponse
+     * @throws FilesystemException
+     */
+    public function setFavoriteLeagues($leagueId)
+    {
+        $favorite_leagues = $this->setFavorite($leagueId, $this->getFavoriteLeagues());
+
+        FilebaseController::setField('favorite_leagues', $favorite_leagues);
+
+        return back();
     }
 }
