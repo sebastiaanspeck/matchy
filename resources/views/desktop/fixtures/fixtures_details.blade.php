@@ -205,9 +205,11 @@
             <li class="nav-item">
                 <a class="nav-link active" id="events-tab" data-toggle="tab" href="#match_summary" role="tab" aria-controls="match_summary" aria-selected="true">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Match Summary") }}</a>
             </li>
+            @if(count($stats) > 1)
             <li class="nav-item">
                 <a class="nav-link" id="statistics-tab" data-toggle="tab" href="#statistics" role="tab" aria-controls="statistics" aria-selected="true">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Statistics") }}</a>
             </li>
+            @endif
             @if(count($lineup) > 1)
                 <li class="nav-item">
                     <a class="nav-link" id="lineups-tab" data-toggle="tab" href="#lineups" role="tab" aria-controls="lineups" aria-selected="true">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Lineups") }}</a>
@@ -247,7 +249,6 @@
                                     </div>
                                     <div class="col-10 col-md-5 order-1"></div>
                                 </div>
-
                         @endforeach
                     </div>
                 @else
@@ -282,7 +283,6 @@
                                                 $stats_array[$k] = [$stats_array[$k], $stat_value];
                                             }
                                         }
-
                                     }
                                 } else {
                                     if(is_null($value)) {
@@ -290,7 +290,7 @@
                                     } else {
                                         $k = \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("statistics", $key);
                                         if(in_array($key, $value_as_percentage)) {
-                                            $stat_value = $stat_value . '%';
+                                            $value = $value . '%';
                                         }
                                         if(!isset($stats_array[$k])) {
                                             $stats_array[$k] = $value;
@@ -321,31 +321,46 @@
                                     $home_stat = $stat[$home_team_i];
                                     $away_stat = $stat[$away_team_i];
 
-                                    $total_stat = $home_stat + $away_stat;
-
-                                    if($home_stat == 0) {
-                                        $home_stat_percentage = 0;
+                                    if(strpos($home_stat, '%') !== false or strpos($away_stat, '%')) {
+                                        $home_stat_percentage = substr_replace($home_stat ,"", -1);
+                                        $away_stat_percentage = substr_replace($away_stat ,"", -1);
+                                        if($home_stat_percentage < $away_stat_percentage) {
+                                            $color_home = "bg-danger";
+                                            $color_away = "bg-success";
+                                        }
+                                        elseif ($home_stat_percentage > $away_stat_percentage) {
+                                            $color_home = "bg-success";
+                                            $color_away = "bg-danger";
+                                        } else {
+                                            $color_home = "bg-primary";
+                                            $color_away = "bg-primary";
+                                        }
                                     } else {
-                                        $home_stat_percentage = $home_stat / $total_stat * 100;
-                                    }
+                                        $total_stat = $home_stat + $away_stat;
 
-                                    if($away_stat == 0) {
-                                        $away_stat_percentage = 0;
-                                    } else {
-                                        $away_stat_percentage = $away_stat / $total_stat * 100;
-                                    }
+                                        if($home_stat == 0) {
+                                            $home_stat_percentage = 0;
+                                        } else {
+                                            $home_stat_percentage = $home_stat / $total_stat * 100;
+                                        }
 
+                                        if($away_stat == 0) {
+                                            $away_stat_percentage = 0;
+                                        } else {
+                                            $away_stat_percentage = $away_stat / $total_stat * 100;
+                                        }
 
-                                    if($home_stat < $away_stat) {
-                                        $color_home = "bg-danger";
-                                        $color_away = "bg-success";
-                                    }
-                                    elseif ($home_stat > $away_stat) {
-                                        $color_home = "bg-success";
-                                        $color_away = "bg-danger";
-                                    } else {
-                                        $color_home = "bg-primary";
-                                        $color_away = "bg-primary";
+                                        if($home_stat < $away_stat) {
+                                            $color_home = "bg-danger";
+                                            $color_away = "bg-success";
+                                        }
+                                        elseif ($home_stat > $away_stat) {
+                                            $color_home = "bg-success";
+                                            $color_away = "bg-danger";
+                                        } else {
+                                            $color_home = "bg-primary";
+                                            $color_away = "bg-primary";
+                                        }
                                     }
                                 @endphp
                                     <tr>
@@ -798,7 +813,7 @@
                                 <td scope="row" style="text-align: center">{!! nl2br(e($scoreLine)) !!}</td>
                                 {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
                                 <td scope="row" style="text-align: left"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}><img src="{{ $awayTeamLogo }}" alt="team_logo">&nbsp;{{$awayTeam->name}}</a></td>
-                                <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $fixture->id])}}"><i class="fa fa-info-circle" aria-hidden="true" style="margin-right: 10px"></i></a></td>
+                                <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $h2h_fixture->id])}}"><i class="fa fa-info-circle" aria-hidden="true" style="margin-right: 10px"></i></a></td>
                             </tr>
                         @else
                             @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; @endphp
@@ -847,7 +862,7 @@
                                     <td scope="row" style="text-align: center">{!! nl2br(e($scoreLine)) !!}</td>
                                     {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
                                     <td scope="row" style="text-align: left"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}><img src="{{ $awayTeamLogo }}" alt="team_logo">&nbsp;{{$awayTeam->name}}</a></td>
-                                    <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $fixture->id])}}"><i class="fa fa-info-circle" aria-hidden="true" style="margin-right: 10px"></i></a></td>
+                                    <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $h2h_fixture->id])}}"><i class="fa fa-info-circle" aria-hidden="true" style="margin-right: 10px"></i></a></td>
                                 </tr>
                                 @endif
                                 @php $last_league_id = $h2h_fixture->league_id; if(isset($h2h_fixture->round)) {$last_round_id = $h2h_fixture->round->data->name;} if(isset($h2h_fixture->stage)) {$last_stage_id = $h2h_fixture->stage->data->name;} $last_season_name = $h2h_fixture->season->data->name; @endphp
@@ -858,7 +873,6 @@
                     <span style="font-weight: bold">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "H2H") }} @choice("application.msg_no_data", 2)</span>
                 @endif
             </div>
-        </div>
         </div>
     </div>
 @endsection
