@@ -12,8 +12,10 @@ return [
 
     '16th Finals'                  => '16th Finals',
     '1st Phase'                    => '1st Phase',
+    '1st Preliminary Round'        => '1st Preliminary Round',
     '1st Qualifying Round'         => '1st Qualifying Round',
     '1st Round'                    => '1st Round',
+    '2nd Preliminary Round'        => '2nd Preliminary Round',
     '2nd Qualifying Round'         => '2nd Qualifying Round',
     '2nd Round'                    => '2nd Round',
     '2nd Round Qualifying'         => '2nd Round Qualifying',
