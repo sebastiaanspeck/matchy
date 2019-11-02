@@ -150,7 +150,7 @@
                     @if(@getimagesize($homeTeam->logo_path) && @getimagesize($awayTeam->logo_path))
                         <tr>
                             <td width="49%"><img style="max-height: 200px; max-width: 200px" alt="homeTeam-logo" src={{ $homeTeam->logo_path }}></td>
-                            <td width="2%"><h3> - </h3></td>
+                            <td width="2%"></td>
                             <td width="49%"><img style="max-height: 200px; max-width: 200px" alt="awayTeam-logo" src={{ $awayTeam->logo_path }}></td>
                         </tr>
                     @endif
