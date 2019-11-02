@@ -158,7 +158,7 @@
                     <tr>
                         <td width="49%" style="vertical-align: top"><h5><a href="{{ route("setFavoriteTeams", ["id" => $homeTeam->id]) }}"><i class="{{ $favorite_homeTeam }} fa-star fa-fw" aria-hidden="true"></i></a>&nbsp;<a href="{{ route("teamsDetails", ["id" => $homeTeam->id]) }}">{{ $homeTeam->name }}</a></h5></td>
                         <td></td>
-                        <td width="49%" style="vertical-align: top"><h5><i class="{{ $favorite_awayTeam }} fa-star fa-fw" aria-hidden="true"></i>&nbsp;<a href =" {{route("teamsDetails", ["id" => $awayTeam->id])}} ">{{ $awayTeam->name }}</a></h5></td>
+                        <td width="49%" style="vertical-align: top"><h5><a href="{{ route("setFavoriteTeams", ["id" => $awayTeam->id]) }}"><i class="{{ $favorite_awayTeam }} fa-star fa-fw" aria-hidden="true"></i></a>&nbsp;<a href =" {{route("teamsDetails", ["id" => $awayTeam->id])}} ">{{ $awayTeam->name }}</a></h5></td>
                     </tr>
                 </table>
 
