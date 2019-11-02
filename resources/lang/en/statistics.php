@@ -27,6 +27,7 @@ return [
     'offsides'                  => 'Offside',
     'possessiontime'            => 'Ball possession',
     'yellowcards'               => 'Yellow cards',
+    'yellowredcards'            => 'Yellow/Red cards',
     'redcards'                  => 'Red cards',
     'saves'                     => 'Saves',
     'substitutions'             => 'Substitutions',
@@ -36,4 +37,6 @@ return [
     'throw_in'                  => 'Throw-ins',
     'ball_safe'                 => 'Ball safe',
     'injuries'                  => 'Injuries',
+    'goals'                     => 'Goals',
+    'penalties'                 => 'Penalties'
 ];

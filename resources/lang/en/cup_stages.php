@@ -11,6 +11,7 @@ return [
     */
 
     '16th Finals'                  => '16th Finals',
+    '1st Phase'                    => '1st Phase',
     '1st Qualifying Round'         => '1st Qualifying Round',
     '1st Round'                    => '1st Round',
     '2nd Qualifying Round'         => '2nd Qualifying Round',
@@ -42,6 +43,7 @@ return [
     'Play Offs Champions League'   => 'Play Offs Champions League',
     'Play-offs'                    => 'Play-offs',
     'Preliminary Round'            => 'Preliminary Round',
+    'Relegation Round'             => 'Relegation Round',
     'Qualifying Round'             => 'Qualifying Round',
     'Quarter-finals'               => 'Quarter-finals',
     'Semi-final'                   => 'Semi-final',
