@@ -2,17 +2,26 @@
 
 namespace App\Http\Controllers\SoccerAPI;
 
+use App\Http\Controllers\Filebase\FilebaseController;
 use Carbon\Carbon;
 use DateTime;
+use Exception;
+use Filebase\Filesystem\FilesystemException;
 use GuzzleHttp\Exception\ClientException;
+use Illuminate\Contracts\Translation\Translator;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\View\View;
 use Jenssegers\Agent\Agent;
+use Lang;
 use Log;
+use Psr\Http\Message\ResponseInterface;
 use Sportmonks\SoccerAPI\Facades\SoccerAPI;
 
 /**
@@ -23,9 +32,11 @@ class SoccerAPIController extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws FilesystemException
+     *
+     * @return Factory|View
      */
     public function allLeagues(Request $request)
     {
@@ -33,9 +44,9 @@ class SoccerAPIController extends BaseController
 
         $leagues = self::makeCall('leagues', 'country,season');
 
-        if (!config('preferences.show_inactive_leagues')) {
+        if (!FilebaseController::getField('show_inactive_leagues')) {
             $currentYear = Carbon::now()->year;
-            $season = config('preferences.season');
+            $season = FilebaseController::getField('season');
 
             foreach ($leagues as $key => $league) {
                 if (!in_array($league->season->data->name, [$season, $currentYear])) {
@@ -63,9 +74,9 @@ class SoccerAPIController extends BaseController
 
     /**
      * @param $leagueId
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function leaguesDetails($leagueId, Request $request)
     {
@@ -150,9 +161,9 @@ class SoccerAPIController extends BaseController
 
     /**
      * @param $type
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     * @return Factory|View|string
      */
     public function livescores($type, Request $request)
     {
@@ -206,9 +217,9 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function fixturesByDate(Request $request)
     {
@@ -243,7 +254,7 @@ class SoccerAPIController extends BaseController
     /**
      * @param $fixtureId
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function fixturesDetails($fixtureId)
     {
@@ -259,9 +270,9 @@ class SoccerAPIController extends BaseController
 
     /**
      * @param $teamId
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function teamsDetails($teamId, Request $request)
     {
@@ -288,12 +299,18 @@ class SoccerAPIController extends BaseController
     /**
      * @param Request $request
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws FilesystemException
+     *
+     * @return Factory|View
      */
     public function favoriteTeams(Request $request)
     {
         $deviceType = self::getDeviceType();
-        $favorite_teams = config('preferences.favorite_teams');
+        $favorite_teams = FilebaseController::getField('favorite_teams');
+
+        if ($favorite_teams[0] === '') {
+            return view("{$deviceType}/teams/favorite_teams", ['teams' => []]);
+        }
 
         if (count($favorite_teams) == 1) {
             return redirect()->route('teamsDetails', ['id' => $favorite_teams[0]]);
@@ -327,12 +344,18 @@ class SoccerAPIController extends BaseController
     /**
      * @param Request $request
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @throws FilesystemException
+     *
+     * @return RedirectResponse
      */
     public function favoriteLeagues(Request $request)
     {
         $deviceType = self::getDeviceType();
-        $favorite_leagues = config('preferences.favorite_leagues');
+        $favorite_leagues = FilebaseController::getField('favorite_leagues');
+
+        if ($favorite_leagues[0] === '') {
+            return view("{$deviceType}/leagues/favorite_leagues", ['leagues' => []]);
+        }
 
         if (count($favorite_leagues) == 1) {
             return redirect()->route('leaguesDetails', ['id' => $favorite_leagues[0]]);
@@ -344,9 +367,9 @@ class SoccerAPIController extends BaseController
             $leagues[] = self::makeCall('league_by_id', 'country,season', $leagueId)->data;
         }
 
-        if (!config('preferences.show_inactive_leagues')) {
+        if (!FilebaseController::getField('show_inactive_leagues')) {
             $currentYear = Carbon::now()->year;
-            $season = config('preferences.season');
+            $season = FilebaseController::getField('season');
 
             foreach ($leagues as $key => $league) {
                 if (!in_array($league->season->data->name, [$season, $currentYear])) {
@@ -400,7 +423,7 @@ class SoccerAPIController extends BaseController
      * @param $data
      * @param $perPage
      *
-     * @return \Illuminate\Pagination\LengthAwarePaginator
+     * @return LengthAwarePaginator
      */
     public function addPagination($data, $perPage)
     {
@@ -416,7 +439,7 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return mixed|string
      */
@@ -441,7 +464,7 @@ class SoccerAPIController extends BaseController
      * @param $date
      * @param string $format
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @return bool
      */
@@ -458,12 +481,12 @@ class SoccerAPIController extends BaseController
      * @param $transType
      * @param $transString
      *
-     * @return array|\Illuminate\Contracts\Translation\Translator|null|string
+     * @return array|Translator|null|string
      */
     public static function translateString($transType, $transString)
     {
         $logString = $transType.'.'.$transString;
-        if (\Lang::has($logString) && trans($logString) !== '') {
+        if (Lang::has($logString) && trans($logString) !== '') {
             if (trans($logString) == trans($logString, [], 'en') && app()->getLocale() !== 'en') {
                 switch ($transType) {
                     case 'application':
@@ -481,21 +504,25 @@ class SoccerAPIController extends BaseController
             return trans($logString);
         }
 
+        $logString = 'Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php';
         switch ($transType) {
             case 'application':
-                Log::alert('Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php');
+                Log::alert($logString);
                 break;
             case 'countries':
-                Log::critical('Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php');
+                Log::critical($logString);
                 break;
             case 'cup_stages':
-                Log::warning('Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php');
+                Log::warning($logString);
                 break;
             case 'injuries':
-                Log::notice('Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php');
+                Log::notice($logString);
                 break;
             case 'leagues':
-                Log::info('Missing '.$transType.' translation for: '.$transString.' in '.app()->getLocale().'/'.$transType.'.php');
+                Log::info($logString);
+                break;
+            case 'statistics':
+                Log::debug($logString);
                 break;
             default:
                 Log::error('Missing error-level for: '.$transString);
@@ -554,7 +581,7 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array|null|string
      */
@@ -585,7 +612,7 @@ class SoccerAPIController extends BaseController
      * @param string|null $visitorteam_id
      * @param bool        $abort
      *
-     * @return \Exception|false|ClientException|mixed|\Psr\Http\Message\ResponseInterface|string
+     * @return Exception|false|ClientException|mixed|ResponseInterface|string
      */
     public function makeCall(string $type, string $include = null, string $id = null, string $leagues = null, string $date = null, string $localteam_id = null, string $visitorteam_id = null, bool $abort = true)
     {
@@ -644,77 +671,22 @@ class SoccerAPIController extends BaseController
 
     /**
      * @param $file
+     * @param $height
+     * @param $width
      *
      * @return string
      */
-    public static function getTeamLogo($file)
+    public static function getTeamLogo($file, $height, $width)
     {
         if ($file !== null) {
-            preg_match('/.*\/(.*)/', $file, $matches);
-            $image_name = $matches[1];
-
-            !file_exists("images/team_logos/16/{$image_name}") ? $team_logo = self::resizeTeamLogo($file, $image_name, 16, 16) : $team_logo = "/images/team_logos/16/{$image_name}";
+            $file = preg_replace("/cdn\.sportmonks/", 'sportmonks.gumlet', $file)."?height={$height}&width={$width}";
+            $headers = get_headers($file);
+            stripos($headers[0], '200 OK') ? $team_logo = $file : $team_logo = '/images/team_logos/16/Unknown.png';
 
             return $team_logo;
         }
 
         return '/images/team_logos/16/Unknown.png';
-    }
-
-    /**
-     * @param $file
-     * @param $new_width
-     * @param $new_height
-     * @param $image_name
-     *
-     * @return string
-     */
-    public static function resizeTeamLogo($file, $image_name, $new_width, $new_height)
-    {
-        $mime = getimagesize($file);
-
-        if ($mime['mime'] == 'image/png') {
-            $src_img = imagecreatefrompng($file);
-        } elseif ($mime['mime'] == 'image/jpg' || $mime['mime'] == 'image/jpeg' || $mime['mime'] == 'image/pjpeg') {
-            $src_img = imagecreatefromjpeg($file);
-        } else {
-            return $file;
-        }
-
-        $old_x = imagesx($src_img);
-        $old_y = imagesy($src_img);
-
-        if ($old_x > $old_y) {
-            $thumb_w = $new_width;
-            $thumb_h = $old_y * ($new_height / $old_x);
-        } elseif ($old_x < $old_y) {
-            $thumb_w = $old_x * ($new_width / $old_y);
-            $thumb_h = $new_height;
-        } else {
-            $thumb_w = $new_width;
-            $thumb_h = $new_height;
-        }
-
-        $dst_img = imagecreatetruecolor($thumb_w, $thumb_h);
-
-        imagealphablending($dst_img, false);
-        imagesavealpha($dst_img, true);
-        $transparent = imagecolorallocatealpha($dst_img, 255, 255, 255, 127);
-        imagefilledrectangle($dst_img, 0, 0, $thumb_w, $thumb_h, $transparent);
-
-        imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $thumb_w, $thumb_h, $old_x, $old_y);
-
-        // New save location
-        $new_thumb_loc = "images/team_logos/{$new_height}/{$image_name}";
-
-        if ($mime['mime'] == 'image/png') {
-            imagepng($dst_img, $new_thumb_loc, 9);
-        }
-
-        imagedestroy($dst_img);
-        imagedestroy($src_img);
-
-        return $new_thumb_loc;
     }
 
     /**

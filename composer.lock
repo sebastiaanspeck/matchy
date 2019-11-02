@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "494d38d38ddbc823c4208e3374614bc3",
+    "content-hash": "c47dbd49b52c8d4a0b81e93f5c7a05ca",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -379,6 +379,59 @@
                 "trusted proxy"
             ],
             "time": "2019-09-03T16:45:42+00:00"
+        },
+        {
+            "name": "filebase/filebase",
+            "version": "v1.0.21",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/filebase/Filebase.git",
+                "reference": "433190a2474a715ad3e23c8d3d74e39990cc9f77"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/filebase/Filebase/zipball/433190a2474a715ad3e23c8d3d74e39990cc9f77",
+                "reference": "433190a2474a715ad3e23c8d3d74e39990cc9f77",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "php-coveralls/php-coveralls": "^2.0",
+                "phpunit/phpunit": "5.*",
+                "symfony/yaml": "^3.4"
+            },
+            "suggest": {
+                "symfony/yaml": "Allows Yaml format"
+            },
+            "type": "package",
+            "autoload": {
+                "psr-4": {
+                    "Filebase\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Timothy Marois",
+                    "email": "timothymarois@gmail.com"
+                }
+            ],
+            "description": "A Simple but Powerful Flat File Database Storage.",
+            "homepage": "https://github.com/filebase/Filebase",
+            "keywords": [
+                "database",
+                "document",
+                "file",
+                "file-files",
+                "filebase",
+                "flat",
+                "flat-file",
+                "key-value",
+                "serverless"
+            ],
+            "time": "2018-12-27T00:27:21+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",

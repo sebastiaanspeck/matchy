@@ -57,7 +57,7 @@
             color: #606f7b;
 
             position: absolute;
-            bottom: 250px;
+            bottom: 300px;
             left: 50%;
             transform: translate(-50%, -50%);
         }
@@ -66,7 +66,7 @@
             font-size: 1.2rem;
 
             position: absolute;
-            bottom: 175px;
+            bottom: 225px;
             left: 50%;
             transform: translate(-50%, -50%);
         }

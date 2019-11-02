@@ -4,7 +4,7 @@
     .progress {
         margin-bottom: 0 !important;
     }
-
+    
     .timeline {
         padding: 20px 0;
         position: relative;
@@ -101,21 +101,21 @@
             $league = $fixture->league->data;
             $homeTeam = $fixture->localTeam->data;
             $awayTeam = $fixture->visitorTeam->data;
-
+            
             if($homeTeam->national_team == true) {
                 $homeTeam->name = \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("countries", $homeTeam->name);
             }
             if($awayTeam->national_team == true) {
                 $awayTeam->name = \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("countries", $awayTeam->name);
             }
-
+            
             isset($fixture->lineup->data) ? $lineup = $fixture->lineup->data : $lineup = null;
-
+            
             isset($fixture->bench->data) ? $bench = $fixture->bench->data : $bench = null;
             isset($fixture->sidelined->data) ? $sidelined = $fixture->sidelined->data : $sidelined = null;
-
+            
             isset($fixture->events->data) ? $events = $fixture->events->data : $events = null;
-
+            
             isset($fixture->localCoach->data) ? $localCoach = $fixture->localCoach->data : $localCoach = null;
             isset($fixture->visitorCoach->data) ? $visitorCoach = $fixture->visitorCoach->data : $localCoach = null;
 
@@ -127,20 +127,25 @@
             isset($fixture->venue->data) ? $venue = $fixture->venue->data : $venue = null;
 
             $favorite_teams = \App\Http\Controllers\Filebase\FilebaseController::getField('favorite_teams');
+            $favorite_leagues = \App\Http\Controllers\Filebase\FilebaseController::getField('favorite_leagues');
+
             $favorite_homeTeam = "far";
-            /** @var array $favorite_teams */
             if (in_array($homeTeam->id, $favorite_teams)) {
                 $favorite_homeTeam = "fas";
             }
 
             $favorite_awayTeam = "far";
-            /** @var array $favorite_teams */
             if (in_array($awayTeam->id, $favorite_teams)) {
                 $favorite_awayTeam = "fas";
             }
+
+            $favorite_league = "far";
+            if (in_array($league->id, $favorite_leagues)) {
+                $favorite_league = "fas";
+            }
         @endphp
         <div id="heading" style="text-align: center">
-            <h3><a href=" {{ route("leaguesDetails", ["id" => $league->id]) }} "> {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }} </a></h3>
+            <h3><a href="{{ route("setFavoriteLeagues", ["id" => $league->id]) }}"><i class="{{ $favorite_league }} fa-star fa-fw fa-xs" aria-hidden="true" style="transform: translate(10%, -10%);"></i></a>&nbsp;<a href="{{ route("leaguesDetails", ["id" => $league->id]) }}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }}</a></h3>
                 <table style="width:100%">
                     @if(@getimagesize($homeTeam->logo_path) && @getimagesize($awayTeam->logo_path))
                         <tr>
@@ -200,11 +205,9 @@
             <li class="nav-item">
                 <a class="nav-link active" id="events-tab" data-toggle="tab" href="#match_summary" role="tab" aria-controls="match_summary" aria-selected="true">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Match Summary") }}</a>
             </li>
-            @if(count($stats) > 1)
             <li class="nav-item">
                 <a class="nav-link" id="statistics-tab" data-toggle="tab" href="#statistics" role="tab" aria-controls="statistics" aria-selected="true">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Statistics") }}</a>
             </li>
-            @endif
             @if(count($lineup) > 1)
                 <li class="nav-item">
                     <a class="nav-link" id="lineups-tab" data-toggle="tab" href="#lineups" role="tab" aria-controls="lineups" aria-selected="true">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Lineups") }}</a>
@@ -244,7 +247,7 @@
                                     </div>
                                     <div class="col-10 col-md-5 order-1"></div>
                                 </div>
-
+                                
                         @endforeach
                     </div>
                 @else
@@ -254,7 +257,12 @@
             <div class="tab-pane fade" id="statistics" role="tabpanel" aria-labelledby="statistics-tab">
                 @if(count($stats) > 0)
                     @php
-                        $value_as_percentage = array('passes-percentage', 'possessiontime');
+                        $stats_keys = array("team_id" => "team_id", "shots-total" => trans("application.Total shots"), "shots-ongoal" => trans("application.Shots on goal"), "shots-offgoal" => trans("application.Shots of goal"), "shots-blocked" => trans("application.Blocked shots"), "shots-insidebox" => trans("application.Shots inside box"), "shots-outsidebox" => trans("application.Shots outside box"),
+                        "passes-total" => trans("application.Total passes"), "passes-accurate" => trans("application.Accurate passes"), "passes-percentage" => trans("application.Passing percentage"),
+                        "attacks-attacks" => trans("application.Total attacks"), "attacks-dangerous_attacks" => trans("application.Dangerous attacks"),
+                        "fouls" => trans("application.Fouls"), "corners" => trans("application.Corners"), "offsides" => trans("application.Offside"), "possessiontime" => trans("application.Ball possession"),
+                        "yellowcards" => trans("application.Yellow cards"), "redcards" => trans("application.Red cards"), "saves" => trans("application.Saves"), "substitutions" => trans("application.Substitutions"),
+                        "goal_kick" => trans("application.Goal kicks"), "goal_attempts" => trans("application.Goal attempts"), "free_kick" => trans("application.Free kicks"), "throw_in" => trans("application.Throw-ins"), "ball_safe" => trans("application.Ball safe"));
                         $stats_array = array();
                         foreach($stats as $stat) {
                             foreach($stat as $key=>$value) {
@@ -266,11 +274,7 @@
                                         if(is_null($stat_value)) {
                                             continue;
                                         } else {
-                                            $search_key = $key . "-" . $stat_key;
-                                            $k = \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("statistics", $search_key);
-                                            if(in_array($search_key, $value_as_percentage)) {
-                                                $stat_value = $stat_value . '%';
-                                            }
+                                            $k = $stats_keys[$key . "-" . $stat_key];
                                             if(!isset($stats_array[$k])) {
                                                 $stats_array[$k] = $stat_value;
                                             } elseif (is_array($stats_array[$k])) {
@@ -285,10 +289,7 @@
                                     if(is_null($value)) {
                                         continue;
                                     } else {
-                                        $k = \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("statistics", $key);
-                                        if(in_array($key, $value_as_percentage)) {
-                                            $value = $stat_value . '%';
-                                        }
+                                        $k = $stats_keys[$key];
                                         if(!isset($stats_array[$k])) {
                                             $stats_array[$k] = $value;
                                         } elseif (is_array($stats_array[$k])) {
@@ -308,7 +309,7 @@
                             $home_team_i = 0;
                             $away_team_i = 1;
                         }
-                    @endphp
+                        @endphp
                     <table class="table table-sm table-borderless">
                         @foreach ($stats_array as $label => $stat)
                             @if ($label == "team_id")
@@ -318,73 +319,64 @@
                                     $home_stat = $stat[$home_team_i];
                                     $away_stat = $stat[$away_team_i];
 
-                                    if(strpos($home_stat, '%') !== false or strpos($away_stat, '%')) {
-                                        $home_stat_percentage = substr_replace($home_stat ,"", -1);
-                                        $away_stat_percentage = substr_replace($away_stat ,"", -1);
-                                        if($home_stat_percentage < $away_stat_percentage) {
-                                            $color_home = "bg-danger";
-                                            $color_away = "bg-success";
-                                        }
-                                        elseif ($home_stat_percentage > $away_stat_percentage) {
-                                            $color_home = "bg-success";
-                                            $color_away = "bg-danger";
-                                        } else {
-                                            $color_home = "bg-primary";
-                                            $color_away = "bg-primary";
-                                        }
+                                    $total_stat = $home_stat + $away_stat;
+
+                                    if($home_stat == 0) {
+                                        $home_stat_percentage = 0;
                                     } else {
-                                        $total_stat = $home_stat + $away_stat;
+                                        $home_stat_percentage = $home_stat / $total_stat * 100;
+                                    }
 
-                                        if($home_stat == 0) {
-                                            $home_stat_percentage = 0;
-                                        } else {
-                                            $home_stat_percentage = $home_stat / $total_stat * 100;
-                                        }
+                                    if($away_stat == 0) {
+                                        $away_stat_percentage = 0;
+                                    } else {
+                                        $away_stat_percentage = $away_stat / $total_stat * 100;
+                                    }
 
-                                        if($away_stat == 0) {
-                                            $away_stat_percentage = 0;
-                                        } else {
-                                            $away_stat_percentage = $away_stat / $total_stat * 100;
-                                        }
 
-                                        if($home_stat < $away_stat) {
-                                            $color_home = "bg-danger";
-                                            $color_away = "bg-success";
-                                        }
-                                        elseif ($home_stat > $away_stat) {
-                                            $color_home = "bg-success";
-                                            $color_away = "bg-danger";
-                                        } else {
-                                            $color_home = "bg-primary";
-                                            $color_away = "bg-primary";
-                                        }
+                                    if($home_stat < $away_stat) {
+                                        $color_home = "bg-danger";
+                                        $color_away = "bg-success";
+                                    }
+                                    elseif ($home_stat > $away_stat) {
+                                        $color_home = "bg-success";
+                                        $color_away = "bg-danger";
+                                    } else {
+                                        $color_home = "bg-primary";
+                                        $color_away = "bg-primary";
                                     }
                                 @endphp
-                                <tr>
-                                    <td colspan="2" style="text-align: left">
-                                        <span>{{$home_stat}}</span>
-                                    </td>
-                                    <td colspan="2" style="text-align: center">
-                                        <span>{{$label}}</span>
-                                    </td>
-                                    <td colspan="2" style="text-align: right">
-                                        <span>{{$away_stat}}</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3" style="width: 50%">
-                                        <div class="progress" style="direction: rtl; height:10px">
-                                            <div class="progress-bar {{$color_home}}" role="progressbar" style="width: {{$home_stat_percentage}}%;" aria-valuenow="{{$home_stat_percentage}}" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                    </td>
-                                    <td colspan="3" style="width: 50%">
-                                        <div class="progress" style="direction: ltr; height:10px">
-                                            <div class="progress-bar {{$color_away}}" role="progressbar" style="width: {{$away_stat_percentage}}%;" aria-valuenow="{{$away_stat_percentage}}" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                </tr>
+                                    <tr>
+                                        @if(in_array($label, array("Ball possession", "Passing percentage", "Balbezit")))
+                                            @php
+                                                $home_stat = $home_stat . "%";
+                                                $away_stat = $away_stat . "%";
+                                            @endphp
+                                        @endif
+                                        <td colspan="2" style="text-align: left">
+                                            <span>{{$home_stat}}</span>
+                                        </td>
+                                        <td colspan="2" style="text-align: center">
+                                            <span>{{$label}}</span>
+                                        </td>
+                                        <td colspan="2" style="text-align: right">
+                                            <span>{{$away_stat}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" style="width: 50%">
+                                            <div class="progress" style="direction: rtl; height:10px">
+                                                <div class="progress-bar {{$color_home}}" role="progressbar" style="width: {{$home_stat_percentage}}%;" aria-valuenow="{{$home_stat_percentage}}" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </td>
+                                        <td colspan="3" style="width: 50%">
+                                            <div class="progress" style="direction: ltr; height:10px">
+                                                <div class="progress-bar {{$color_away}}" role="progressbar" style="width: {{$away_stat_percentage}}%;" aria-valuenow="{{$away_stat_percentage}}" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                    </tr>
                             @endif
                         @endforeach
                     </table>
@@ -425,7 +417,7 @@
                                 } else {
                                     $player = ["player_id" => $val->player_id, "number" => $val->number, "common_name" => $val->player_name, "nationality" => "Unknown", "stats" => $val->stats, "events" => array()];
                                 }
-
+                                
                                 if($val->stats->goals->scored != 0) {
                                     for($goals = 0; $goals < $val->stats->goals->scored; $goals++) {
                                         array_push($player['events'], "/images/events/goal.svg");
@@ -442,11 +434,11 @@
                                     }
                                 }
                                 $player['nationality'] = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($player['nationality']);
-
+                                
                                 if($player['nationality'] == "Unknown"){
                                     Log::emergency("Missing nationality for player with id: {$player['player_id']}");
                                 }
-
+                                
                                 if($val->team == "home") {
                                     $home_lineup_players->{$counter_h} = (object) $player;
                                     $counter_h++;
@@ -457,7 +449,7 @@
                             }
                             $home_lineup_players = get_object_vars($home_lineup_players);
                             $away_lineup_players = get_object_vars($away_lineup_players);
-
+                            
                             $counter_h >= $counter_a ? $counter = $counter_h : $counter = $counter_a;
                         @endphp
                         @for($index = 0; $index < $counter; $index++)
@@ -523,7 +515,7 @@
                                     } else {
                                         $player = ["player_id" => $val->player_id, "number" => $val->number, "common_name" => $val->player_name, "nationality" => "Unknown", "stats" => $val->stats, "events" => array()];
                                     }
-
+                                    
                                     if($val->stats->goals->scored != 0) {
                                         for($goals = 0; $goals < $val->stats->goals->scored; $goals++) {
                                             array_push($player['events'], "/images/events/goal.svg");
@@ -540,11 +532,11 @@
                                         }
                                     }
                                     $player['nationality'] = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($player['nationality']);
-
+                                    
                                     if($player['nationality'] == "Unknown"){
                                         Log::emergency("Missing nationality for player with id: {$player['player_id']}");
                                     }
-
+                                    
                                     if($val->team == "home") {
                                         $home_bench_players->{$counter_h} = (object) $player;
                                         $counter_h++;
@@ -555,7 +547,7 @@
                                 }
                                 $home_bench_players = get_object_vars($home_bench_players);
                                 $away_bench_players = get_object_vars($away_bench_players);
-
+                                
                                 $counter_h >= $counter_a ? $counter = $counter_h : $counter = $counter_a;
                             @endphp
                             @for($index = 0; $index < $counter; $index++)
@@ -618,13 +610,13 @@
                                 foreach($sidelined as $val){
                                     $val->team_id == $homeTeam->id ? $val->team = "home" : $val->team = "away";
                                     $player = array("player_id" => $val->player_id, "common_name" => $val->player->data->common_name, "nationality" => $val->player->data->nationality, "reason" => $val->reason);
-
+                                    
                                     $player['nationality'] = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($player['nationality']);
-
+                                    
                                     if($player['nationality'] == "Unknown"){
                                         Log::emergency("Missing nationality for player with id: {$player['player_id']}");
                                     }
-
+                                    
                                     if($val->team == "home") {
                                         $home_sidelined_players->{$counter_h} = (object) $player;
                                         $counter_h++;
@@ -676,11 +668,11 @@
                             @php
                                 $localCoach->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($localCoach->nationality);
                                 $visitorCoach->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($visitorCoach->nationality);
-
+                            
                                 if($localCoach->nationality == "Unknown") {
                                     Log::emergency("Missing nationality for coach with id: " . $localCoach->coach_id);
                                 }
-
+                                
                                 if($visitorCoach->nationality == "Unknown") {
                                     Log::emergency("Missing nationality for coach with id: " . $visitorCoach->coach_id);
                                 }
@@ -724,14 +716,14 @@
                             $league = $h2h_fixture->league->data;
                             $homeTeam = $h2h_fixture->localTeam->data;
                             $awayTeam = $h2h_fixture->visitorTeam->data;
-
+                            
                             if($homeTeam->national_team == true) {
                                 $homeTeam->name = \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("countries", $homeTeam->name);
                             }
                             if($awayTeam->national_team == true) {
                                 $awayTeam->name = \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("countries", $awayTeam->name);
                             }
-
+                            
                             if(in_array($h2h_fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
                                 switch($h2h_fixture->time->status) {
                                     case("FT_PEN"):
@@ -760,7 +752,7 @@
                             } else {
                                 $homeTeamClass = $awayTeamClass = "";
                             }
-
+                            
                             switch($h2h_fixture->time->status) {
                                 case("FT_PEN"):
                                     $scoreLine = $h2h_fixture->scores->localteam_score . " - " . $h2h_fixture->scores->visitorteam_score ."\n(" . $h2h_fixture->scores->localteam_pen_score . " - " . $h2h_fixture->scores->visitorteam_pen_score . ")";
@@ -780,19 +772,21 @@
                             $awayTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($awayTeam->logo_path, 16, 16);
                         @endphp
                         @if($h2h_fixture->league_id == $last_league_id)
-                            @if(isset($h2h_fixture->round) and $last_round_id !== $h2h_fixture->round->data->name)
-                                <tr>
-                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
-                                        @if($h2h_fixture->stage->data->name !== "Regular Season")
-                                            {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $h2h_fixture->stage->data->name) }}
-                                        @endif
-                                        {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Matchday") }} {{$h2h_fixture->round->data->name}}
-                                        @if($h2h_fixture->season->data->name != $last_season_name)
-                                            - {{ $h2h_fixture->season->data->name }}
-                                        @endif
-                                    </td>
-                                </tr>
-                            @elseif(isset($h2h_fixture->stage) and $last_stage_id !== $h2h_fixture->stage->data->name)
+                            @if(isset($h2h_fixture->round))
+                                @if($last_round_id !== $h2h_fixture->round->data->name)
+                                    <tr>
+                                        <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
+                                            @if($h2h_fixture->stage->data->name !== "Regular Season")
+                                                {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $h2h_fixture->stage->data->name) }}
+                                            @endif
+                                            {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Matchday") }} {{$h2h_fixture->round->data->name}}
+                                            @if($h2h_fixture->season->data->name != $last_season_name)
+                                                - {{ $h2h_fixture->season->data->name }}
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endif
+                            @elseif($last_stage_id !== $h2h_fixture->stage->data->name)
                                 <tr>
                                     <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
                                         {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $h2h_fixture->stage->data->name) }}
@@ -810,7 +804,7 @@
                                 <td scope="row" style="text-align: center">{!! nl2br(e($scoreLine)) !!}</td>
                                 {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
                                 <td scope="row" style="text-align: left"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}><img src="{{ $awayTeamLogo }}" alt="team_logo">&nbsp;{{$awayTeam->name}}</a></td>
-                                <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $h2h_fixture->id])}}"><i class="fa fa-info-circle" aria-hidden="true" style="margin-right: 10px"></i></a></td>
+                                <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $fixture->id])}}"><i class="fa fa-info-circle" aria-hidden="true" style="margin-right: 10px"></i></a></td>
                             </tr>
                         @else
                             @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; @endphp
@@ -859,10 +853,10 @@
                                     <td scope="row" style="text-align: center">{!! nl2br(e($scoreLine)) !!}</td>
                                     {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
                                     <td scope="row" style="text-align: left"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}><img src="{{ $awayTeamLogo }}" alt="team_logo">&nbsp;{{$awayTeam->name}}</a></td>
-                                    <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $h2h_fixture->id])}}"><i class="fa fa-info-circle" aria-hidden="true" style="margin-right: 10px"></i></a></td>
+                                    <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $fixture->id])}}"><i class="fa fa-info-circle" aria-hidden="true" style="margin-right: 10px"></i></a></td>
                                 </tr>
                                 @endif
-                                @php $last_league_id = $h2h_fixture->league_id; if(isset($h2h_fixture->round)) {$last_round_id = $h2h_fixture->round->data->name;} if(isset($h2h_fixture->stage)) {$last_stage_id = $h2h_fixture->stage->data->name;} $last_season_name = $h2h_fixture->season->data->name; @endphp
+                                @php $last_league_id = $h2h_fixture->league_id; if(isset($h2h_fixture->round)) {$last_round_id = $h2h_fixture->round->data->name;} $last_stage_id = $h2h_fixture->stage->data->name; $last_season_name = $h2h_fixture->season->data->name; @endphp
                     @endforeach
                     </tbody>
                 </table>

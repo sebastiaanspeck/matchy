@@ -18,9 +18,9 @@
                         $country = $league->country->data;
                     @endphp
                     <tr>
-                        <td scope="row" width="25%"><a href="{{route("leaguesDetails", ["id" => $league->id])}}"><i class="fas fa-star fa-fw"></i>&nbsp;&nbsp;{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }}</a></td>
+                        <td scope="row" width="25%"><a href="{{ route("setFavoriteLeagues", ["id" => $league->id]) }}"><i class="fas fa-star fa-fw" aria-hidden="true"></i></a>&nbsp;<a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }}</a></td>
                         @php $country->flag = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($country->name); @endphp
-                        <td scope="row" width="50%"><img src="/images/flags/shiny/16/{{$country->flag}}.png" alt="countryflag">&nbsp;&nbsp;{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("countries", $country->name) }}</td>
+                        <td scope="row" width="50%"><img src="/images/flags/shiny/16/{{$country->flag}}.png" alt="countryflag">&nbsp;{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("countries", $country->name) }}</td>
                     </tr>
                 @endforeach
                 </tbody>
