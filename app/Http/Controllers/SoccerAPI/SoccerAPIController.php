@@ -32,6 +32,7 @@ class SoccerAPIController extends BaseController
     use AuthorizesRequests;
     use DispatchesJobs;
     use ValidatesRequests;
+
     /**
      * @param Request $request
      *
