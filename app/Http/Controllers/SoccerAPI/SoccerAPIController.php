@@ -29,8 +29,9 @@ use Sportmonks\SoccerAPI\Facades\SoccerAPI;
  */
 class SoccerAPIController extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-
+    use AuthorizesRequests;
+    use DispatchesJobs;
+    use ValidatesRequests;
     /**
      * @param Request $request
      *
