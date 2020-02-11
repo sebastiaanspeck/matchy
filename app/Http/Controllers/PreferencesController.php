@@ -17,6 +17,7 @@ class PreferencesController extends BaseController
     use AuthorizesRequests;
     use DispatchesJobs;
     use ValidatesRequests;
+
     /**
      * @param $teamId
      *
