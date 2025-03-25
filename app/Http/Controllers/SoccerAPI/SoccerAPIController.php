@@ -75,7 +75,7 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param $leagueId
+     * @param         $leagueId
      * @param Request $request
      *
      * @return Factory|View
@@ -162,7 +162,7 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param $type
+     * @param         $type
      * @param Request $request
      *
      * @return Factory|View|string
@@ -271,7 +271,7 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param $teamId
+     * @param         $teamId
      * @param Request $request
      *
      * @return Factory|View
@@ -463,7 +463,7 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param $date
+     * @param        $date
      * @param string $format
      *
      * @throws Exception
@@ -616,7 +616,7 @@ class SoccerAPIController extends BaseController
      *
      * @return Exception|false|ClientException|mixed|ResponseInterface|string
      */
-    public function makeCall(string $type, string $include = null, string $id = null, string $leagues = null, string $date = null, string $localteam_id = null, string $visitorteam_id = null, bool $abort = true)
+    public function makeCall(string $type, ?string $include = null, ?string $id = null, ?string $leagues = null, ?string $date = null, ?string $localteam_id = null, ?string $visitorteam_id = null, bool $abort = true)
     {
         switch ($type) {
             case 'livescores':
