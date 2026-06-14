@@ -9,21 +9,13 @@
                 </tr>
                 <tr>
                     @php
-                        if($team->national_team == true) {
-                            $team->name = trans("countries." . $team->name);
-                        }
-                        
-                        if(strpos($team->name, "countries") !== false) {
-                            Log::critical("Missing country translation for: " . str_replace("countries.", "", $team->name) . " in " . app()->getLocale() . "/countries.php");
-                        }
-
                         $favorite_teams = \App\Http\Controllers\Filebase\FilebaseController::getField('favorite_teams');
                         $favorite_team = "far";
                         if (in_array($team->id, $favorite_teams)) {
                             $favorite_team = "fas";
                         }
                     @endphp
-                    <td style="vertical-align: top"><h3><i class="{{ $favorite_team }} fa-star fa-fw fa-xs" aria-hidden="true"></i>&nbsp;{{$team->name}}</h3></td>
+                    <td style="vertical-align: top"><h3><a href="{{ route("setFavoriteTeams", ["id" => $team->id]) }}"><i class="{{ $favorite_team }} fa-star fa-fw fa-xs" aria-hidden="true"></i></a>&nbsp;{{$team->name}}</h3></td>
                 </tr>
                 @if(isset($coach))
                     <tr>
@@ -57,20 +49,15 @@
                             $league = $last_fixture->league->data;
                             $homeTeam = $last_fixture->localTeam->data;
                             $awayTeam = $last_fixture->visitorTeam->data;
-                            
-                            if($homeTeam->national_team == true) {
-                                $homeTeam->name = trans("countries." . $homeTeam->name);
-                            }
-                            if($awayTeam->national_team == true) {
-                                $awayTeam->name = trans("countries." . $awayTeam->name);
-                            }
-                            
+
+
+
                             if(strpos($homeTeam->name, "countries") !== false) {
                                 Log::critical("Missing country translation for: " . str_replace("countries.", "", $homeTeam->name) . " in " . app()->getLocale() . "/countries.php");
                             } elseif(strpos($awayTeam->name, "countries") !== false) {
                                 Log::critical("Missing country translation for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
                             }
-                            
+
                             if(in_array($last_fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
                                 switch($last_fixture->time->status) {
                                     case("FT_PEN"):
@@ -99,7 +86,7 @@
                             } else {
                                 $homeTeamClass = $awayTeamClass = "";
                             }
-                            
+
                             switch($last_fixture->time->status) {
                                 case("FT_PEN"):
                                     $scoreLine = $last_fixture->scores->localteam_score . " - " . $last_fixture->scores->visitorteam_score ."\n(" . $last_fixture->scores->localteam_pen_score . " - " . $last_fixture->scores->visitorteam_pen_score . ")";
@@ -195,14 +182,9 @@
                             $league = $upcoming_fixture->league->data;
                             $homeTeam = $upcoming_fixture->localTeam->data;
                             $awayTeam = $upcoming_fixture->visitorTeam->data;
-                            
-                            if($homeTeam->national_team == true) {
-                                $homeTeam->name = trans("countries." . $homeTeam->name);
-                            }
-                            if($awayTeam->national_team == true) {
-                                $awayTeam->name = trans("countries." . $awayTeam->name);
-                            }
-                            
+
+
+
                             if(strpos($homeTeam->name, "countries") !== false) {
                                 Log::critical("Missing country translation for: " . str_replace("countries.", "", $homeTeam->name) . " in " . app()->getLocale() . "/countries.php");
                             } elseif(strpos($awayTeam->name, "countries") !== false) {
