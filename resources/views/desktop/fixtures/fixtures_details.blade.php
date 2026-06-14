@@ -109,22 +109,16 @@
                 $awayTeam->name = \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("countries", $awayTeam->name);
             }
 
-            isset($fixture->lineup->data) ? $lineup = $fixture->lineup->data : $lineup = null;
-
-            isset($fixture->bench->data) ? $bench = $fixture->bench->data : $bench = null;
-            isset($fixture->sidelined->data) ? $sidelined = $fixture->sidelined->data : $sidelined = null;
-
-            isset($fixture->events->data) ? $events = $fixture->events->data : $events = null;
-
-            isset($fixture->localCoach->data) ? $localCoach = $fixture->localCoach->data : $localCoach = null;
-            isset($fixture->visitorCoach->data) ? $visitorCoach = $fixture->visitorCoach->data : $localCoach = null;
-
-            isset($fixture->stats->data) ? $stats = $fixture->stats->data : $stats = null;
-            isset($fixture->comments->data) ? $comments = $fixture->comments->data : $comments = null;
-            isset($fixture->highlights->data) ? $highlights = $fixture->highlights->data : $highlights = null;
-
-            isset($fixture->referee->data) ? $referee = $fixture->referee->data : $referee = null;
-            isset($fixture->venue->data) ? $venue = $fixture->venue->data : $venue = null;
+            $lineup      = $fixture->lineup->data ?? [];
+            $bench       = $fixture->bench->data ?? [];
+            $sidelined   = $fixture->sidelined->data ?? [];
+            $events      = $fixture->events->data ?? [];
+            $localCoach  = $fixture->localCoach->data ?? null;
+            $visitorCoach = $fixture->visitorCoach->data ?? null;
+            $statistics  = $fixture->statistics->data ?? [];
+            $comments    = $fixture->comments->data ?? [];
+            $referee     = $fixture->referee->data ?? null;
+            $venue       = $fixture->venue->data ?? null;
 
             $favorite_teams = \App\Http\Controllers\Filebase\FilebaseController::getField('favorite_teams');
             $favorite_leagues = \App\Http\Controllers\Filebase\FilebaseController::getField('favorite_leagues');
@@ -205,7 +199,7 @@
             <li class="nav-item">
                 <a class="nav-link active" id="events-tab" data-toggle="tab" href="#match_summary" role="tab" aria-controls="match_summary" aria-selected="true">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Match Summary") }}</a>
             </li>
-            @if(count($stats) > 1)
+            @if(count($statistics) > 0)
             <li class="nav-item">
                 <a class="nav-link" id="statistics-tab" data-toggle="tab" href="#statistics" role="tab" aria-controls="statistics" aria-selected="true">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Statistics") }}</a>
             </li>
@@ -256,139 +250,66 @@
                 @endif
             </div>
             <div class="tab-pane fade" id="statistics" role="tabpanel" aria-labelledby="statistics-tab">
-                @if(count($stats) > 0)
+                @if(count($statistics) > 0)
                     @php
-                        $value_as_percentage = array('passes-percentage', 'possessiontime');
-                        $stats_array = array();
-                        foreach($stats as $stat) {
-                            foreach($stat as $key=>$value) {
-                                if($key == "fixture_id") {
-                                    continue;
-                                }
-                                if(is_object($value)) {
-                                    foreach($value as $stat_key => $stat_value) {
-                                        if(is_null($stat_value)) {
-                                            continue;
-                                        } else {
-                                            $search_key = $key . "-" . $stat_key;
-                                            $k = \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("statistics", $search_key);
-                                            if(in_array($search_key, $value_as_percentage)) {
-                                                $stat_value = $stat_value . '%';
-                                            }
-                                            if(!isset($stats_array[$k])) {
-                                                $stats_array[$k] = $stat_value;
-                                            } elseif (is_array($stats_array[$k])) {
-                                                $stats_array[$k][] = $stat_value;
-                                            } else {
-                                                $stats_array[$k] = [$stats_array[$k], $stat_value];
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    if(is_null($value)) {
-                                        continue;
-                                    } else {
-                                        $k = \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("statistics", $key);
-                                        if(in_array($key, $value_as_percentage)) {
-                                            $value = $value . '%';
-                                        }
-                                        if(!isset($stats_array[$k])) {
-                                            $stats_array[$k] = $value;
-                                        } elseif (is_array($stats_array[$k])) {
-                                            $stats_array[$k][] = $value;
-                                        } else {
-                                            $stats_array[$k] = [$stats_array[$k], $value];
-                                        }
-                                    }
-
-                                }
+                        $stats_by_type = [];
+                        foreach ($statistics as $stat) {
+                            $typeId   = $stat->data_type_id;
+                            $devName  = strtolower(str_replace('_', '-', $stat->type->data->developer_name ?? ''));
+                            $label    = \Illuminate\Support\Facades\Lang::has('statistics.' . $devName)
+                                ? trans('statistics.' . $devName)
+                                : ($stat->type->data->name ?? ('Stat ' . $typeId));
+                            $isPct    = str_contains(strtoupper($stat->type->data->developer_name ?? ''), 'POSSESSION')
+                                     || str_contains(strtoupper($stat->type->data->developer_name ?? ''), 'PERCENTAGE')
+                                     || str_contains(strtoupper($stat->type->data->developer_name ?? ''), 'ACCURACY');
+                            if (!isset($stats_by_type[$typeId])) {
+                                $stats_by_type[$typeId] = ['label' => $label, 'home' => null, 'away' => null, 'is_pct' => $isPct];
+                            }
+                            if ($stat->participant_id == $homeTeam->id) {
+                                $stats_by_type[$typeId]['home'] = $stat->value;
+                            } elseif ($stat->participant_id == $awayTeam->id) {
+                                $stats_by_type[$typeId]['away'] = $stat->value;
                             }
                         }
-                        if($stats_array["team_id"][0] != $homeTeam->id) {
-                            $home_team_i = 1;
-                            $away_team_i = 0;
-                        } else {
-                            $home_team_i = 0;
-                            $away_team_i = 1;
-                        }
-                        @endphp
+                    @endphp
                     <table class="table table-sm table-borderless">
-                        @foreach ($stats_array as $label => $stat)
-                            @if ($label == "team_id")
+                        @foreach ($stats_by_type as $row)
+                            @if ($row['home'] === null && $row['away'] === null)
                                 @continue
-                            @else
-                                @php
-                                    $home_stat = $stat[$home_team_i];
-                                    $away_stat = $stat[$away_team_i];
-
-                                    if(strpos($home_stat, '%') !== false or strpos($away_stat, '%')) {
-                                        $home_stat_percentage = substr_replace($home_stat ,"", -1);
-                                        $away_stat_percentage = substr_replace($away_stat ,"", -1);
-                                        if($home_stat_percentage < $away_stat_percentage) {
-                                            $color_home = "bg-danger";
-                                            $color_away = "bg-success";
-                                        }
-                                        elseif ($home_stat_percentage > $away_stat_percentage) {
-                                            $color_home = "bg-success";
-                                            $color_away = "bg-danger";
-                                        } else {
-                                            $color_home = "bg-primary";
-                                            $color_away = "bg-primary";
-                                        }
-                                    } else {
-                                        $total_stat = $home_stat + $away_stat;
-
-                                        if($home_stat == 0) {
-                                            $home_stat_percentage = 0;
-                                        } else {
-                                            $home_stat_percentage = $home_stat / $total_stat * 100;
-                                        }
-
-                                        if($away_stat == 0) {
-                                            $away_stat_percentage = 0;
-                                        } else {
-                                            $away_stat_percentage = $away_stat / $total_stat * 100;
-                                        }
-
-                                        if($home_stat < $away_stat) {
-                                            $color_home = "bg-danger";
-                                            $color_away = "bg-success";
-                                        }
-                                        elseif ($home_stat > $away_stat) {
-                                            $color_home = "bg-success";
-                                            $color_away = "bg-danger";
-                                        } else {
-                                            $color_home = "bg-primary";
-                                            $color_away = "bg-primary";
-                                        }
-                                    }
-                                @endphp
-                                    <tr>
-                                        <td colspan="2" style="text-align: left">
-                                            <span>{{$home_stat}}</span>
-                                        </td>
-                                        <td colspan="2" style="text-align: center">
-                                            <span>{{$label}}</span>
-                                        </td>
-                                        <td colspan="2" style="text-align: right">
-                                            <span>{{$away_stat}}</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="3" style="width: 50%">
-                                            <div class="progress" style="direction: rtl; height:10px">
-                                                <div class="progress-bar {{$color_home}}" role="progressbar" style="width: {{$home_stat_percentage}}%;" aria-valuenow="{{$home_stat_percentage}}" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                        </td>
-                                        <td colspan="3" style="width: 50%">
-                                            <div class="progress" style="direction: ltr; height:10px">
-                                                <div class="progress-bar {{$color_away}}" role="progressbar" style="width: {{$away_stat_percentage}}%;" aria-valuenow="{{$away_stat_percentage}}" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                    </tr>
                             @endif
+                            @php
+                                $home_val = $row['home'] ?? 0;
+                                $away_val = $row['away'] ?? 0;
+                                if ($row['is_pct']) {
+                                    $home_pct = (float) $home_val;
+                                    $away_pct = (float) $away_val;
+                                } else {
+                                    $total    = ($home_val + $away_val) ?: 1;
+                                    $home_pct = $home_val / $total * 100;
+                                    $away_pct = $away_val / $total * 100;
+                                }
+                                $color_home = $home_val > $away_val ? 'bg-success' : ($home_val < $away_val ? 'bg-danger' : 'bg-primary');
+                                $color_away = $away_val > $home_val ? 'bg-success' : ($away_val < $home_val ? 'bg-danger' : 'bg-primary');
+                                $home_display = $row['is_pct'] ? $home_val . '%' : $home_val;
+                                $away_display = $row['is_pct'] ? $away_val . '%' : $away_val;
+                            @endphp
+                            <tr>
+                                <td colspan="2" style="text-align: left"><span>{{ $home_display }}</span></td>
+                                <td colspan="2" style="text-align: center"><span>{{ $row['label'] }}</span></td>
+                                <td colspan="2" style="text-align: right"><span>{{ $away_display }}</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="width: 50%">
+                                    <div class="progress" style="direction: rtl; height:10px">
+                                        <div class="progress-bar {{ $color_home }}" role="progressbar" style="width: {{ $home_pct }}%;" aria-valuenow="{{ $home_pct }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </td>
+                                <td colspan="3" style="width: 50%">
+                                    <div class="progress" style="direction: ltr; height:10px">
+                                        <div class="progress-bar {{ $color_away }}" role="progressbar" style="width: {{ $away_pct }}%;" aria-valuenow="{{ $away_pct }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </td>
+                            </tr>
                         @endforeach
                     </table>
                 @else

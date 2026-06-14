@@ -1,17 +1,9 @@
 <?php
 
+use App\Http\Controllers\PreferencesController;
+use App\Http\Controllers\SoccerAPI\SoccerAPIController;
+use Illuminate\Support\Facades\Route;
 use Jenssegers\Agent\Agent;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
 Route::get('/', function () {
     $agent = new Agent;
@@ -32,22 +24,22 @@ Route::get('/', function () {
 });
 
 // Leagues
-Route::get('/leagues', 'SoccerAPI\SoccerAPIController@allLeagues')->name('leagues');
-Route::get('/leagues/{id}', 'SoccerAPI\SoccerAPIController@leaguesDetails')->name('leaguesDetails');
+Route::get('/leagues', [SoccerAPIController::class, 'allLeagues'])->name('leagues');
+Route::get('/leagues/{id}', [SoccerAPIController::class, 'leaguesDetails'])->name('leaguesDetails');
 
 // Livescores
-Route::get('/livescores/{type}', 'SoccerAPI\SoccerAPIController@livescores')->name('livescores');
+Route::get('/livescores/{type}', [SoccerAPIController::class, 'livescores'])->name('livescores');
 
 // Fixtures
-Route::get('/fixtures', 'SoccerAPI\SoccerAPIController@fixturesByDate')->name('fixturesByDate');
-Route::get('/fixtures/{id}', 'SoccerAPI\SoccerAPIController@fixturesDetails')->name('fixturesDetails');
+Route::get('/fixtures', [SoccerAPIController::class, 'fixturesByDate'])->name('fixturesByDate');
+Route::get('/fixtures/{id}', [SoccerAPIController::class, 'fixturesDetails'])->name('fixturesDetails');
 
 // Teams
-Route::get('/teams/{id}', 'SoccerAPI\SoccerAPIController@teamsDetails')->name('teamsDetails');
+Route::get('/teams/{id}', [SoccerAPIController::class, 'teamsDetails'])->name('teamsDetails');
 
 // Favorites
-Route::get('/favorite_teams', 'SoccerAPI\SoccerAPIController@favoriteTeams')->name('favoriteTeams');
-Route::get('/favorite_leagues', 'SoccerAPI\SoccerAPIController@favoriteLeagues')->name('favoriteLeagues');
+Route::get('/favorite_teams', [SoccerAPIController::class, 'favoriteTeams'])->name('favoriteTeams');
+Route::get('/favorite_leagues', [SoccerAPIController::class, 'favoriteLeagues'])->name('favoriteLeagues');
 
-Route::get('/update_favorite_teams/{id}', 'PreferencesController@setFavoriteTeams')->name('setFavoriteTeams');
-Route::get('/update_favorite_leagues/{id}', 'PreferencesController@setFavoriteLeagues')->name('setFavoriteLeagues');
+Route::get('/update_favorite_teams/{id}', [PreferencesController::class, 'setFavoriteTeams'])->name('setFavoriteTeams');
+Route::get('/update_favorite_leagues/{id}', [PreferencesController::class, 'setFavoriteLeagues'])->name('setFavoriteLeagues');

@@ -3,26 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Filebase\FilebaseController;
-use Filebase\Filesystem\FilesystemException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 
-/**
- * Class PreferencesController.
- */
 class PreferencesController extends BaseController
 {
     use AuthorizesRequests;
-    use DispatchesJobs;
     use ValidatesRequests;
 
-    /**
-     * @return back
-     *
-     * @throws FilesystemException
-     */
     public function setFavoriteTeams($teamId)
     {
         $favorite_teams = $this->getFavoriteTeams();
@@ -35,34 +24,20 @@ class PreferencesController extends BaseController
             $favorite_teams[] = $teamId;
         }
 
-        if (array_key_exists(0, $favorite_teams)) {
-            if ($favorite_teams[0] === '') {
-                unset($favorite_teams[0]);
-            }
+        if (array_key_exists(0, $favorite_teams) && $favorite_teams[0] === '') {
+            unset($favorite_teams[0]);
         }
 
-        $favorite_teams = implode(',', $favorite_teams);
-
-        FilebaseController::setField('favorite_teams', $favorite_teams);
+        FilebaseController::setField('favorite_teams', implode(',', $favorite_teams));
 
         return back();
     }
 
-    /**
-     * @return array
-     *
-     * @throws FilesystemException
-     */
-    public function getFavoriteTeams()
+    public function getFavoriteTeams(): array
     {
         return FilebaseController::getField('favorite_teams');
     }
 
-    /**
-     * @return back
-     *
-     * @throws FilesystemException
-     */
     public function setFavoriteLeagues($leagueId)
     {
         $favorite_leagues = $this->getFavoriteLeagues();
@@ -75,24 +50,16 @@ class PreferencesController extends BaseController
             $favorite_leagues[] = $leagueId;
         }
 
-        if (array_key_exists(0, $favorite_leagues)) {
-            if ($favorite_leagues[0] === '') {
-                unset($favorite_leagues[0]);
-            }
+        if (array_key_exists(0, $favorite_leagues) && $favorite_leagues[0] === '') {
+            unset($favorite_leagues[0]);
         }
-        $favorite_leagues = implode(',', $favorite_leagues);
 
-        FilebaseController::setField('favorite_leagues', $favorite_leagues);
+        FilebaseController::setField('favorite_leagues', implode(',', $favorite_leagues));
 
         return back();
     }
 
-    /**
-     * @return array
-     *
-     * @throws FilesystemException
-     */
-    public function getFavoriteLeagues()
+    public function getFavoriteLeagues(): array
     {
         return FilebaseController::getField('favorite_leagues');
     }

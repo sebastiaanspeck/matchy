@@ -3301,35 +3301,34 @@
         },
         {
             "name": "pyaesoneaung/sportmonks-football-api",
-            "version": "v2.2.0",
+            "version": "v3.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PyaeSoneAungRgn/sportmonks-football-api.git",
-                "reference": "a51ce368c3c39adcbb619910bbf99eba384c580b"
+                "reference": "c133b6d08c28841a82d3627eea5d449c75105fe8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PyaeSoneAungRgn/sportmonks-football-api/zipball/a51ce368c3c39adcbb619910bbf99eba384c580b",
-                "reference": "a51ce368c3c39adcbb619910bbf99eba384c580b",
+                "url": "https://api.github.com/repos/PyaeSoneAungRgn/sportmonks-football-api/zipball/c133b6d08c28841a82d3627eea5d449c75105fe8",
+                "reference": "c133b6d08c28841a82d3627eea5d449c75105fe8",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/guzzle": "^7.0",
-                "illuminate/contracts": "^9.0|^10.0|^11.0|^12.0",
+                "illuminate/contracts": "^10.0|^11.0|^12.0|^13.0",
                 "php": "^8.1",
                 "spatie/laravel-package-tools": "^1.13.0"
             },
             "require-dev": {
-                "laravel/pint": "^1.0",
-                "nunomaduro/collision": "^6.0",
-                "nunomaduro/larastan": "^2.0.1",
-                "orchestra/testbench": "^7.0|^8.0|^9.0|^10.0",
-                "pestphp/pest": "^1.21",
-                "pestphp/pest-plugin-laravel": "^1.1",
-                "phpstan/extension-installer": "^1.1",
-                "phpstan/phpstan-deprecation-rules": "^1.0",
-                "phpstan/phpstan-phpunit": "^1.0",
-                "phpunit/phpunit": "^9.5"
+                "larastan/larastan": "^3.4",
+                "laravel/pint": "^1.22",
+                "nunomaduro/collision": "^8.8",
+                "orchestra/testbench": "^10.3|^11.0",
+                "pestphp/pest": "^3.8",
+                "pestphp/pest-plugin-laravel": "^3.2|^4.1",
+                "phpstan/extension-installer": "^1.4",
+                "phpstan/phpstan-deprecation-rules": "^2.0",
+                "phpstan/phpstan-phpunit": "^2.0",
+                "phpunit/phpunit": "^11.5.15|^12.1|^13.0"
             },
             "type": "library",
             "extra": {
@@ -3368,9 +3367,9 @@
             ],
             "support": {
                 "issues": "https://github.com/PyaeSoneAungRgn/sportmonks-football-api/issues",
-                "source": "https://github.com/PyaeSoneAungRgn/sportmonks-football-api/tree/v2.2.0"
+                "source": "https://github.com/PyaeSoneAungRgn/sportmonks-football-api/tree/v3.2.1"
             },
-            "time": "2025-02-24T16:04:05+00:00"
+            "time": "2026-03-18T10:27:35+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -8736,5 +8735,5 @@
         "php": "^8.3"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }
