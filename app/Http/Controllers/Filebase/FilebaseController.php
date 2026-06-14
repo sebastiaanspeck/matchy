@@ -7,9 +7,9 @@ use Illuminate\Routing\Controller as BaseController;
 class FilebaseController extends BaseController
 {
     /**
-     * @throws \Filebase\Filesystem\FilesystemException
-     *
      * @return \Filebase\Database
+     *
+     * @throws \Filebase\Filesystem\FilesystemException
      */
     public static function getDB()
     {
@@ -17,9 +17,9 @@ class FilebaseController extends BaseController
     }
 
     /**
-     * @throws \Filebase\Filesystem\FilesystemException
-     *
      * @return \Filebase\Document
+     *
+     * @throws \Filebase\Filesystem\FilesystemException
      */
     public static function getPreferences()
     {
@@ -29,11 +29,9 @@ class FilebaseController extends BaseController
     }
 
     /**
-     * @param $field
+     * @return array|string|bool
      *
      * @throws \Filebase\Filesystem\FilesystemException
-     *
-     * @return array|string|bool
      */
     public static function getField($field)
     {
@@ -53,9 +51,6 @@ class FilebaseController extends BaseController
     }
 
     /**
-     * @param $field
-     * @param $value
-     *
      * @throws \Filebase\Filesystem\FilesystemException
      */
     public static function setField($field, $value)
