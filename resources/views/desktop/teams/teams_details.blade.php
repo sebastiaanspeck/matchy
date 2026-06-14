@@ -23,7 +23,7 @@
                             $favorite_team = "fas";
                         }
                     @endphp
-                    <td style="vertical-align: top"><h3><i class="{{ $favorite_team }} fa-star fa-fw fa-xs" aria-hidden="true" style="transform: translate(10%, -10%);"></i>&nbsp;{{$team->name}}</h3></td>
+                    <td style="vertical-align: top"><h3><a href="{{ route("setFavoriteTeams", ["id" => $team->id]) }}"><i class="{{ $favorite_team }} fa-star fa-fw fa-xs" aria-hidden="true" style="transform: translate(10%, -10%);"></i></a>&nbsp;{{$team->name}}</h3></td>
                 </tr>
                 @if(isset($coach))
                     <tr>
