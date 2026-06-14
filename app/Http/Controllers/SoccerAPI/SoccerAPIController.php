@@ -179,7 +179,11 @@ class SoccerAPIController extends BaseController
         $dateFormat = self::getDateFormat();
 
         $fixture = self::makeCall('fixture_by_id', 'participants;state;scores;lineups.player;sidelined.player;statistics.type;comments;league;season;events;venue;coaches.coach;stage;round', $fixtureId);
-        $h2hFixtures = self::makeCall('h2h', 'participants;league;season;state;scores;round;stage', null, null, $fixture->localteam_id ?? null, $fixture->visitorteam_id ?? null);
+
+        $h2hFixtures = [];
+        if (! empty($fixture->localteam_id) && ! empty($fixture->visitorteam_id)) {
+            $h2hFixtures = self::makeCall('h2h', 'participants;league;season;state;scores;round;stage', null, null, $fixture->localteam_id, $fixture->visitorteam_id, false);
+        }
 
         return view("{$deviceType}/fixtures/fixtures_details", ['fixture' => $fixture, 'h2h_fixtures' => $h2hFixtures, 'date_format' => $dateFormat]);
     }

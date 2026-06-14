@@ -598,15 +598,18 @@
                         @endif
                         @if(isset($localCoach) || isset($visitorCoach))
                             @php
-                                $localCoach->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($localCoach->nationality);
-                                $visitorCoach->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($visitorCoach->nationality);
-
-                                if($localCoach->nationality == "Unknown") {
-                                    Log::emergency("Missing nationality for coach with id: " . $localCoach->coach_id);
+                                if(isset($localCoach)) {
+                                    $localCoach->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($localCoach->nationality);
+                                    if($localCoach->nationality == "Unknown") {
+                                        Log::emergency("Missing nationality for coach with id: " . $localCoach->coach_id);
+                                    }
                                 }
 
-                                if($visitorCoach->nationality == "Unknown") {
-                                    Log::emergency("Missing nationality for coach with id: " . $visitorCoach->coach_id);
+                                if(isset($visitorCoach)) {
+                                    $visitorCoach->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($visitorCoach->nationality);
+                                    if($visitorCoach->nationality == "Unknown") {
+                                        Log::emergency("Missing nationality for coach with id: " . $visitorCoach->coach_id);
+                                    }
                                 }
                             @endphp
                         <tr style="font-weight: bold; text-align: center; background: #D3D3D3">
