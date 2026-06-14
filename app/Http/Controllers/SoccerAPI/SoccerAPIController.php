@@ -178,8 +178,12 @@ class SoccerAPIController extends BaseController
         $deviceType = self::getDeviceType();
         $dateFormat = self::getDateFormat();
 
-        $fixture = self::makeCall('fixture_by_id', 'participants;state;scores;lineups.player;sidelined.player;statistics.type;comments;league;season;events;venue;coaches.coach;stage;round', $fixtureId);
-        $h2hFixtures = self::makeCall('h2h', 'participants;league;season;state;scores;round;stage', null, null, $fixture->localteam_id ?? null, $fixture->visitorteam_id ?? null);
+        $fixture = self::makeCall('fixture_by_id', 'participants;state;scores;lineups.player;sidelined.player;statistics.type;comments;league;season;events;venue;coaches;stage;round', $fixtureId);
+
+        $h2hFixtures = [];
+        if (! empty($fixture->localteam_id) && ! empty($fixture->visitorteam_id)) {
+            $h2hFixtures = self::makeCall('h2h', 'participants;league;season;state;scores;round;stage', null, null, $fixture->localteam_id, $fixture->visitorteam_id, false);
+        }
 
         return view("{$deviceType}/fixtures/fixtures_details", ['fixture' => $fixture, 'h2h_fixtures' => $h2hFixtures, 'date_format' => $dateFormat]);
     }
@@ -870,6 +874,9 @@ class SoccerAPIController extends BaseController
 
         if (! isset($obj->reason) && isset($obj->player_id) && ! isset($obj->jersey_number)) {
             $obj->reason = $obj->category ?? $obj->description ?? '';
+            if (! isset($obj->team_id) && isset($obj->participant_id)) {
+                $obj->team_id = $obj->participant_id;
+            }
         }
 
         // Coach profile: ensure common_name and coach_id for view rendering
@@ -880,6 +887,11 @@ class SoccerAPIController extends BaseController
             if (! isset($obj->coach_id) && isset($obj->id)) {
                 $obj->coach_id = $obj->id;
             }
+        }
+
+        // Statistics: flatten nested data.value onto the stat object
+        if (! isset($obj->value) && isset($obj->type_id) && isset($obj->participant_id) && isset($obj->data->data->value)) {
+            $obj->value = $obj->data->data->value;
         }
     }
 
