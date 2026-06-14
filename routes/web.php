@@ -14,7 +14,7 @@ use Jenssegers\Agent\Agent;
 */
 
 Route::get('/', function () {
-    $agent = new Agent();
+    $agent = new Agent;
 
     if ($agent->isDesktop()) {
         $deviceType = 'desktop';

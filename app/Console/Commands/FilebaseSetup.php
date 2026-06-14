@@ -36,9 +36,10 @@ class FilebaseSetup extends Command
     /**
      * Execute the console command.
      *
-     * @throws \Filebase\Filesystem\FilesystemException
      *
      * @return mixed
+     *
+     * @throws \Filebase\Filesystem\FilesystemException
      */
     public function handle()
     {

@@ -11,7 +11,7 @@ class TokenTest extends TestCase
      *
      * @return void
      */
-    public function testBasicTest()
+    public function test_basic_test()
     {
         $response = $this->get('/');
 

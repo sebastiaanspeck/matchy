@@ -19,11 +19,9 @@ class PreferencesController extends BaseController
     use ValidatesRequests;
 
     /**
-     * @param $teamId
+     * @return back
      *
      * @throws FilesystemException
-     *
-     * @return back
      */
     public function setFavoriteTeams($teamId)
     {
@@ -51,9 +49,9 @@ class PreferencesController extends BaseController
     }
 
     /**
-     * @throws FilesystemException
-     *
      * @return array
+     *
+     * @throws FilesystemException
      */
     public function getFavoriteTeams()
     {
@@ -61,11 +59,9 @@ class PreferencesController extends BaseController
     }
 
     /**
-     * @param $leagueId
+     * @return back
      *
      * @throws FilesystemException
-     *
-     * @return back
      */
     public function setFavoriteLeagues($leagueId)
     {
@@ -92,9 +88,9 @@ class PreferencesController extends BaseController
     }
 
     /**
-     * @throws FilesystemException
-     *
      * @return array
+     *
+     * @throws FilesystemException
      */
     public function getFavoriteLeagues()
     {

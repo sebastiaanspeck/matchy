@@ -34,11 +34,9 @@ class SoccerAPIController extends BaseController
     use ValidatesRequests;
 
     /**
-     * @param Request $request
+     * @return Factory|View
      *
      * @throws FilesystemException
-     *
-     * @return Factory|View
      */
     public function allLeagues(Request $request)
     {
@@ -46,12 +44,12 @@ class SoccerAPIController extends BaseController
 
         $leagues = self::makeCall('leagues', 'country,season');
 
-        if (!FilebaseController::getField('show_inactive_leagues')) {
+        if (! FilebaseController::getField('show_inactive_leagues')) {
             $currentYear = Carbon::now()->year;
             $season = FilebaseController::getField('season');
 
             foreach ($leagues as $key => $league) {
-                if (!in_array($league->season->data->name, [$season, $currentYear])) {
+                if (! in_array($league->season->data->name, [$season, $currentYear])) {
                     unset($leagues[$key]);
                 }
             }
@@ -75,9 +73,6 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param         $leagueId
-     * @param Request $request
-     *
      * @return Factory|View
      */
     public function leaguesDetails($leagueId, Request $request)
@@ -118,7 +113,7 @@ class SoccerAPIController extends BaseController
         $upcomingFixtures = [];
         $numberOfMatches = 10;
 
-        if (!empty($season)) {
+        if (! empty($season)) {
             $numberOfMatches = $request->query('matches', 10);
 
             $lastFixtures = $season->data->results->data;
@@ -151,20 +146,17 @@ class SoccerAPIController extends BaseController
         }
 
         return view("{$deviceType}/leagues/leagues_details", [
-            'league'            => $league,
-            'standings_raw'     => $standingsRaw,
-            'last_fixtures'     => $lastFixtures,
+            'league' => $league,
+            'standings_raw' => $standingsRaw,
+            'last_fixtures' => $lastFixtures,
             'upcoming_fixtures' => $upcomingFixtures,
             'number_of_matches' => $numberOfMatches,
-            'topscorers'        => $topscorers,
-            'date_format'       => $dateFormat,
+            'topscorers' => $topscorers,
+            'date_format' => $dateFormat,
         ]);
     }
 
     /**
-     * @param         $type
-     * @param Request $request
-     *
      * @return Factory|View|string
      */
     public function livescores($type, Request $request)
@@ -174,7 +166,7 @@ class SoccerAPIController extends BaseController
 
         $leagues = '';
 
-        if (!$request->query('leagues') == 'all') {
+        if (! $request->query('leagues') == 'all') {
             $leagues = $request->query('leagues', '');
         }
 
@@ -219,8 +211,6 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param Request $request
-     *
      * @return Factory|View
      */
     public function fixturesByDate(Request $request)
@@ -232,7 +222,7 @@ class SoccerAPIController extends BaseController
 
         $leagues = '';
 
-        if (!$request->query('leagues') == 'all') {
+        if (! $request->query('leagues') == 'all') {
             $leagues = $request->query('leagues', '');
         }
 
@@ -254,8 +244,6 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param $fixtureId
-     *
      * @return Factory|View
      */
     public function fixturesDetails($fixtureId)
@@ -271,9 +259,6 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param         $teamId
-     * @param Request $request
-     *
      * @return Factory|View
      */
     public function teamsDetails($teamId, Request $request)
@@ -290,20 +275,18 @@ class SoccerAPIController extends BaseController
         $upcomingFixtures = self::addPagination($team->upcoming->data, $numberOfMatches);
 
         return view("{$deviceType}/teams/teams_details", [
-            'team'              => $team,
-            'coach'             => $coach,
-            'last_fixtures'     => $lastFixtures,
+            'team' => $team,
+            'coach' => $coach,
+            'last_fixtures' => $lastFixtures,
             'upcoming_fixtures' => $upcomingFixtures,
-            'date_format'       => $dateFormat,
+            'date_format' => $dateFormat,
         ]);
     }
 
     /**
-     * @param Request $request
+     * @return Factory|View
      *
      * @throws FilesystemException
-     *
-     * @return Factory|View
      */
     public function favoriteTeams(Request $request)
     {
@@ -344,11 +327,9 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param Request $request
+     * @return RedirectResponse
      *
      * @throws FilesystemException
-     *
-     * @return RedirectResponse
      */
     public function favoriteLeagues(Request $request)
     {
@@ -369,12 +350,12 @@ class SoccerAPIController extends BaseController
             $leagues[] = self::makeCall('league_by_id', 'country,season', $leagueId)->data;
         }
 
-        if (!FilebaseController::getField('show_inactive_leagues')) {
+        if (! FilebaseController::getField('show_inactive_leagues')) {
             $currentYear = Carbon::now()->year;
             $season = FilebaseController::getField('season');
 
             foreach ($leagues as $key => $league) {
-                if (!in_array($league->season->data->name, [$season, $currentYear])) {
+                if (! in_array($league->season->data->name, [$season, $currentYear])) {
                     unset($leagues[$key]);
                 }
             }
@@ -412,7 +393,7 @@ class SoccerAPIController extends BaseController
 
         if (count($livescores) >= 1) {
             foreach ($livescores as $livescore) {
-                if (!in_array($livescore->time->status, ['NS', 'FT', 'FT_PEN', 'CANCL', 'POSTP', 'INT', 'ABAN', 'SUSP', 'AWARDED', 'DELAYED', 'TBA', 'WO', 'AU'])) {
+                if (! in_array($livescore->time->status, ['NS', 'FT', 'FT_PEN', 'CANCL', 'POSTP', 'INT', 'ABAN', 'SUSP', 'AWARDED', 'DELAYED', 'TBA', 'WO', 'AU'])) {
                     $count++;
                 }
             }
@@ -422,9 +403,6 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param $data
-     * @param $perPage
-     *
      * @return LengthAwarePaginator
      */
     public function addPagination($data, $perPage)
@@ -441,8 +419,6 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param Request $request
-     *
      * @return mixed|string
      */
     public function removePageParameter(Request $request)
@@ -463,16 +439,14 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param        $date
-     * @param string $format
+     * @param  string  $format
+     * @return bool
      *
      * @throws Exception
-     *
-     * @return bool
      */
     public function validateDate($date, $format = 'Y-m-d')
     {
-        $dateTime = new DateTime();
+        $dateTime = new DateTime;
 
         $validDate = $dateTime::createFromFormat($format, $date);
 
@@ -480,9 +454,6 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param $transType
-     * @param $transString
-     *
      * @return array|Translator|null|string
      */
     public static function translateString($transType, $transString)
@@ -535,8 +506,6 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param $country
-     *
      * @return string
      */
     public static function getCountryFlag($country)
@@ -554,7 +523,7 @@ class SoccerAPIController extends BaseController
                 break;
         }
 
-        if (!file_exists('images/flags/shiny/16/'.$country.'.png')) {
+        if (! file_exists('images/flags/shiny/16/'.$country.'.png')) {
             Log::emergency('Missing flag for: '.$country);
             $country = 'Unknown';
         }
@@ -583,8 +552,6 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param Request $request
-     *
      * @return array|null|string
      */
     public function getDateFromRequest(Request $request)
@@ -605,15 +572,6 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param string      $type
-     * @param string|null $include
-     * @param string|null $id
-     * @param string|null $leagues
-     * @param string|null $date
-     * @param string|null $localteam_id
-     * @param string|null $visitorteam_id
-     * @param bool        $abort
-     *
      * @return Exception|false|ClientException|mixed|ResponseInterface|string
      */
     public function makeCall(string $type, ?string $include = null, ?string $id = null, ?string $leagues = null, ?string $date = null, ?string $localteam_id = null, ?string $visitorteam_id = null, bool $abort = true)
@@ -672,10 +630,6 @@ class SoccerAPIController extends BaseController
     }
 
     /**
-     * @param $file
-     * @param $height
-     * @param $width
-     *
      * @return string
      */
     public static function getTeamLogo($file, $height, $width)
@@ -696,7 +650,7 @@ class SoccerAPIController extends BaseController
      */
     public static function getDeviceType()
     {
-        $agent = new Agent();
+        $agent = new Agent;
 
         if ($agent->isDesktop()) {
             return 'desktop';
