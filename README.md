@@ -1,39 +1,65 @@
 # Laravel Sportmonks Website
 
-Laravel website that uses [Sportmonks](https://www.sportmonks.com/sports/soccer) (live)score API calls.
-Documentation for the API can be found [here](https://www.sportmonks.com/sports/soccer)
+Laravel website that uses the [Sportmonks](https://www.sportmonks.com/sports/soccer) football API for (live)scores.
+API documentation can be found in the [Sportmonks Football API documentation](https://docs.sportmonks.com/football).
 
 ## Screenshots
 
 [Gallery with screenshots](https://imgur.com/gallery/BlqvOwU)
 
+## Requirements
+
+- PHP 8.3+
+- Composer
+- A [Sportmonks API token](https://www.sportmonks.com/register) (free tier available)
+
 ## Installation
 
-**1-** Run Composer to install requirements.
+**1.** Install Composer dependencies.
 
 ```bash
 composer install
 ```
 
-**2-** Publish the configuration file
+**2.** Copy the example environment file and rename it to `.env`.
 
 ```bash
-php artisan vendor:publish --provider="Sportmonks\SoccerAPI\SoccerAPIServiceProvider"
+cp .env.example .env
 ```
 
-**3-** Make a copy of .env.example and rename to .env
+**3.** Add your Sportmonks API token to `.env`.
 
-**4-** Add your API token in the .env file to `SPORTMONKS_API_TOKEN`
+```env
+SPORTMONKS_FOOTBALL_API_TOKEN=your_token_here
+```
 
-***If you don't have a API-token, you can get a free one [here](https://www.sportmonks.com/register) This should be enough to experiment with the code.***
+> Don't have a token yet? Register for free at [sportmonks.com](https://www.sportmonks.com/register).
 
-**5-** Review the configuration file and change the `'without_data' => 'false'` to `'without_data' => 'true'`:
+**4.** Generate the application key.
 
-**6-** Run `php artisan key:generate` to overcome the next [problem](https://stackoverflow.com/questions/44839648/no-application-encryption-key-has-been-specified-new-laravel-app)
+```bash
+php artisan key:generate
+```
 
-**7-** Run `php artisan serve` to use the application
+**5.** Run the database migrations.
 
-**8-** If the application doesn't work as expected, run the following commands. If the problem still exists, open a issue.
+```bash
+php artisan migrate
+```
+
+**6.** Initialise the preferences storage.
+
+```bash
+php artisan filebase:setup
+```
+
+**7.** Start the development server.
+
+```bash
+php artisan serve
+```
+
+**8.** If the application doesn't work as expected, try clearing the caches. If the problem persists, please open an issue.
 
 ```bash
 php artisan config:clear

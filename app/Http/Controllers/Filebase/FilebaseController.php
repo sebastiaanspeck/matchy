@@ -6,58 +6,71 @@ use Illuminate\Routing\Controller as BaseController;
 
 class FilebaseController extends BaseController
 {
-    /**
-     * @return \Filebase\Database
-     *
-     * @throws \Filebase\Filesystem\FilesystemException
-     */
-    public static function getDB()
+    private static string $path;
+
+    private static function getPath(): string
     {
-        return new \Filebase\Database(['dir' => base_path().'/database/filebase']);
-    }
-
-    /**
-     * @return \Filebase\Document
-     *
-     * @throws \Filebase\Filesystem\FilesystemException
-     */
-    public static function getPreferences()
-    {
-        $db = self::getDB();
-
-        return $db->get('preferences');
-    }
-
-    /**
-     * @return array|string|bool
-     *
-     * @throws \Filebase\Filesystem\FilesystemException
-     */
-    public static function getField($field)
-    {
-        $db = self::getDB();
-
-        $data = $db->get('preferences')->field($field);
-
-        if (\strpos($field, 'favorite') !== false) {
-            $data = explode(',', $data);
-
-            if ($data === '') {
-                $data = [];
-            }
+        if (! isset(self::$path)) {
+            self::$path = base_path('database/filebase/preferences.json');
         }
 
-        return $data;
+        return self::$path;
     }
 
-    /**
-     * @throws \Filebase\Filesystem\FilesystemException
-     */
-    public static function setField($field, $value)
+    private static function readAll(): array
     {
-        $db = self::getPreferences();
-        $db->$field = $value;
+        $path = self::getPath();
 
-        $db->save();
+        if (! file_exists($path)) {
+            return self::defaults();
+        }
+
+        $data = json_decode(file_get_contents($path), true);
+
+        return is_array($data) ? array_merge(self::defaults(), $data) : self::defaults();
+    }
+
+    private static function defaults(): array
+    {
+        return [
+            'season' => date('Y').'/'.(date('Y') + 1),
+            'show_inactive_leagues' => false,
+            'favorite_teams' => '',
+            'favorite_leagues' => '',
+        ];
+    }
+
+    private static function writeAll(array $data): void
+    {
+        $path = self::getPath();
+        $dir = dirname($path);
+
+        if (! is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
+        file_put_contents($path, json_encode($data, JSON_PRETTY_PRINT));
+    }
+
+    public static function getField(string $field): array|string|bool
+    {
+        $data = self::readAll();
+        $value = $data[$field] ?? null;
+
+        if (str_contains($field, 'favorite')) {
+            $list = explode(',', (string) $value);
+
+            return $list === [''] ? [] : $list;
+        }
+
+        return $value ?? '';
+    }
+
+    public static function setField(string $field, mixed $value): void
+    {
+        $data = self::readAll();
+        $data[$field] = $value;
+
+        self::writeAll($data);
     }
 }

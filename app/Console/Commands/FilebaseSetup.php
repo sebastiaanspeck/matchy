@@ -2,59 +2,22 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\Filebase\FilebaseController;
 use Illuminate\Console\Command;
 
-/**
- * Class FilebaseSetup.
- */
 class FilebaseSetup extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'filebase:setup';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Setup the filebase';
+    protected $description = 'Initialize the preferences storage with default values';
 
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public function handle(): void
     {
-        parent::__construct();
-    }
+        FilebaseController::setField('season', date('Y').'/'.(date('Y') + 1));
+        FilebaseController::setField('show_inactive_leagues', false);
+        FilebaseController::setField('favorite_teams', '');
+        FilebaseController::setField('favorite_leagues', '');
 
-    /**
-     * Execute the console command.
-     *
-     *
-     * @return mixed
-     *
-     * @throws \Filebase\Filesystem\FilesystemException
-     */
-    public function handle()
-    {
-        $db = new \Filebase\Database(['dir' => 'database/filebase']);
-
-        $preferences = $db->get('preferences');
-
-        $preferences->season = '2018/2019';
-        $preferences->show_inactive_leagues = false;
-        $preferences->favorite_teams = '';
-        $preferences->favorite_leagues = '';
-
-        $preferences->save();
-
-        dump($db);
-        dump($preferences);
+        $this->info('Preferences storage initialised at database/filebase/preferences.json');
     }
 }
