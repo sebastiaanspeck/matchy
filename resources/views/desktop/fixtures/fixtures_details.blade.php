@@ -254,7 +254,7 @@
                     @php
                         $stats_by_type = [];
                         foreach ($statistics as $stat) {
-                            $typeId   = $stat->data_type_id;
+                            $typeId   = $stat->type_id ?? $stat->data_type_id;
                             $devName  = strtolower(str_replace('_', '-', $stat->type->data->developer_name ?? ''));
                             $label    = \Illuminate\Support\Facades\Lang::has('statistics.' . $devName)
                                 ? trans('statistics.' . $devName)
@@ -345,9 +345,9 @@
                             foreach($lineup as $val){
                                 $val->team_id == $homeTeam->id ? $val->team = "home" : $val->team = "away";
                                 if(isset($val->player->data)) {
-                                    $player = ["player_id" => $val->player_id, "number" => $val->number, "common_name" => $val->player->data->common_name, "nationality" => $val->player->data->nationality, "stats" => $val->stats, "events" => array()];
+                                    $player = ["player_id" => $val->player_id, "number" => $val->number, "common_name" => $val->player->data->common_name ?? $val->player->data->display_name ?? '', "nationality" => $val->player->data->nationality ?? 'Unknown', "stats" => $val->stats, "events" => array()];
                                 } else {
-                                    $player = ["player_id" => $val->player_id, "number" => $val->number, "common_name" => $val->player_name, "nationality" => "Unknown", "stats" => $val->stats, "events" => array()];
+                                    $player = ["player_id" => $val->player_id, "number" => $val->number, "common_name" => $val->player_name ?? '', "nationality" => "Unknown", "stats" => $val->stats, "events" => array()];
                                 }
 
                                 if($val->stats->goals->scored != 0) {
@@ -443,9 +443,9 @@
                                 foreach($bench as $val){
                                     $val->team_id == $homeTeam->id ? $val->team = "home" : $val->team = "away";
                                     if(isset($val->player->data)) {
-                                        $player = ["player_id" => $val->player_id, "number" => $val->number, "common_name" => $val->player->data->common_name, "nationality" => $val->player->data->nationality, "stats" => $val->stats, "events" => array()];
+                                        $player = ["player_id" => $val->player_id, "number" => $val->number, "common_name" => $val->player->data->common_name ?? $val->player->data->display_name ?? '', "nationality" => $val->player->data->nationality ?? 'Unknown', "stats" => $val->stats, "events" => array()];
                                     } else {
-                                        $player = ["player_id" => $val->player_id, "number" => $val->number, "common_name" => $val->player_name, "nationality" => "Unknown", "stats" => $val->stats, "events" => array()];
+                                        $player = ["player_id" => $val->player_id, "number" => $val->number, "common_name" => $val->player_name ?? '', "nationality" => "Unknown", "stats" => $val->stats, "events" => array()];
                                     }
 
                                     if($val->stats->goals->scored != 0) {
@@ -541,7 +541,7 @@
                                 $counter_a = 0;
                                 foreach($sidelined as $val){
                                     $val->team_id == $homeTeam->id ? $val->team = "home" : $val->team = "away";
-                                    $player = array("player_id" => $val->player_id, "common_name" => $val->player->data->common_name, "nationality" => $val->player->data->nationality, "reason" => $val->reason);
+                                    $player = array("player_id" => $val->player_id, "common_name" => $val->player->data->common_name ?? $val->player->data->display_name ?? '', "nationality" => $val->player->data->nationality ?? 'Unknown', "reason" => $val->reason);
 
                                     $player['nationality'] = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($player['nationality']);
 
