@@ -482,18 +482,20 @@ class SoccerAPIController extends BaseController
         mixed $visitorteam_id = null,
         bool $abort = true
     ): mixed {
+        $localeQuery = array_filter(['locale' => config('sportmonks-football-api.locale', '')]);
+
         try {
             $resource = match ($type) {
-                'livescores' => SportmonksFootballApi::fixture()->setInclude($include ?? '')->byDate(Carbon::now()->toDateString()),
-                'livescores/now' => SportmonksFootballApi::livescore()->setInclude($include ?? '')->inplay(),
-                'leagues' => SportmonksFootballApi::league()->setInclude($include ?? '')->all(),
-                'league_by_id' => SportmonksFootballApi::league()->setInclude($include ?? '')->byId($id),
-                'standings' => SportmonksFootballApi::standing()->setInclude($include ?? '')->bySeasonId($id),
-                'fixtures_by_date' => SportmonksFootballApi::fixture()->setInclude($include ?? '')->byDate($date),
-                'fixture_by_id' => SportmonksFootballApi::fixture()->setInclude($include ?? '')->byId($id),
-                'h2h' => SportmonksFootballApi::fixture()->setInclude($include ?? '')->byHeadToHead($localteam_id, $visitorteam_id),
-                'team_by_id' => SportmonksFootballApi::team()->setInclude($include ?? '')->byId($id),
-                'topscorers' => SportmonksFootballApi::topscorer()->setInclude($include ?? '')->bySeasonId($id),
+                'livescores' => SportmonksFootballApi::fixture()->setInclude($include ?? '')->withQueries($localeQuery)->byDate(Carbon::now()->toDateString()),
+                'livescores/now' => SportmonksFootballApi::livescore()->setInclude($include ?? '')->withQueries($localeQuery)->inplay(),
+                'leagues' => SportmonksFootballApi::league()->setInclude($include ?? '')->withQueries($localeQuery)->all(),
+                'league_by_id' => SportmonksFootballApi::league()->setInclude($include ?? '')->withQueries($localeQuery)->byId($id),
+                'standings' => SportmonksFootballApi::standing()->setInclude($include ?? '')->withQueries($localeQuery)->bySeasonId($id),
+                'fixtures_by_date' => SportmonksFootballApi::fixture()->setInclude($include ?? '')->withQueries($localeQuery)->byDate($date),
+                'fixture_by_id' => SportmonksFootballApi::fixture()->setInclude($include ?? '')->withQueries($localeQuery)->byId($id),
+                'h2h' => SportmonksFootballApi::fixture()->setInclude($include ?? '')->withQueries($localeQuery)->byHeadToHead($localteam_id, $visitorteam_id),
+                'team_by_id' => SportmonksFootballApi::team()->setInclude($include ?? '')->withQueries($localeQuery)->byId($id),
+                'topscorers' => SportmonksFootballApi::topscorer()->setInclude($include ?? '')->withQueries($localeQuery)->bySeasonId($id),
                 default => [],
             };
         } catch (\Exception $e) {
@@ -952,8 +954,10 @@ class SoccerAPIController extends BaseController
 
     private static function fetchSeasonFixtures(int|string $seasonId): array
     {
+        $localeQuery = array_filter(['locale' => config('sportmonks-football-api.locale', '')]);
+
         try {
-            $response = SportmonksFootballApi::schedule()->bySeasonId($seasonId);
+            $response = SportmonksFootballApi::schedule()->withQueries($localeQuery)->bySeasonId($seasonId);
         } catch (\Exception $e) {
             Log::error('Schedule API error: '.$e->getMessage());
 
