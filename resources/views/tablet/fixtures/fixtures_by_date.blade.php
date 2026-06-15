@@ -3,12 +3,12 @@
 @section("content")
     <div class = "container">
         @if(isset($date))
-            <h3 style="text-align: center">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Fixtures") }} - {{date($date_format, strtotime($date))}}</h3>
+            <h3 class="text-center">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Fixtures") }} - {{date($date_format, strtotime($date))}}</h3>
         @endif
 
         @if(count($fixtures) >= 1 && gettype($fixtures) == "array")
             @if(count($fixtures) >= 100)
-                <p style="color:red">@lang("application.msg_too_much_results", ["count" => count($fixtures)])</p>
+                <p class="text-api-error">@lang("application.msg_too_much_results", ["count" => count($fixtures)])</p>
             @endif
 
             @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; $favorite_leagues = \App\Http\Controllers\Filebase\FilebaseController::getField('favorite_leagues'); $favorite_teams = \App\Http\Controllers\Filebase\FilebaseController::getField('favorite_teams'); @endphp
@@ -46,7 +46,7 @@
                     } else {
                         $homeTeamClass = $awayTeamClass = "";
                     }
-                    
+
                     switch($fixture->time->status) {
                         case("FT_PEN"):
                             $scoreLine = $fixture->scores->localteam_score . " - " . $fixture->scores->visitorteam_score ."\n(" . $fixture->scores->localteam_pen_score . " - " . $fixture->scores->visitorteam_pen_score . ")";
@@ -74,7 +74,7 @@
                     @if(isset($fixture->round))
                         @if($last_round_id !== $fixture->round->data->name)
                             <tr>
-                                <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
+                                <td class="fixture-round-header" colspan="5">
                                     @if($fixture->stage->data->name !== "Regular Season")
                                         {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $fixture->stage->data->name) }} -
                                     @endif
@@ -83,7 +83,7 @@
                         @endif
                     @elseif($last_stage_id !== $fixture->stage->data->name)
                         <tr>
-                            <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $fixture->stage->data->name) }}</td>
+                            <td class="fixture-round-header" colspan="5">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $fixture->stage->data->name) }}</td>
                         </tr>
                     @endif
                     <tr>
@@ -93,12 +93,12 @@
                             @endif
                         </td>
                         {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
-                        <td scope="row" style="text-align: right"><a href="{{ route("setFavoriteTeams", ["id" => $homeTeam->id]) }}"><i class="{{ in_array($homeTeam->id, $favorite_teams) ? 'fas' : 'far' }} fa-star fa-fw" aria-hidden="true"></i></a>&nbsp;<a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}&nbsp;<img src="{{ $homeTeamLogo }}" alt="team_logo"></a></td>
+                        <td scope="row" class="td-action"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}&nbsp;<img src="{{ $homeTeamLogo }}" alt="team_logo"></a>&nbsp;<a href="{{ route("setFavoriteTeams", ["id" => $homeTeam->id]) }}"><i class="{{ in_array($homeTeam->id, $favorite_teams) ? 'fas' : 'far' }} fa-star fa-fw" aria-hidden="true"></i></a></td>
                         {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
-                        <td scope="row" style="text-align: center">{!! nl2br(e($scoreLine)) !!}</td>
+                        <td scope="row" class="td-score">{!! nl2br(e($scoreLine)) !!}</td>
                         {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
-                        <td scope="row" style="text-align: left"><a href="{{ route("setFavoriteTeams", ["id" => $awayTeam->id]) }}"><i class="{{ in_array($awayTeam->id, $favorite_teams) ? 'fas' : 'far' }} fa-star fa-fw" aria-hidden="true"></i></a>&nbsp;<a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}><img src="{{ $awayTeamLogo }}" alt="team_logo">&nbsp;{{$awayTeam->name}}</a></td>
-                        <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $fixture->id])}}"><i class="fa fa-info-circle" aria-hidden="true" style="margin-right: 10px"></i></a></td>
+                        <td scope="row" class="td-away"><a href="{{ route("setFavoriteTeams", ["id" => $awayTeam->id]) }}"><i class="{{ in_array($awayTeam->id, $favorite_teams) ? 'fas' : 'far' }} fa-star fa-fw" aria-hidden="true"></i></a>&nbsp;<a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}><img src="{{ $awayTeamLogo }}" alt="team_logo">&nbsp;{{$awayTeam->name}}</a></td>
+                        <td scope="row" class="td-action"><a href="{{route("fixturesDetails", ["id" => $fixture->id])}}"><i class="fa fa-info-circle" aria-hidden="true" ></i></a></td>
                     </tr>
                 @else
                     @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; @endphp
@@ -106,7 +106,7 @@
                         @if(isset($fixture->round))
                             @if($last_round_id !== $fixture->round->data->name)
                                 <tr>
-                                    <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">
+                                    <td class="fixture-league-header" colspan="5">
                                         <a href="{{ route("setFavoriteLeagues", ["id" => $league->id]) }}"><i class="{{ $favorite_league }} fa-star fa-fw" aria-hidden="true"></i></a>&nbsp;
                                         <a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }}</a> -
                                         @if($fixture->stage->data->name !== "Regular Season")
@@ -117,14 +117,14 @@
                             @endif
                         @elseif($last_stage_id !== $fixture->stage->data->name)
                             <tr>
-                                <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">
+                                <td class="fixture-league-header" colspan="5">
                                     <a href="{{ route("setFavoriteLeagues", ["id" => $league->id]) }}"><i class="{{ $favorite_league }} fa-star fa-fw" aria-hidden="true"></i></a>&nbsp;
                                     <a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }}</a> -
                                     {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $fixture->stage->data->name) }}
                                 </td>
                             </tr>
                         @endif
-                        <thead style="visibility: collapse">
+                        <thead class="thead-hidden">
                             <tr>
                                 <th scope="col" width="20%"></th>
                                 <th scope="col" width="26.25%"></th>
@@ -141,12 +141,12 @@
                                 @endif
                             </td>
                             {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
-                            <td scope="row" style="text-align: right"><a href="{{ route("setFavoriteTeams", ["id" => $homeTeam->id]) }}"><i class="{{ in_array($homeTeam->id, $favorite_teams) ? 'fas' : 'far' }} fa-star fa-fw" aria-hidden="true"></i></a>&nbsp;<a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}&nbsp;<img src="{{ $homeTeamLogo }}" alt="team_logo"></a></td>
+                            <td scope="row" class="td-action"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}&nbsp;<img src="{{ $homeTeamLogo }}" alt="team_logo"></a>&nbsp;<a href="{{ route("setFavoriteTeams", ["id" => $homeTeam->id]) }}"><i class="{{ in_array($homeTeam->id, $favorite_teams) ? 'fas' : 'far' }} fa-star fa-fw" aria-hidden="true"></i></a></td>
                             {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
-                            <td scope="row" style="text-align: center">{!! nl2br(e($scoreLine)) !!}</td>
+                            <td scope="row" class="td-score">{!! nl2br(e($scoreLine)) !!}</td>
                             {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
-                            <td scope="row" style="text-align: left"><a href="{{ route("setFavoriteTeams", ["id" => $awayTeam->id]) }}"><i class="{{ in_array($awayTeam->id, $favorite_teams) ? 'fas' : 'far' }} fa-star fa-fw" aria-hidden="true"></i></a>&nbsp;<a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}><img src="{{ $awayTeamLogo }}" alt="team_logo">&nbsp;{{$awayTeam->name}}</a></td>
-                            <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $fixture->id])}}"><i class="fa fa-info-circle" aria-hidden="true" style="margin-right: 10px"></i></a></td>
+                            <td scope="row" class="td-away"><a href="{{ route("setFavoriteTeams", ["id" => $awayTeam->id]) }}"><i class="{{ in_array($awayTeam->id, $favorite_teams) ? 'fas' : 'far' }} fa-star fa-fw" aria-hidden="true"></i></a>&nbsp;<a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}><img src="{{ $awayTeamLogo }}" alt="team_logo">&nbsp;{{$awayTeam->name}}</a></td>
+                            <td scope="row" class="td-action"><a href="{{route("fixturesDetails", ["id" => $fixture->id])}}"><i class="fa fa-info-circle" aria-hidden="true" ></i></a></td>
                         </tr>
                 @endif
                 @php $last_league_id = $fixture->league_id; if(isset($fixture->round)) {$last_round_id = $fixture->round->data->name;} $last_stage_id = $fixture->stage->data->name; @endphp

@@ -50,17 +50,18 @@ body {
     padding-left: .5rem;
 }
 
-a:link {
+/* Only style links inside the main content area, not in the navbar */
+main a:link {
     color: black;
     background-color: transparent;
-    text-decoration:none;
+    text-decoration: none;
 }
-a:visited {
+main a:visited {
     color: black;
     background-color: transparent;
-    text-decoration:none;
+    text-decoration: none;
 }
-a:hover {
+main a:hover {
     color: grey;
 }
 
@@ -135,6 +136,45 @@ caption {
 .live {
     animation: blinker 1.5s linear infinite;
     color: #ff0000;
+}
+
+/* Fixture table group headers */
+.fixture-round-header {
+    font-weight: bold;
+    text-align: center;
+    background-color: #d3d3d3;
+}
+.fixture-league-header {
+    font-weight: bold;
+    text-align: center;
+    background-color: #bdbdbd;
+}
+
+/* Fixture table alignment helpers */
+.td-score { text-align: center; white-space: pre-line; }
+.td-away { text-align: left; }
+.td-action { text-align: right; }
+.td-narrow { width: 1%; white-space: nowrap; }
+.thead-hidden { visibility: collapse; }
+
+/* Error text */
+.text-api-error { color: red; }
+
+/* Fixture score and status display */
+.score-display { font-size: x-large; margin: 0; }
+.fixture-status { font-size: medium; margin: 0; }
+
+/* Muted secondary text (e.g. injury reason) */
+.text-muted-alt { color: #A9A9A9; }
+
+/* Hide Unknown placeholder for nationality flags */
+img[alt$="-nationality"][src$="Unknown.png"] { display: none; }
+
+/* Team logos inside fixture/standings tables are always 16×16 */
+.table img[alt="team_logo"] {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
 }
 
 @keyframes blinker {
