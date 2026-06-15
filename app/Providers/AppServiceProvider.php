@@ -16,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
 
     public function register(): void
     {
-        $this->app->bind(FootballApiProviderInterface::class, function () {
+        $this->app->singleton(FootballApiProviderInterface::class, function () {
             return match (config('football-api.provider')) {
                 'sportmonks' => new SportmonksProvider,
                 default => new ApiFootballProvider,

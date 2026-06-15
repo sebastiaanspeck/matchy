@@ -11,21 +11,15 @@ class SportmonksProvider implements FootballApiProviderInterface
 {
     public function fetchFixtures(array $params): array
     {
-        try {
-            if (isset($params['live'])) {
-                $resource = SportmonksFootballApi::livescore()
-                    ->setInclude('league;participants;state;scores;round;stage')
-                    ->inplay();
-            } else {
-                $date = $params['date'] ?? Carbon::now()->toDateString();
-                $resource = SportmonksFootballApi::fixture()
-                    ->setInclude('league;participants;state;scores;round;stage')
-                    ->byDate($date);
-            }
-        } catch (\Exception $e) {
-            Log::error('Sportmonks fetchFixtures error: '.$e->getMessage());
-
-            return [];
+        if (isset($params['live'])) {
+            $resource = SportmonksFootballApi::livescore()
+                ->setInclude('league;participants;state;scores;round;stage')
+                ->inplay();
+        } else {
+            $date = $params['date'] ?? Carbon::now()->toDateString();
+            $resource = SportmonksFootballApi::fixture()
+                ->setInclude('league;participants;state;scores;round;stage')
+                ->byDate($date);
         }
 
         return $this->processList($resource);
@@ -33,75 +27,45 @@ class SportmonksProvider implements FootballApiProviderInterface
 
     public function fetchLeagues(): array
     {
-        try {
-            $resource = SportmonksFootballApi::league()
-                ->setInclude('country;currentSeason')
-                ->all();
-        } catch (\Exception $e) {
-            Log::error('Sportmonks fetchLeagues error: '.$e->getMessage());
-
-            return [];
-        }
+        $resource = SportmonksFootballApi::league()
+            ->setInclude('country;currentSeason')
+            ->all();
 
         return $this->processList($resource);
     }
 
     public function fetchLeagueById(int $id): \stdClass
     {
-        try {
-            $resource = SportmonksFootballApi::league()
-                ->setInclude('country;currentSeason')
-                ->byId($id);
-        } catch (\Exception $e) {
-            Log::error('Sportmonks fetchLeagueById error: '.$e->getMessage());
-
-            return (object) [];
-        }
+        $resource = SportmonksFootballApi::league()
+            ->setInclude('country;currentSeason')
+            ->byId($id);
 
         return $this->processSingle($resource, 'league_by_id');
     }
 
     public function fetchStandings(string $seasonId): array
     {
-        try {
-            $resource = SportmonksFootballApi::standing()
-                ->setInclude('participant;details.type;group;stage')
-                ->bySeasonId($seasonId);
-        } catch (\Exception $e) {
-            Log::error('Sportmonks fetchStandings error: '.$e->getMessage());
-
-            return [];
-        }
+        $resource = SportmonksFootballApi::standing()
+            ->setInclude('participant;details.type;group;stage')
+            ->bySeasonId($seasonId);
 
         return $this->processList($resource);
     }
 
     public function fetchFixtureById(int $id): \stdClass
     {
-        try {
-            $resource = SportmonksFootballApi::fixture()
-                ->setInclude('participants;state;scores;lineups.player;sidelined.player;statistics.type;comments;league;season;events;venue;coaches.coach;stage;round')
-                ->byId($id);
-        } catch (\Exception $e) {
-            Log::error('Sportmonks fetchFixtureById error: '.$e->getMessage());
-
-            return (object) [];
-        }
+        $resource = SportmonksFootballApi::fixture()
+            ->setInclude('participants;state;scores;lineups.player;sidelined.player;statistics.type;comments;league;season;events;venue;coaches.coach;stage;round')
+            ->byId($id);
 
         return $this->processSingle($resource, 'fixture_by_id');
     }
 
     public function fetchH2H(int $team1Id, int $team2Id): array
     {
-        try {
-            $resource = SportmonksFootballApi::fixture()
-                ->setInclude('participants;league;season;state;scores;round;stage')
-                ->byHeadToHead($team1Id, $team2Id);
-        } catch (\Exception $e) {
-            Log::error('Sportmonks fetchH2H error: '.$e->getMessage());
-
-            return [];
-        }
+        $resource = SportmonksFootballApi::fixture()
+            ->setInclude('participants;league;season;state;scores;round;stage')
+            ->byHeadToHead($team1Id, $team2Id);
 
         return $this->processList($resource);
     }
@@ -110,43 +74,27 @@ class SportmonksProvider implements FootballApiProviderInterface
     {
         $sdkInclude = $include ?? 'country;coaches.coach;venue';
 
-        try {
-            $resource = SportmonksFootballApi::team()
-                ->setInclude($sdkInclude)
-                ->byId($id);
-        } catch (\Exception $e) {
-            Log::error('Sportmonks fetchTeamById error: '.$e->getMessage());
-
-            return (object) [];
-        }
+        $resource = SportmonksFootballApi::team()
+            ->setInclude($sdkInclude)
+            ->byId($id);
 
         return $this->processSingle($resource, 'team_by_id');
     }
 
     public function fetchTopscorers(string $seasonId): array
     {
-        try {
-            $resource = SportmonksFootballApi::topscorer()
-                ->setInclude('player;team')
-                ->bySeasonId($seasonId);
-        } catch (\Exception $e) {
-            Log::error('Sportmonks fetchTopscorers error: '.$e->getMessage());
-
-            return [];
-        }
+        $resource = SportmonksFootballApi::topscorer()
+            ->setInclude('player;team')
+            ->bySeasonId($seasonId);
 
         return $this->processList($resource);
     }
 
     public function fetchSeasonFixtures(int|string $seasonId): array
     {
-        try {
-            $response = SportmonksFootballApi::schedule()->bySeasonId($seasonId);
-        } catch (\Exception $e) {
-            Log::error('Sportmonks fetchSeasonFixtures error: '.$e->getMessage());
-
-            return [];
-        }
+        $response = SportmonksFootballApi::schedule()
+            ->setInclude('participants;state;scores')
+            ->bySeasonId($seasonId);
 
         if (! is_array($response) || ! isset($response['data'])) {
             return [];

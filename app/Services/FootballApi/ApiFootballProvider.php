@@ -80,11 +80,22 @@ class ApiFootballProvider implements FootballApiProviderInterface
 
         $fixture = self::mapFixture($response[0]);
 
-        $eventsRaw = $this->apiRequest('fixtures/events', ['fixture' => $id]);
+        $base = config('football-api.api_football.base_url');
+        $headers = ['x-apisports-key' => config('football-api.api_football.api_key')];
+
+        [$eventsRes, $lineupsRes, $statsRes] = Http::pool(fn ($pool) => [
+            $pool->withHeaders($headers)->get($base.'fixtures/events', ['fixture' => $id]),
+            $pool->withHeaders($headers)->get($base.'fixtures/lineups', ['fixture' => $id]),
+            $pool->withHeaders($headers)->get($base.'fixtures/statistics', ['fixture' => $id]),
+        ]);
+
+        $eventsRaw = $eventsRes->ok() ? ($eventsRes->json()['response'] ?? []) : [];
+        $lineupsRaw = $lineupsRes->ok() ? ($lineupsRes->json()['response'] ?? []) : [];
+        $statsRaw = $statsRes->ok() ? ($statsRes->json()['response'] ?? []) : [];
+
         $playerStats = self::buildPlayerStatsFromEvents($eventsRaw);
         $fixture->events = (object) ['data' => array_map([self::class, 'mapEvent'], $eventsRaw)];
 
-        $lineupsRaw = $this->apiRequest('fixtures/lineups', ['fixture' => $id]);
         [$lineup, $bench, $localFormation, $visitorFormation, $localCoach, $visitorCoach] = self::mapLineups(
             $lineupsRaw,
             $fixture->localteam_id,
@@ -97,7 +108,6 @@ class ApiFootballProvider implements FootballApiProviderInterface
         $fixture->localCoach = (object) ['data' => $localCoach];
         $fixture->visitorCoach = (object) ['data' => $visitorCoach];
 
-        $statsRaw = $this->apiRequest('fixtures/statistics', ['fixture' => $id]);
         $fixture->statistics = (object) ['data' => self::mapStatistics($statsRaw)];
 
         return $fixture;
@@ -112,20 +122,31 @@ class ApiFootballProvider implements FootballApiProviderInterface
 
     public function fetchTeamById(int $id, ?string $include = null): \stdClass
     {
-        $response = $this->apiRequest('teams', ['id' => $id]);
+        $base = config('football-api.api_football.base_url');
+        $headers = ['x-apisports-key' => config('football-api.api_football.api_key')];
 
-        if (empty($response)) {
+        [$teamRes, $coachsRes] = Http::pool(fn ($pool) => [
+            $pool->withHeaders($headers)->get($base.'teams', ['id' => $id]),
+            $pool->withHeaders($headers)->get($base.'coachs', ['team' => $id]),
+        ]);
+
+        $teamData = $teamRes->ok() ? ($teamRes->json()['response'] ?? []) : [];
+        $coachsData = $coachsRes->ok() ? ($coachsRes->json()['response'] ?? []) : [];
+
+        if (empty($teamData)) {
             return (object) [];
         }
 
-        $team = self::mapTeamBasic($response[0]);
-
-        $coaches = $this->apiRequest('coachs', ['team' => $id]);
-        $team->coach = (object) ['data' => ! empty($coaches) ? self::mapCoach($coaches[0]) : null];
+        $team = self::mapTeamBasic($teamData[0]);
+        $team->coach = (object) ['data' => ! empty($coachsData) ? self::mapCoach($coachsData[0]) : null];
 
         if ($include !== null && str_contains($include, 'latest')) {
-            $latestRaw = $this->apiRequest('fixtures', ['team' => $id, 'last' => 15]);
-            $upcomingRaw = $this->apiRequest('fixtures', ['team' => $id, 'next' => 15]);
+            [$latestRes, $upcomingRes] = Http::pool(fn ($pool) => [
+                $pool->withHeaders($headers)->get($base.'fixtures', ['team' => $id, 'last' => 15]),
+                $pool->withHeaders($headers)->get($base.'fixtures', ['team' => $id, 'next' => 15]),
+            ]);
+            $latestRaw = $latestRes->ok() ? ($latestRes->json()['response'] ?? []) : [];
+            $upcomingRaw = $upcomingRes->ok() ? ($upcomingRes->json()['response'] ?? []) : [];
             $team->latest = (object) ['data' => array_map([self::class, 'mapFixture'], $latestRaw)];
             $team->upcoming = (object) ['data' => array_map([self::class, 'mapFixture'], $upcomingRaw)];
         } else {
@@ -172,6 +193,7 @@ class ApiFootballProvider implements FootballApiProviderInterface
         $response = Http::withHeaders([
             'x-apisports-key' => config('football-api.api_football.api_key'),
         ])->get(config('football-api.api_football.base_url').$endpoint, $params);
+        // ConnectionException (network errors) intentionally propagates to makeCall()'s catch block
 
         if (! $response->ok()) {
             Log::error('API-Football HTTP '.$response->status().' on '.$endpoint);
@@ -322,7 +344,7 @@ class ApiFootballProvider implements FootballApiProviderInterface
         $obj->name = $league['name'] ?? '';
         $obj->image_path = $league['logo'] ?? null;
         $obj->logo_path = $obj->image_path;
-        $obj->national_team = ($league['type'] ?? '') === 'Cup';
+        $obj->national_team = false;
         $obj->country = (object) ['data' => $countryObj];
         $obj->currentSeason = (object) ['data' => $seasonObj];
         $obj->season = $obj->currentSeason;
@@ -487,7 +509,7 @@ class ApiFootballProvider implements FootballApiProviderInterface
 
         foreach ($events as $e) {
             $playerId = $e['player']['id'] ?? null;
-            if (! $playerId) {
+            if ($playerId === null) {
                 continue;
             }
 
@@ -521,7 +543,7 @@ class ApiFootballProvider implements FootballApiProviderInterface
 
         foreach ($lineups as $teamLineup) {
             $teamId = $teamLineup['team']['id'] ?? null;
-            $isHome = ($teamId === $homeTeamId);
+            $isHome = ($homeTeamId !== null && $teamId === $homeTeamId);
 
             $formation = $teamLineup['formation'] ?? null;
             if ($isHome) {
@@ -639,6 +661,8 @@ class ApiFootballProvider implements FootballApiProviderInterface
 
             return [(int) $parts[0], (int) $parts[1]];
         }
+
+        Log::error('ApiFootballProvider: malformed seasonId — expected "leagueId:year", got: '.$seasonId);
 
         return [0, 0];
     }

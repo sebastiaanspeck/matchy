@@ -63,7 +63,7 @@ class SoccerAPIController extends BaseController
 
         $league = self::makeCall('league_by_id', 'country;currentSeason', $leagueId);
 
-        Log::info('League details for: '.$league->current_season_id);
+        Log::info('League details for: '.($league->current_season_id ?? 'unknown'));
 
         $standingsRaw = self::groupStandings(
             self::makeCall('standings', 'participant;details.type;group;stage', $league->current_season_id ?? 0)
@@ -74,7 +74,12 @@ class SoccerAPIController extends BaseController
         $topscorers = [];
 
         if (! empty($league->current_season_id)) {
-            $allFixtures = $this->provider->fetchSeasonFixtures($league->current_season_id);
+            try {
+                $allFixtures = $this->provider->fetchSeasonFixtures($league->current_season_id);
+            } catch (\Exception $e) {
+                Log::error('fetchSeasonFixtures failed: '.$e->getMessage());
+                $allFixtures = [];
+            }
             $finishedStatuses = ['FT', 'AET', 'FT_PEN', 'ABAN', 'AWARDED'];
 
             $results = array_values(array_filter($allFixtures, fn ($f) => in_array($f->time->status ?? '', $finishedStatuses)));
@@ -88,11 +93,18 @@ class SoccerAPIController extends BaseController
 
             $topscorersRaw = self::makeCall('topscorers', 'player;team', $league->current_season_id, null, null, null, false);
 
-            if (! empty($topscorersRaw) && $league->current_stage_id !== null) {
+            $currentStageId = $league->current_stage_id ?? null;
+
+            if (! empty($topscorersRaw) && $currentStageId !== null) {
                 foreach ($topscorersRaw as $key => $ts) {
-                    if (($ts->stage_id ?? null) != $league->current_stage_id) {
+                    if (($ts->stage_id ?? null) !== $currentStageId) {
                         unset($topscorersRaw[$key]);
                     }
+                }
+
+                $position = 1;
+                foreach ($topscorersRaw as $key => $ts) {
+                    $topscorersRaw[$key]->position = $position++;
                 }
             }
 
