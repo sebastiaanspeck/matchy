@@ -23,7 +23,9 @@ class SoccerAPIController extends BaseController
     use AuthorizesRequests;
     use ValidatesRequests;
 
-    public function __construct(private readonly FootballApiProviderInterface $provider) {}
+    public function __construct(private readonly FootballApiProviderInterface $provider)
+    {
+    }
 
     public function allLeagues(Request $request): Factory|View
     {
