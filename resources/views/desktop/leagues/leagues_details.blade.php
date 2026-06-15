@@ -52,12 +52,6 @@
                             $homeTeam = $last_fixture->localTeam->data;
                             $awayTeam = $last_fixture->visitorTeam->data;
 
-                            if(strpos($homeTeam->name, "countries") !== false) {
-                                Log::critical("Missing country translation for: " . str_replace("countries.", "", $homeTeam->name) . " in " . app()->getLocale() . "/countries.php");
-                            } elseif(strpos($awayTeam->name, "countries") !== false) {
-                                Log::critical("Missing country translation for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
-                            }
-
                             if(in_array($last_fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
                                 switch($last_fixture->time->status) {
                                     case("FT_PEN"):
@@ -183,14 +177,6 @@
                         @php
                             $homeTeam = $upcoming_fixture->localTeam->data;
                             $awayTeam = $upcoming_fixture->visitorTeam->data;
-
-
-
-                            if(strpos($homeTeam->name, "countries") !== false) {
-                                Log::critical("Missing country translation for: " . str_replace("countries.", "", $homeTeam->name) . " in " . app()->getLocale() . "/countries.php");
-                            } elseif(strpos($awayTeam->name, "countries") !== false) {
-                                Log::critical("Missing country translation for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
-                            }
 
                             $homeTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($homeTeam->logo_path, 16, 16);
                             $awayTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($awayTeam->logo_path, 16, 16);
@@ -358,10 +344,6 @@
                                             $player->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($player->nationality);
                                         } else {
                                             $player->nationality = "Unknown";
-                                        }
-
-                                        if(strpos($team->name, "countries") !== false) {
-                                            Log::critical("Missing country translation for: " . str_replace("countries.", "", $team->name) . " in " . app()->getLocale() . "/countries.php");
                                         }
 
                                         $teamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($team->logo_path, 16, 16);

@@ -16,13 +16,6 @@
                         $homeTeam = $livescore->localTeam->data;
                         $awayTeam = $livescore->visitorTeam->data;
 
-
-                        if(strpos($homeTeam->name, "countries") !== false) {
-                            Log::critical("Missing translation-string for: " . str_replace("countries.", "", $homeTeam->name) . " in " . app()->getLocale() . "/countries.php");
-                        } elseif(strpos($awayTeam->name, "countries") !== false) {
-                            Log::critical("Missing translation-string for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
-                        }
-
                         if(in_array($livescore->time->status,  array("FT", "AET", "FT_PEN"))) {
                             switch($livescore->time->status) {
                                 case("FT_PEN"):
