@@ -51,20 +51,7 @@
                         @php
                             $homeTeam = $last_fixture->localTeam->data;
                             $awayTeam = $last_fixture->visitorTeam->data;
-                            
-                            if($homeTeam->national_team == true) {
-                                $homeTeam->name = trans("countries." . $homeTeam->name);
-                            }
-                            if($awayTeam->national_team == true) {
-                                $awayTeam->name = trans("countries." . $awayTeam->name);
-                            }
-                            
-                            if(strpos($homeTeam->name, "countries") !== false) {
-                                Log::critical("Missing country translation for: " . str_replace("countries.", "", $homeTeam->name) . " in " . app()->getLocale() . "/countries.php");
-                            } elseif(strpos($awayTeam->name, "countries") !== false) {
-                                Log::critical("Missing country translation for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
-                            }
-                            
+
                             if(in_array($last_fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
                                 switch($last_fixture->time->status) {
                                     case("FT_PEN"):
@@ -191,19 +178,6 @@
                             $homeTeam = $upcoming_fixture->localTeam->data;
                             $awayTeam = $upcoming_fixture->visitorTeam->data;
                             
-                            if($homeTeam->national_team == true) {
-                                $homeTeam->name = trans("countries." . $homeTeam->name);
-                            }
-                            if($awayTeam->national_team == true) {
-                                $awayTeam->name = trans("countries." . $awayTeam->name);
-                            }
-                            
-                            if(strpos($homeTeam->name, "countries") !== false) {
-                                Log::critical("Missing country translation for: " . str_replace("countries.", "", $homeTeam->name) . " in " . app()->getLocale() . "/countries.php");
-                            } elseif(strpos($awayTeam->name, "countries") !== false) {
-                                Log::critical("Missing country translation for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
-                            }
-
                             $homeTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($homeTeam->logo_path, 16, 16);
                             $awayTeamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($awayTeam->logo_path, 16, 16);
                         @endphp
@@ -302,14 +276,6 @@
                             <tbody>
                                     @foreach($standing as $team)
                                         @php
-                                            if($team->team->data->national_team == true) {
-                                                $team->team_name = trans("countries." . $team->team_name);
-                                            }
-                                            
-                                            if(strpos($team->team_name, "countries") !== false) {
-                                                Log::critical("Missing country translation for: " . str_replace("countries.", "", $team->team_name) . " in " . app()->getLocale() . "/countries.php");
-                                            }
-
                                             $teamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($team->team->data->logo_path, 16, 16);
                                         @endphp
                                         <tr>
@@ -380,14 +346,6 @@
                                             $player->nationality = "Unknown";
                                         }
                                         
-                                        if($team->national_team == true) {
-                                            $team->name = trans("countries." . $team->name);
-                                        }
-                                        
-                                        if(strpos($team->name, "countries") !== false) {
-                                            Log::critical("Missing country translation for: " . str_replace("countries.", "", $team->name) . " in " . app()->getLocale() . "/countries.php");
-                                        }
-
                                         $teamLogo = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getTeamLogo($team->logo_path, 16, 16);
                                     @endphp
                                     <td scope="row"><img src="/images/flags/shiny/16/{{$player->nationality}}.png" alt="countryflag">&nbsp;{{$player->common_name}}</td>

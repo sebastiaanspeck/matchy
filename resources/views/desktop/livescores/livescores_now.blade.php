@@ -23,20 +23,7 @@
                         $league = $livescore->league->data;
                         $homeTeam = $livescore->localTeam->data;
                         $awayTeam = $livescore->visitorTeam->data;
-                        
-                        if($homeTeam->national_team == true) {
-                            $homeTeam->name = trans("countries." . $homeTeam->name);
-                        }
-                        if($awayTeam->national_team == true) {
-                            $awayTeam->name = trans("countries." . $awayTeam->name);
-                        }
-                        
-                        if(strpos($homeTeam->name, "countries") !== false) {
-                            Log::warning("Missing translation-string for: " . str_replace("countries.", "", $homeTeam->name) . " in " . app()->getLocale() . "/countries.php");
-                        } elseif(strpos($awayTeam->name, "countries") !== false) {
-                            Log::warning("Missing translation-string for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
-                        }
-                        
+
                         if(in_array($livescore->time->status, array("LIVE", "HT", "ET", "PEN_LIVE", "AET", "BREAK"))) {
                             if($livescore->time->status == "HT") {
                                 $timeLine = "HT";

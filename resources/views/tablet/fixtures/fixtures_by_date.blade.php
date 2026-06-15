@@ -17,20 +17,7 @@
                     $league = $fixture->league->data;
                     $homeTeam = $fixture->localTeam->data;
                     $awayTeam = $fixture->visitorTeam->data;
-                    
-                    if($homeTeam->national_team == true) {
-                        $homeTeam->name = trans("countries." . $homeTeam->name);
-                    }
-                    if($awayTeam->national_team == true) {
-                        $awayTeam->name = trans("countries." . $awayTeam->name);
-                    }
-                    
-                    if(strpos($homeTeam->name, "countries") !== false) {
-                        Log::critical("Missing country translation for: " . str_replace("countries.", "", $homeTeam->name) . " in " . app()->getLocale() . "/countries.php");
-                    } elseif(strpos($awayTeam->name, "countries") !== false) {
-                        Log::critical("Missing country translation for: " . str_replace("countries.", "", $awayTeam->name) . " in " . app()->getLocale() . "/countries.php");
-                    }
-                    
+
                     if(in_array($fixture->time->status,  array("FT", "AET", "FT_PEN"))) {
                         switch($fixture->time->status) {
                             case("FT_PEN"):
