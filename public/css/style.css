@@ -167,6 +167,9 @@ caption {
 /* Muted secondary text (e.g. injury reason) */
 .text-muted-alt { color: #A9A9A9; }
 
+/* Hide Unknown placeholder for nationality flags */
+img[alt$="-nationality"][src$="Unknown.png"] { display: none; }
+
 /* Team logos inside fixture/standings tables are always 16×16 */
 .table img[alt="team_logo"] {
     width: 16px;

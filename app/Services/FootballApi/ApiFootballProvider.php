@@ -583,6 +583,12 @@ class ApiFootballProvider implements FootballApiProviderInterface
         $playerId = $player['id'] ?? null;
         $stats = $playerStats[$playerId] ?? ['goals' => 0, 'yellowcards' => 0, 'redcards' => 0];
 
+        $playerDataObj = new \stdClass;
+        $playerDataObj->id = $playerId;
+        $playerDataObj->common_name = $player['name'] ?? '';
+        $playerDataObj->display_name = $player['name'] ?? '';
+        $playerDataObj->nationality = null; // not provided by the lineups endpoint
+
         $obj = new \stdClass;
         $obj->id = null;
         $obj->player_id = $playerId;
@@ -590,6 +596,7 @@ class ApiFootballProvider implements FootballApiProviderInterface
         $obj->type_id = $typeId;
         $obj->team_id = $teamId;
         $obj->player_name = $player['name'] ?? '';
+        $obj->player = (object) ['data' => $playerDataObj];
         $obj->stats = (object) [
             'goals' => (object) ['scored' => $stats['goals']],
             'cards' => (object) ['yellowcards' => $stats['yellowcards'], 'redcards' => $stats['redcards']],

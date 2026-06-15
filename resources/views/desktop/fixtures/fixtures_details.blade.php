@@ -368,7 +368,6 @@
                                 $player['nationality'] = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($player['nationality']);
 
                                 if($player['nationality'] == "Unknown"){
-                                    Log::emergency("Missing nationality for player with id: {$player['player_id']}");
                                 }
 
                                 if($val->team == "home") {
@@ -466,7 +465,6 @@
                                     $player['nationality'] = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($player['nationality']);
 
                                     if($player['nationality'] == "Unknown"){
-                                        Log::emergency("Missing nationality for player with id: {$player['player_id']}");
                                     }
 
                                     if($val->team == "home") {
@@ -546,7 +544,6 @@
                                     $player['nationality'] = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($player['nationality']);
 
                                     if($player['nationality'] == "Unknown"){
-                                        Log::emergency("Missing nationality for player with id: {$player['player_id']}");
                                     }
 
                                     if($val->team == "home") {
@@ -601,14 +598,12 @@
                                 if(isset($localCoach)) {
                                     $localCoach->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($localCoach->nationality);
                                     if($localCoach->nationality == "Unknown") {
-                                        Log::emergency("Missing nationality for coach with id: " . $localCoach->coach_id);
                                     }
                                 }
 
                                 if(isset($visitorCoach)) {
                                     $visitorCoach->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($visitorCoach->nationality);
                                     if($visitorCoach->nationality == "Unknown") {
-                                        Log::emergency("Missing nationality for coach with id: " . $visitorCoach->coach_id);
                                     }
                                 }
                             @endphp

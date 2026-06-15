@@ -444,7 +444,6 @@
                                 $player['nationality'] = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($player['nationality']);
 
                                 if($player['nationality'] == "Unknown"){
-                                    Log::emergency("Missing nationality for player with id: {$player['player_id']}");
                                 }
 
                                 if($val->team == "home") {
@@ -542,7 +541,6 @@
                                     $player['nationality'] = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($player['nationality']);
 
                                     if($player['nationality'] == "Unknown"){
-                                        Log::emergency("Missing nationality for player with id: {$player['player_id']}");
                                     }
 
                                     if($val->team == "home") {
@@ -622,7 +620,6 @@
                                     $player['nationality'] = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($player['nationality']);
 
                                     if($player['nationality'] == "Unknown"){
-                                        Log::emergency("Missing nationality for player with id: {$player['player_id']}");
                                     }
 
                                     if($val->team == "home") {
@@ -678,11 +675,9 @@
                                 $visitorCoach->nationality = \App\Http\Controllers\SoccerAPI\SoccerAPIController::getCountryFlag($visitorCoach->nationality);
 
                                 if($localCoach->nationality == "Unknown") {
-                                    Log::emergency("Missing nationality for coach with id: " . $localCoach->coach_id);
                                 }
 
                                 if($visitorCoach->nationality == "Unknown") {
-                                    Log::emergency("Missing nationality for coach with id: " . $visitorCoach->coach_id);
                                 }
                             @endphp
                         <tr class="fixture-round-header">
