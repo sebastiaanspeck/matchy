@@ -9,7 +9,7 @@
                 @if(count($livescores) >= 100)
                     <p style="color:red">@lang("application.msg_too_much_results", ["count" => count($livescores)])</p>
                 @endif
-                    @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; $favorite_leagues = \App\Http\Controllers\Filebase\FilebaseController::getField('favorite_leagues'); @endphp
+                    @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; $favorite_leagues = \App\Http\Controllers\Filebase\FilebaseController::getField('favorite_leagues'); $favorite_teams = \App\Http\Controllers\Filebase\FilebaseController::getField('favorite_teams'); @endphp
                 @foreach($livescores as $livescore)
                     @php
                         $league = $livescore->league->data;
@@ -104,10 +104,10 @@
                                 @endif
                             </td>
                             {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
-                            <td scope="row" style="text-align: right"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}&nbsp;<img src="{{ $homeTeamLogo }}" alt="team_logo"></a></td>
+                            <td scope="row" style="text-align: right"><a href="{{ route("setFavoriteTeams", ["id" => $homeTeam->id]) }}"><i class="{{ in_array($homeTeam->id, $favorite_teams) ? 'fas' : 'far' }} fa-star fa-fw" aria-hidden="true"></i></a>&nbsp;<a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}&nbsp;<img src="{{ $homeTeamLogo }}" alt="team_logo"></a></td>
                             {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
                             <td scope="row" style="text-align: center">{!! nl2br(e($scoreLine)) !!}</td>
-                            <td scope="row" style="text-align: left"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}><img src="{{ $awayTeamLogo }}" alt="team_logo">&nbsp;{{$awayTeam->name}}</a></td>
+                            <td scope="row" style="text-align: left"><a href="{{ route("setFavoriteTeams", ["id" => $awayTeam->id]) }}"><i class="{{ in_array($awayTeam->id, $favorite_teams) ? 'fas' : 'far' }} fa-star fa-fw" aria-hidden="true"></i></a>&nbsp;<a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}><img src="{{ $awayTeamLogo }}" alt="team_logo">&nbsp;{{$awayTeam->name}}</a></td>
                             <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $livescore->id])}}"><i class="fa fa-info-circle" aria-hidden="true" style="margin-right: 10px"></i></a></td>
                         </tr>
                     @else
@@ -151,10 +151,10 @@
                                     @endif
                                 </td>
                                 {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
-                                <td scope="row" style="text-align: right"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}&nbsp;<img src="{{ $homeTeamLogo }}" alt="team_logo"></a></td>
+                                <td scope="row" style="text-align: right"><a href="{{ route("setFavoriteTeams", ["id" => $homeTeam->id]) }}"><i class="{{ in_array($homeTeam->id, $favorite_teams) ? 'fas' : 'far' }} fa-star fa-fw" aria-hidden="true"></i></a>&nbsp;<a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}&nbsp;<img src="{{ $homeTeamLogo }}" alt="team_logo"></a></td>
                                 {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
                                 <td scope="row" style="text-align: center">{!! nl2br(e($scoreLine)) !!}</td>
-                                <td scope="row" style="text-align: left"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}><img src="{{ $awayTeamLogo }}" alt="team_logo">&nbsp;{{$awayTeam->name}}</a></td>
+                                <td scope="row" style="text-align: left"><a href="{{ route("setFavoriteTeams", ["id" => $awayTeam->id]) }}"><i class="{{ in_array($awayTeam->id, $favorite_teams) ? 'fas' : 'far' }} fa-star fa-fw" aria-hidden="true"></i></a>&nbsp;<a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}><img src="{{ $awayTeamLogo }}" alt="team_logo">&nbsp;{{$awayTeam->name}}</a></td>
                                 <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $livescore->id])}}"><i class="fa fa-info-circle" aria-hidden="true" style="margin-right: 10px"></i></a></td>
                             </tr>
                     @endif
