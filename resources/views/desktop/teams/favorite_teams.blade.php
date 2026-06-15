@@ -6,7 +6,7 @@
 
         @if(count($teams) >= 1)
             <table class="table table-striped table-light table-sm" width="100%">
-                <thead class="thead-dark">
+                <thead class="table-dark">
                 <tr>
                     <th scope="col" width="50%">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Team name") }}</th>
                     <th scope="col" width="50%">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Country") }}</th>

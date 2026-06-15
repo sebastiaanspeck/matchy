@@ -260,7 +260,7 @@
                                 @endif
                                 </caption>
                             @endif
-                            <thead class="thead-dark">
+                            <thead class="table-dark">
                                 <tr>
                                     <th scope="col" width="1%">#</th>
                                     <th scope="col">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Team") }}</th>
@@ -324,7 +324,7 @@
             <div class="tab-pane fade" id="topscorers" role="tabpanel" aria-labelledby="topscorers-tab">
                 @if(count($topscorers) > 0)
                     <table class="table table-light table-striped table-sm" style="width: 100%">
-                        <thead class="thead-dark">
+                        <thead class="table-dark">
                             <tr>
                                 <th scope="col" width="1%">@lang("application.No.")</th>
                                 <th scope="col">@lang("application.Player")</th>

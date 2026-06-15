@@ -50,17 +50,18 @@ body {
     padding-left: .5rem;
 }
 
-a:link {
+/* Only style links inside the main content area, not in the navbar */
+main a:link {
     color: black;
     background-color: transparent;
-    text-decoration:none;
+    text-decoration: none;
 }
-a:visited {
+main a:visited {
     color: black;
     background-color: transparent;
-    text-decoration:none;
+    text-decoration: none;
 }
-a:hover {
+main a:hover {
     color: grey;
 }
 
@@ -165,6 +166,13 @@ caption {
 
 /* Muted secondary text (e.g. injury reason) */
 .text-muted-alt { color: #A9A9A9; }
+
+/* Team logos inside fixture/standings tables are always 16×16 */
+.table img[alt="team_logo"] {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+}
 
 @keyframes blinker {
     50% {

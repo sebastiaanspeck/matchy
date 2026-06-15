@@ -492,7 +492,7 @@ class SoccerAPIController extends BaseController
         return Carbon::now()->toDateString();
     }
 
-    public static function getTeamLogo(?string $file, int $height, int $width): string
+    public static function getTeamLogo(?string $file, int $height = 16, int $width = 16): string
     {
         if ($file !== null && $file !== '') {
             if (str_contains($file, 'cdn.sportmonks')) {
