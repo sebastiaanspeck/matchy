@@ -141,7 +141,7 @@
         @endphp
         <div id="heading" class="text-center">
             <h3><a href=" {{ route("leaguesDetails", ["id" => $league->id]) }} "> {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }} </a></h3>
-                <table >
+                <table class="mx-auto">
                     @if(@getimagesize($homeTeam->logo_path) && @getimagesize($awayTeam->logo_path))
                         <tr>
                             <td width="49%"><img style="max-height: 200px; max-width: 200px" alt="homeTeam-logo" src={{ $homeTeam->logo_path }}></td>
@@ -787,8 +787,8 @@
                                             {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $h2h_fixture->stage->data->name) }}
                                         @endif
                                         {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Matchday") }} {{$h2h_fixture->round->data->name}}
-                                        @if($h2h_fixture->season->data->name != $last_season_name)
-                                            - {{ $h2h_fixture->season->data->name }}
+                                        @if(($h2h_fixture->season->data->name ?? null) != $last_season_name)
+                                            - {{ ($h2h_fixture->season->data->name ?? null) }}
                                         @endif
                                     </td>
                                 </tr>
@@ -796,8 +796,8 @@
                                 <tr>
                                     <td class="fixture-round-header" colspan="5">
                                         {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $h2h_fixture->stage->data->name) }}
-                                        @if($h2h_fixture->season->data->name != $last_season_name)
-                                            - {{ $h2h_fixture->season->data->name }}
+                                        @if(($h2h_fixture->season->data->name ?? null) != $last_season_name)
+                                            - {{ ($h2h_fixture->season->data->name ?? null) }}
                                         @endif
                                     </td>
                                 </tr>
@@ -824,8 +824,8 @@
                                                     {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $h2h_fixture->stage->data->name) }} -
                                                 @endif
                                                 {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Matchday") }} {{$h2h_fixture->round->data->name}}
-                                                @if($h2h_fixture->season->data->name != $last_season_name || $h2h_fixture->league_id !== $last_league_id)
-                                                    - {{ $h2h_fixture->season->data->name }}
+                                                @if(($h2h_fixture->season->data->name ?? null) != $last_season_name || $h2h_fixture->league_id !== $last_league_id)
+                                                    - {{ ($h2h_fixture->season->data->name ?? null) }}
                                                 @endif
                                             </td>
                                         </tr>
@@ -835,8 +835,8 @@
                                         <td class="fixture-league-header" colspan="5">
                                             <a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }}</a> -
                                             {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $h2h_fixture->stage->data->name) }}
-                                            @if($h2h_fixture->season->data->name != $last_season_name || $h2h_fixture->league_id !== $last_league_id)
-                                                - {{ $h2h_fixture->season->data->name }}
+                                            @if(($h2h_fixture->season->data->name ?? null) != $last_season_name || $h2h_fixture->league_id !== $last_league_id)
+                                                - {{ ($h2h_fixture->season->data->name ?? null) }}
                                             @endif
                                         </td>
                                     </tr>
@@ -862,7 +862,7 @@
                                     <td scope="row" class="td-action"><a href="{{route("fixturesDetails", ["id" => $h2h_fixture->id])}}"><i class="fa fa-info-circle" aria-hidden="true" ></i></a></td>
                                 </tr>
                                 @endif
-                                @php $last_league_id = $h2h_fixture->league_id; if(isset($h2h_fixture->round)) {$last_round_id = $h2h_fixture->round->data->name;} if(isset($h2h_fixture->stage)) {$last_stage_id = $h2h_fixture->stage->data->name;} $last_season_name = $h2h_fixture->season->data->name; @endphp
+                                @php $last_league_id = $h2h_fixture->league_id; if(isset($h2h_fixture->round)) {$last_round_id = $h2h_fixture->round->data->name;} if(isset($h2h_fixture->stage)) {$last_stage_id = $h2h_fixture->stage->data->name;} $last_season_name = ($h2h_fixture->season->data->name ?? null); @endphp
                     @endforeach
                     </tbody>
                 </table>

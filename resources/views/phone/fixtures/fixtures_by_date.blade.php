@@ -93,7 +93,7 @@
                             @endif
                         </td>
                         {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
-                        <td scope="row" class="td-action"><a href="{{ route("setFavoriteTeams", ["id" => $homeTeam->id]) }}"><i class="{{ in_array($homeTeam->id, $favorite_teams) ? 'fas' : 'far' }} fa-star fa-fw" aria-hidden="true"></i></a>&nbsp;<a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}&nbsp;<img src="{{ $homeTeamLogo }}" alt="team_logo"></a></td>
+                        <td scope="row" class="td-action"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}&nbsp;<img src="{{ $homeTeamLogo }}" alt="team_logo"></a>&nbsp;<a href="{{ route("setFavoriteTeams", ["id" => $homeTeam->id]) }}"><i class="{{ in_array($homeTeam->id, $favorite_teams) ? 'fas' : 'far' }} fa-star fa-fw" aria-hidden="true"></i></a></td>
                         {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
                         <td scope="row" class="td-score">{!! nl2br(e($scoreLine)) !!}</td>
                         {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
@@ -141,7 +141,7 @@
                                 @endif
                             </td>
                             {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
-                            <td scope="row" class="td-action"><a href="{{ route("setFavoriteTeams", ["id" => $homeTeam->id]) }}"><i class="{{ in_array($homeTeam->id, $favorite_teams) ? 'fas' : 'far' }} fa-star fa-fw" aria-hidden="true"></i></a>&nbsp;<a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}&nbsp;<img src="{{ $homeTeamLogo }}" alt="team_logo"></a></td>
+                            <td scope="row" class="td-action"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}&nbsp;<img src="{{ $homeTeamLogo }}" alt="team_logo"></a>&nbsp;<a href="{{ route("setFavoriteTeams", ["id" => $homeTeam->id]) }}"><i class="{{ in_array($homeTeam->id, $favorite_teams) ? 'fas' : 'far' }} fa-star fa-fw" aria-hidden="true"></i></a></td>
                             {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
                             <td scope="row" class="td-score">{!! nl2br(e($scoreLine)) !!}</td>
                             {{-- show winning team in green, losing team in red, if draw, show both in orange --}}

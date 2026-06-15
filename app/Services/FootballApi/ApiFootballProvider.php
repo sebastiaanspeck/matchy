@@ -294,6 +294,11 @@ class ApiFootballProvider implements FootballApiProviderInterface
         $obj->referee = (object) ['data' => $refereeObj];
         $obj->venue = (object) ['data' => $venueObj];
 
+        $seasonObj = new \stdClass;
+        $seasonObj->id = null;
+        $seasonObj->name = $league['season'] ?? null;
+        $obj->season = (object) ['data' => $seasonObj];
+
         if ($roundName !== null) {
             $obj->round = (object) ['data' => (object) ['id' => null, 'name' => $roundName]];
         }
