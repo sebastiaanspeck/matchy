@@ -12,11 +12,11 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Jenssegers\Agent\Agent;
-use PyaeSoneAung\SportmonksFootballApi\Facades\SportmonksFootballApi;
 
 class SoccerAPIController extends BaseController
 {
@@ -61,7 +61,7 @@ class SoccerAPIController extends BaseController
 
         $league = self::makeCall('league_by_id', 'country;currentSeason', $leagueId);
 
-        log::info('League details for: '.$league->current_season_id);
+        Log::info('League details for: '.$league->current_season_id);
 
         $standingsRaw = self::groupStandings(
             self::makeCall('standings', 'participant;details.type;group;stage', $league->current_season_id ?? 0)
@@ -84,17 +84,18 @@ class SoccerAPIController extends BaseController
             $lastFixtures = self::addPagination($results, $numberOfMatches);
             $upcomingFixtures = self::addPagination($upcoming, $numberOfMatches);
 
-            if (! empty($league->current_stage_id)) {
-                $topscorersRaw = self::makeCall('topscorers', 'player;team', $league->current_season_id, null, null, null, false);
+            // Fetch topscorers (API-Football uses league+season, no stage filtering needed)
+            $topscorersRaw = self::makeCall('topscorers', 'player;team', $league->current_season_id, null, null, null, false);
 
+            if (! empty($topscorersRaw) && $league->current_stage_id !== null) {
                 foreach ($topscorersRaw as $key => $ts) {
                     if (($ts->stage_id ?? null) != $league->current_stage_id) {
                         unset($topscorersRaw[$key]);
                     }
                 }
-
-                $topscorers = self::addPagination($topscorersRaw, 10);
             }
+
+            $topscorers = self::addPagination($topscorersRaw, 10);
         }
 
         return view("{$deviceType}/leagues/leagues_details", [
@@ -444,13 +445,8 @@ class SoccerAPIController extends BaseController
 
     public static function getTeamLogo(?string $file, int $height, int $width): string
     {
-        if ($file !== null) {
-            $file = preg_replace("/cdn\.sportmonks/", 'sportmonks.gumlet', $file)."?height={$height}&width={$width}";
-            $headers = @get_headers($file);
-
-            if ($headers && stripos($headers[0], '200 OK') !== false) {
-                return $file;
-            }
+        if ($file !== null && $file !== '') {
+            return $file;
         }
 
         return '/images/team_logos/16/Unknown.png';
@@ -482,24 +478,22 @@ class SoccerAPIController extends BaseController
         mixed $visitorteam_id = null,
         bool $abort = true
     ): mixed {
-        $localeQuery = array_filter(['locale' => config('sportmonks-football-api.locale', '')]);
-
         try {
-            $resource = match ($type) {
-                'livescores' => SportmonksFootballApi::fixture()->setInclude($include ?? '')->withQueries($localeQuery)->byDate(Carbon::now()->toDateString()),
-                'livescores/now' => SportmonksFootballApi::livescore()->setInclude($include ?? '')->withQueries($localeQuery)->inplay(),
-                'leagues' => SportmonksFootballApi::league()->setInclude($include ?? '')->withQueries($localeQuery)->all(),
-                'league_by_id' => SportmonksFootballApi::league()->setInclude($include ?? '')->withQueries($localeQuery)->byId($id),
-                'standings' => SportmonksFootballApi::standing()->setInclude($include ?? '')->withQueries($localeQuery)->bySeasonId($id),
-                'fixtures_by_date' => SportmonksFootballApi::fixture()->setInclude($include ?? '')->withQueries($localeQuery)->byDate($date),
-                'fixture_by_id' => SportmonksFootballApi::fixture()->setInclude($include ?? '')->withQueries($localeQuery)->byId($id),
-                'h2h' => SportmonksFootballApi::fixture()->setInclude($include ?? '')->withQueries($localeQuery)->byHeadToHead($localteam_id, $visitorteam_id),
-                'team_by_id' => SportmonksFootballApi::team()->setInclude($include ?? '')->withQueries($localeQuery)->byId($id),
-                'topscorers' => SportmonksFootballApi::topscorer()->setInclude($include ?? '')->withQueries($localeQuery)->bySeasonId($id),
+            return match ($type) {
+                'livescores' => $this->fetchFixtures(['date' => Carbon::now()->toDateString()]),
+                'livescores/now' => $this->fetchFixtures(['live' => 'all']),
+                'leagues' => $this->fetchLeagues(),
+                'league_by_id' => $this->fetchLeagueById((int) $id),
+                'standings' => $this->fetchStandings((string) $id),
+                'fixtures_by_date' => $this->fetchFixtures(['date' => $date]),
+                'fixture_by_id' => $this->fetchFixtureById((int) $id),
+                'h2h' => $this->fetchH2H((int) $localteam_id, (int) $visitorteam_id),
+                'team_by_id' => $this->fetchTeamById((int) $id, $include),
+                'topscorers' => $this->fetchTopscorers((string) $id),
                 default => [],
             };
         } catch (\Exception $e) {
-            Log::error('Sportmonks call API error: '.$e->getMessage());
+            Log::error('API-Football call error: '.$e->getMessage());
 
             if ($abort) {
                 abort(500, $e->getMessage());
@@ -507,43 +501,631 @@ class SoccerAPIController extends BaseController
 
             return [];
         }
+    }
 
-        if (is_array($resource)) {
-            // V3-style error: {"message": "...", "code": 5001} — Sportmonks internal codes, no 'data' key
-            if (isset($resource['message']) && ! isset($resource['data'])) {
-                $smCode = $resource['code'] ?? 0;
-                // Map Sportmonks internal codes to valid HTTP codes
-                $httpCode = match (true) {
-                    $smCode >= 100 && $smCode <= 599 => $smCode,
-                    $smCode >= 5000 => 500,
-                    $smCode >= 4000 => 403,
-                    default => 500,
-                };
-                Log::error('Sportmonks API error: '.$resource['message'], ['sm_code' => $smCode, 'type' => $type]);
+    private static function apiRequest(string $endpoint, array $params = []): array
+    {
+        $response = Http::withHeaders([
+            'x-apisports-key' => config('api-football.api_key'),
+        ])->get(config('api-football.base_url').$endpoint, $params);
 
-                if ($abort) {
-                    abort($httpCode, $resource['message']);
-                }
+        if (! $response->ok()) {
+            Log::error('API-Football HTTP '.$response->status().' on '.$endpoint);
 
-                return [];
-            }
-
-            $data = $resource['data'] ?? $resource;
-
-            if (in_array($type, ['league_by_id', 'fixture_by_id', 'team_by_id'])) {
-                // V3 returns a single object in 'data' for by-id calls; wrap so toObject can map it
-                $items = is_array($data) && array_is_list($data) ? $data : (is_array($data) ? [$data] : []);
-
-                return self::toObject($items)[0] ?? (object) [];
-            }
-
-            // For list endpoints: only iterate elements that are themselves arrays
-            $items = is_array($data) && array_is_list($data) ? $data : [];
-
-            return self::toObject($items);
+            return [];
         }
 
-        return [];
+        $data = $response->json();
+
+        if (! empty($data['errors'])) {
+            $errStr = is_array($data['errors']) ? implode(', ', $data['errors']) : (string) $data['errors'];
+            Log::error('API-Football errors on '.$endpoint.': '.$errStr);
+
+            return [];
+        }
+
+        return $data['response'] ?? [];
+    }
+
+    private function fetchFixtures(array $params): array
+    {
+        $response = self::apiRequest('fixtures', $params);
+
+        return array_map([self::class, 'mapFixture'], $response);
+    }
+
+    private function fetchLeagues(): array
+    {
+        $response = self::apiRequest('leagues', ['current' => 'true']);
+
+        return array_map([self::class, 'mapLeague'], $response);
+    }
+
+    private function fetchLeagueById(int $id): \stdClass
+    {
+        $response = self::apiRequest('leagues', ['id' => $id]);
+
+        return ! empty($response) ? self::mapLeague($response[0]) : (object) [];
+    }
+
+    private function fetchStandings(string $seasonId): array
+    {
+        [$leagueId, $year] = self::decodeSeasonId($seasonId);
+
+        if ($leagueId === 0 || $year === 0) {
+            return [];
+        }
+
+        $response = self::apiRequest('standings', ['league' => $leagueId, 'season' => $year]);
+
+        if (empty($response)) {
+            return [];
+        }
+
+        $standingGroups = $response[0]['league']['standings'] ?? [];
+        $rows = [];
+        $groupCounter = 1;
+        $leagueName = $response[0]['league']['name'] ?? '';
+
+        foreach ($standingGroups as $group) {
+            $firstRow = $group[0] ?? [];
+            $groupName = $firstRow['group'] ?? 'Regular Season';
+            $isSingleGroup = ($groupName === $leagueName || $groupName === 'Regular Season' || $groupName === '');
+            $groupId = $isSingleGroup ? null : $groupCounter++;
+
+            foreach ($group as $row) {
+                $rows[] = self::mapStandingRow($row, $groupId, $groupName);
+            }
+        }
+
+        return $rows;
+    }
+
+    private function fetchFixtureById(int $id): \stdClass
+    {
+        $response = self::apiRequest('fixtures', ['id' => $id]);
+
+        if (empty($response)) {
+            return (object) [];
+        }
+
+        $fixture = self::mapFixture($response[0]);
+
+        // Events
+        $eventsRaw = self::apiRequest('fixtures/events', ['fixture' => $id]);
+        $playerStats = self::buildPlayerStatsFromEvents($eventsRaw);
+        $fixture->events = (object) ['data' => array_map([self::class, 'mapEvent'], $eventsRaw)];
+
+        // Lineups (uses player stats derived from events to avoid an extra API call)
+        $lineupsRaw = self::apiRequest('fixtures/lineups', ['fixture' => $id]);
+        [$lineup, $bench, $localFormation, $visitorFormation, $localCoach, $visitorCoach] = self::mapLineups(
+            $lineupsRaw,
+            $fixture->localteam_id,
+            $fixture->visitorteam_id,
+            $playerStats
+        );
+        $fixture->lineup = (object) ['data' => $lineup];
+        $fixture->bench = (object) ['data' => $bench];
+        $fixture->formations = (object) ['localteam_formation' => $localFormation, 'visitorteam_formation' => $visitorFormation];
+        $fixture->localCoach = (object) ['data' => $localCoach];
+        $fixture->visitorCoach = (object) ['data' => $visitorCoach];
+
+        // Statistics
+        $statsRaw = self::apiRequest('fixtures/statistics', ['fixture' => $id]);
+        $fixture->statistics = (object) ['data' => self::mapStatistics($statsRaw)];
+
+        return $fixture;
+    }
+
+    private function fetchH2H(int $team1Id, int $team2Id): array
+    {
+        $response = self::apiRequest('fixtures/headtohead', ['h2h' => $team1Id.'-'.$team2Id]);
+
+        return array_map([self::class, 'mapFixture'], $response);
+    }
+
+    private function fetchTeamById(int $id, ?string $include = null): \stdClass
+    {
+        $response = self::apiRequest('teams', ['id' => $id]);
+
+        if (empty($response)) {
+            return (object) [];
+        }
+
+        $team = self::mapTeamBasic($response[0]);
+
+        // Coach
+        $coaches = self::apiRequest('coachs', ['team' => $id]);
+        $team->coach = (object) ['data' => ! empty($coaches) ? self::mapCoach($coaches[0]) : null];
+
+        // Fixtures (only when the full team-detail include is requested)
+        if ($include !== null && str_contains($include, 'latest')) {
+            $latestRaw = self::apiRequest('fixtures', ['team' => $id, 'last' => 15]);
+            $upcomingRaw = self::apiRequest('fixtures', ['team' => $id, 'next' => 15]);
+            $team->latest = (object) ['data' => array_map([self::class, 'mapFixture'], $latestRaw)];
+            $team->upcoming = (object) ['data' => array_map([self::class, 'mapFixture'], $upcomingRaw)];
+        } else {
+            $team->latest = (object) ['data' => []];
+            $team->upcoming = (object) ['data' => []];
+        }
+
+        return $team;
+    }
+
+    private function fetchTopscorers(string $seasonId): array
+    {
+        [$leagueId, $year] = self::decodeSeasonId($seasonId);
+
+        if ($leagueId === 0 || $year === 0) {
+            return [];
+        }
+
+        $response = self::apiRequest('players/topscorers', ['league' => $leagueId, 'season' => $year]);
+
+        return array_values(array_map(function ($ts, $index) {
+            $obj = self::mapTopscorer($ts);
+            $obj->position = $index + 1;
+
+            return $obj;
+        }, $response, array_keys($response)));
+    }
+
+    private static function fetchSeasonFixtures(int|string $seasonId): array
+    {
+        [$leagueId, $year] = self::decodeSeasonId((string) $seasonId);
+
+        if ($leagueId === 0 || $year === 0) {
+            return [];
+        }
+
+        try {
+            $response = self::apiRequest('fixtures', ['league' => $leagueId, 'season' => $year]);
+        } catch (\Exception $e) {
+            Log::error('API-Football season fixtures error: '.$e->getMessage());
+
+            return [];
+        }
+
+        return array_map([self::class, 'mapFixture'], $response);
+    }
+
+    private static function mapFixture(array $f): \stdClass
+    {
+        $fx = $f['fixture'] ?? [];
+        $league = $f['league'] ?? [];
+        $home = $f['teams']['home'] ?? [];
+        $away = $f['teams']['away'] ?? [];
+        $goals = $f['goals'] ?? [];
+        $score = $f['score'] ?? [];
+
+        $statusShort = $fx['status']['short'] ?? 'NS';
+        $status = self::mapApiFootballStatus($statusShort);
+        $elapsed = $fx['status']['elapsed'] ?? null;
+
+        [$stageName, $roundName] = self::parseRoundString($league['round'] ?? null);
+
+        $homeGoals = $goals['home'] ?? null;
+        $awayGoals = $goals['away'] ?? null;
+        $homePen = $score['penalty']['home'] ?? null;
+        $awayPen = $score['penalty']['away'] ?? null;
+
+        $homeObj = new \stdClass;
+        $homeObj->id = $home['id'] ?? null;
+        $homeObj->name = $home['name'] ?? '';
+        $homeObj->logo_path = $home['logo'] ?? null;
+        $homeObj->national_team = false;
+
+        $awayObj = new \stdClass;
+        $awayObj->id = $away['id'] ?? null;
+        $awayObj->name = $away['name'] ?? '';
+        $awayObj->logo_path = $away['logo'] ?? null;
+        $awayObj->national_team = false;
+
+        $leagueObj = new \stdClass;
+        $leagueObj->id = $league['id'] ?? null;
+        $leagueObj->name = $league['name'] ?? '';
+        $leagueObj->image_path = $league['logo'] ?? null;
+        $leagueObj->logo_path = $leagueObj->image_path;
+
+        $timeObj = new \stdClass;
+        $timeObj->status = $status;
+        $timeObj->minute = $elapsed;
+        $timeObj->added_time = null;
+        $timeObj->injury_time = null;
+        $timeObj->starting_at = (object) ['date_time' => $fx['date'] ?? ''];
+
+        $scoresObj = new \stdClass;
+        $scoresObj->localteam_score = $homeGoals;
+        $scoresObj->visitorteam_score = $awayGoals;
+        $scoresObj->ft_score = ($homeGoals !== null && $awayGoals !== null) ? "$homeGoals - $awayGoals" : null;
+        $scoresObj->localteam_pen_score = $homePen;
+        $scoresObj->visitorteam_pen_score = $awayPen;
+
+        // Referee
+        $refereeStr = $fx['referee'] ?? null;
+        $refereeObj = null;
+        if ($refereeStr) {
+            $refereeObj = new \stdClass;
+            $refereeObj->fullname = $refereeStr;
+        }
+
+        // Venue
+        $venueArr = $fx['venue'] ?? null;
+        $venueObj = null;
+        if ($venueArr) {
+            $venueObj = new \stdClass;
+            $venueObj->id = $venueArr['id'] ?? null;
+            $venueObj->name = $venueArr['name'] ?? '';
+            $venueObj->city = $venueArr['city'] ?? '';
+        }
+
+        $obj = new \stdClass;
+        $obj->id = $fx['id'] ?? null;
+        $obj->league_id = $league['id'] ?? null;
+        $obj->league = (object) ['data' => $leagueObj];
+        $obj->localTeam = (object) ['data' => $homeObj];
+        $obj->localteam_id = $homeObj->id;
+        $obj->visitorTeam = (object) ['data' => $awayObj];
+        $obj->visitorteam_id = $awayObj->id;
+        $obj->time = $timeObj;
+        $obj->scores = $scoresObj;
+        $obj->referee = (object) ['data' => $refereeObj];
+        $obj->venue = (object) ['data' => $venueObj];
+
+        if ($roundName !== null) {
+            $obj->round = (object) ['data' => (object) ['id' => null, 'name' => $roundName]];
+        }
+        $obj->stage = (object) ['data' => (object) ['id' => null, 'name' => $stageName]];
+
+        // Defaults for detail fields (populated by fetchFixtureById when needed)
+        $obj->lineup = (object) ['data' => []];
+        $obj->bench = (object) ['data' => []];
+        $obj->sidelined = (object) ['data' => []];
+        $obj->comments = (object) ['data' => []];
+        $obj->events = (object) ['data' => []];
+        $obj->statistics = (object) ['data' => []];
+        $obj->formations = (object) ['localteam_formation' => null, 'visitorteam_formation' => null];
+        $obj->coverage = (object) ['topscorer_goals' => false];
+
+        return $obj;
+    }
+
+    private static function mapLeague(array $l): \stdClass
+    {
+        $league = $l['league'] ?? [];
+        $country = $l['country'] ?? [];
+        $seasons = $l['seasons'] ?? [];
+
+        $currentSeason = null;
+        foreach ($seasons as $s) {
+            if ($s['current'] ?? false) {
+                $currentSeason = $s;
+                break;
+            }
+        }
+        if ($currentSeason === null && ! empty($seasons)) {
+            $currentSeason = end($seasons);
+        }
+
+        $leagueId = $league['id'] ?? null;
+        $seasonYear = $currentSeason['year'] ?? null;
+
+        $countryObj = new \stdClass;
+        $countryObj->name = $country['name'] ?? '';
+        $countryObj->image_path = $country['flag'] ?? null;
+
+        $seasonObj = new \stdClass;
+        $seasonObj->id = ($leagueId !== null && $seasonYear !== null) ? self::encodeSeasonId($leagueId, $seasonYear) : null;
+        $seasonObj->name = $seasonYear;
+
+        $obj = new \stdClass;
+        $obj->id = $leagueId;
+        $obj->name = $league['name'] ?? '';
+        $obj->image_path = $league['logo'] ?? null;
+        $obj->logo_path = $obj->image_path;
+        $obj->national_team = ($league['type'] ?? '') === 'Cup';
+        $obj->country = (object) ['data' => $countryObj];
+        $obj->currentSeason = (object) ['data' => $seasonObj];
+        $obj->season = $obj->currentSeason;
+        $obj->current_season_id = $seasonObj->id;
+        $obj->current_stage_id = null;
+        $obj->coverage = (object) ['topscorer_goals' => $currentSeason['coverage']['top_scorers'] ?? false];
+
+        return $obj;
+    }
+
+    private static function mapTeamBasic(array $teamData): \stdClass
+    {
+        $team = $teamData['team'] ?? [];
+        $venue = $teamData['venue'] ?? [];
+
+        $countryObj = new \stdClass;
+        $countryObj->name = $team['country'] ?? '';
+
+        $obj = new \stdClass;
+        $obj->id = $team['id'] ?? null;
+        $obj->name = $team['name'] ?? '';
+        $obj->logo_path = $team['logo'] ?? null;
+        $obj->national_team = $team['national'] ?? false;
+        $obj->founded = $team['founded'] ?? null;
+        $obj->country = (object) ['data' => $countryObj];
+        $obj->coverage = (object) ['topscorer_goals' => false];
+
+        if (! empty($venue)) {
+            $venueObj = new \stdClass;
+            $venueObj->id = $venue['id'] ?? null;
+            $venueObj->name = $venue['name'] ?? '';
+            $venueObj->city = $venue['city'] ?? '';
+            $venueObj->capacity = $venue['capacity'] ?? null;
+            $obj->venue = (object) ['data' => $venueObj];
+        } else {
+            $obj->venue = (object) ['data' => null];
+        }
+
+        return $obj;
+    }
+
+    private static function mapCoach(array $coachData): ?\stdClass
+    {
+        if (empty($coachData)) {
+            return null;
+        }
+
+        $nameParts = explode(' ', $coachData['name'] ?? '', 2);
+
+        $obj = new \stdClass;
+        $obj->id = $coachData['id'] ?? null;
+        $obj->coach_id = $coachData['id'] ?? null;
+        $obj->firstname = $nameParts[0] ?? '';
+        $obj->lastname = $nameParts[1] ?? '';
+        $obj->common_name = $coachData['name'] ?? '';
+        $obj->display_name = $coachData['name'] ?? '';
+        $obj->nationality = $coachData['nationality'] ?? 'Unknown';
+
+        return $obj;
+    }
+
+    private static function mapStandingRow(array $row, ?int $groupId, string $groupName): \stdClass
+    {
+        $all = $row['all'] ?? [];
+        $team = $row['team'] ?? [];
+
+        $teamObj = new \stdClass;
+        $teamObj->id = $team['id'] ?? null;
+        $teamObj->name = $team['name'] ?? '';
+        $teamObj->logo_path = $team['logo'] ?? null;
+
+        $overallObj = new \stdClass;
+        $overallObj->games_played = $all['played'] ?? null;
+        $overallObj->won = $all['win'] ?? null;
+        $overallObj->draw = $all['draw'] ?? null;
+        $overallObj->lost = $all['lose'] ?? null;
+        $overallObj->goals_scored = $all['goals']['for'] ?? null;
+        $overallObj->goals_against = $all['goals']['against'] ?? null;
+
+        $obj = new \stdClass;
+        $obj->id = null;
+        $obj->position = $row['rank'] ?? null;
+        $obj->participant_id = $team['id'] ?? null;
+        $obj->participant = (object) ['data' => $teamObj];
+        $obj->team = $obj->participant;
+        $obj->team_id = $team['id'] ?? null;
+        $obj->team_name = $team['name'] ?? '';
+        $obj->points = $row['points'] ?? null;
+        $obj->goalsDiff = $row['goalsDiff'] ?? null;
+        $obj->form = $row['form'] ?? '';
+        $obj->result = $row['status'] ?? 'same';
+        $obj->overall = $overallObj;
+        $obj->details = (object) ['data' => []];
+        $obj->group_id = $groupId;
+        $obj->group = (object) ['data' => (object) ['id' => $groupId, 'name' => $groupId !== null ? $groupName : null]];
+        $obj->stage_id = 1;
+        $obj->stage = (object) ['data' => (object) ['id' => 1, 'name' => 'Regular Season']];
+
+        return $obj;
+    }
+
+    private static function mapTopscorer(array $ts): \stdClass
+    {
+        $player = $ts['player'] ?? [];
+        $stats = $ts['statistics'][0] ?? [];
+        $team = $stats['team'] ?? [];
+
+        $playerObj = new \stdClass;
+        $playerObj->id = $player['id'] ?? null;
+        $playerObj->common_name = $player['name'] ?? '';
+        $playerObj->display_name = $player['name'] ?? '';
+        $playerObj->nationality = $player['nationality'] ?? 'Unknown';
+
+        $teamObj = new \stdClass;
+        $teamObj->id = $team['id'] ?? null;
+        $teamObj->name = $team['name'] ?? '';
+        $teamObj->logo_path = $team['logo'] ?? null;
+
+        $obj = new \stdClass;
+        $obj->id = null;
+        $obj->position = 0;
+        $obj->player_id = $player['id'] ?? null;
+        $obj->player = (object) ['data' => $playerObj];
+        $obj->team = (object) ['data' => $teamObj];
+        $obj->stage_id = null;
+        $obj->goals = $stats['goals']['total'] ?? 0;
+        $obj->total = $obj->goals;
+
+        return $obj;
+    }
+
+    private static function mapEvent(array $e): \stdClass
+    {
+        $type = $e['type'] ?? '';
+        $detail = $e['detail'] ?? '';
+
+        $mappedType = match (true) {
+            $type === 'subst' => 'substitution',
+            $type === 'Goal' && $detail === 'Own Goal' => 'own_goal',
+            $type === 'Goal' => 'goal',
+            $type === 'Card' && $detail === 'Yellow Card' => 'yellowcard',
+            $type === 'Card' && $detail === 'Red Card' => 'redcard',
+            $type === 'Card' && $detail === 'Yellow Red Card' => 'yellowred',
+            default => strtolower(str_replace(' ', '_', $type)),
+        };
+
+        $obj = new \stdClass;
+        $obj->id = null;
+        $obj->team_id = $e['team']['id'] ?? null;
+        $obj->minute = $e['time']['elapsed'] ?? null;
+        $obj->extra_minute = $e['time']['extra'] ?? null;
+        $obj->player_name = $e['player']['name'] ?? '';
+        $obj->related_player_name = $e['assist']['name'] ?? null;
+        $obj->type = $mappedType;
+
+        return $obj;
+    }
+
+    private static function buildPlayerStatsFromEvents(array $events): array
+    {
+        $stats = [];
+
+        foreach ($events as $e) {
+            $playerId = $e['player']['id'] ?? null;
+            if (! $playerId) {
+                continue;
+            }
+
+            if (! isset($stats[$playerId])) {
+                $stats[$playerId] = ['goals' => 0, 'yellowcards' => 0, 'redcards' => 0];
+            }
+
+            $type = $e['type'] ?? '';
+            $detail = $e['detail'] ?? '';
+
+            if ($type === 'Goal' && $detail !== 'Own Goal') {
+                $stats[$playerId]['goals']++;
+            } elseif ($type === 'Card' && $detail === 'Yellow Card') {
+                $stats[$playerId]['yellowcards']++;
+            } elseif ($type === 'Card' && in_array($detail, ['Red Card', 'Yellow Red Card'])) {
+                $stats[$playerId]['redcards']++;
+            }
+        }
+
+        return $stats;
+    }
+
+    private static function mapLineups(array $lineups, ?int $homeTeamId, ?int $awayTeamId, array $playerStats = []): array
+    {
+        $allLineup = [];
+        $allBench = [];
+        $homeFormation = null;
+        $awayFormation = null;
+        $homeCoach = null;
+        $awayCoach = null;
+
+        foreach ($lineups as $teamLineup) {
+            $teamId = $teamLineup['team']['id'] ?? null;
+            $isHome = ($teamId === $homeTeamId);
+
+            $formation = $teamLineup['formation'] ?? null;
+            if ($isHome) {
+                $homeFormation = $formation;
+            } else {
+                $awayFormation = $formation;
+            }
+
+            if (! empty($teamLineup['coach'])) {
+                $coach = self::mapCoach($teamLineup['coach']);
+                if ($isHome) {
+                    $homeCoach = $coach;
+                } else {
+                    $awayCoach = $coach;
+                }
+            }
+
+            foreach ($teamLineup['startXI'] ?? [] as $p) {
+                $allLineup[] = self::mapLineupPlayer($p['player'] ?? [], $teamId, 11, $playerStats);
+            }
+
+            foreach ($teamLineup['substitutes'] ?? [] as $p) {
+                $allBench[] = self::mapLineupPlayer($p['player'] ?? [], $teamId, 12, $playerStats);
+            }
+        }
+
+        return [$allLineup, $allBench, $homeFormation, $awayFormation, $homeCoach, $awayCoach];
+    }
+
+    private static function mapLineupPlayer(array $player, ?int $teamId, int $typeId, array $playerStats = []): \stdClass
+    {
+        $playerId = $player['id'] ?? null;
+        $stats = $playerStats[$playerId] ?? ['goals' => 0, 'yellowcards' => 0, 'redcards' => 0];
+
+        $obj = new \stdClass;
+        $obj->id = null;
+        $obj->player_id = $playerId;
+        $obj->number = $player['number'] ?? null;
+        $obj->type_id = $typeId;
+        $obj->team_id = $teamId;
+        $obj->player_name = $player['name'] ?? '';
+        $obj->stats = (object) [
+            'goals' => (object) ['scored' => $stats['goals']],
+            'cards' => (object) ['yellowcards' => $stats['yellowcards'], 'redcards' => $stats['redcards']],
+        ];
+
+        return $obj;
+    }
+
+    private static function mapStatistics(array $statsResponse): array
+    {
+        $statTypeMap = [
+            'Shots on Goal' => ['id' => 1, 'dev_name' => 'SHOTS_ONGOAL'],
+            'Shots off Goal' => ['id' => 2, 'dev_name' => 'SHOTS_OFFGOAL'],
+            'Total Shots' => ['id' => 3, 'dev_name' => 'SHOTS_TOTAL'],
+            'Blocked Shots' => ['id' => 4, 'dev_name' => 'SHOTS_BLOCKED'],
+            'Shots insidebox' => ['id' => 5, 'dev_name' => 'SHOTS_INSIDEBOX'],
+            'Shots outsidebox' => ['id' => 6, 'dev_name' => 'SHOTS_OUTSIDEBOX'],
+            'Fouls' => ['id' => 7, 'dev_name' => 'FOULS'],
+            'Corner Kicks' => ['id' => 8, 'dev_name' => 'CORNERS'],
+            'Offsides' => ['id' => 9, 'dev_name' => 'OFFSIDES'],
+            'Ball Possession' => ['id' => 10, 'dev_name' => 'POSSESSIONTIME'],
+            'Yellow Cards' => ['id' => 11, 'dev_name' => 'YELLOWCARDS'],
+            'Red Cards' => ['id' => 12, 'dev_name' => 'REDCARDS'],
+            'Goalkeeper Saves' => ['id' => 13, 'dev_name' => 'SAVES'],
+            'Total passes' => ['id' => 14, 'dev_name' => 'PASSES_TOTAL'],
+            'Passes accurate' => ['id' => 15, 'dev_name' => 'PASSES_ACCURATE'],
+            'Passes %' => ['id' => 16, 'dev_name' => 'PASSES_PERCENTAGE'],
+        ];
+
+        $result = [];
+
+        foreach ($statsResponse as $teamStats) {
+            $teamId = $teamStats['team']['id'] ?? null;
+
+            foreach ($teamStats['statistics'] ?? [] as $stat) {
+                $typeName = $stat['type'] ?? '';
+                $typeInfo = $statTypeMap[$typeName] ?? null;
+
+                if (! $typeInfo) {
+                    continue;
+                }
+
+                $value = $stat['value'];
+                if (is_string($value) && str_ends_with($value, '%')) {
+                    $value = (float) rtrim($value, '%');
+                }
+
+                $typeObj = new \stdClass;
+                $typeObj->developer_name = $typeInfo['dev_name'];
+                $typeObj->name = $typeName;
+
+                $statObj = new \stdClass;
+                $statObj->type_id = $typeInfo['id'];
+                $statObj->type = (object) ['data' => $typeObj];
+                $statObj->participant_id = $teamId;
+                $statObj->value = $value;
+
+                $result[] = $statObj;
+            }
+        }
+
+        return $result;
     }
 
     private static function groupStandings(array $rows): array
@@ -561,36 +1143,38 @@ class SoccerAPIController extends BaseController
             'OVERALL_CONCEDED' => 'goals_against',
         ];
 
-        // bucket key: group_id when present, otherwise stage_id
-        $buckets = [];   // key → [rows]
-        $bucketNames = [];   // key → group/stage display name
-        $stageNames = [];   // key → stage name (for the caption logic)
+        $buckets = [];
+        $bucketNames = [];
+        $stageNames = [];
 
         foreach ($rows as $row) {
             $groupId = $row->group_id ?? null;
             $stageId = $row->stage_id ?? 0;
             $key = $groupId !== null ? 'g_'.$groupId : 's_'.$stageId;
 
-            // Capture group/stage name on first encounter
             if (! isset($bucketNames[$key])) {
-                $bucketNames[$key] = $row->group->data->name  // e.g. "Group A"
-                    ?? $row->stage->data->name                // e.g. "Regular Season"
+                $bucketNames[$key] = $row->group->data->name
+                    ?? $row->stage->data->name
                     ?? 'Group';
                 $stageNames[$key] = $row->stage->data->name ?? 'Regular Season';
             }
 
-            // Build overall stats from the standing details include
-            $overall = new \stdClass;
-            foreach ($row->details->data ?? [] as $detail) {
-                $devName = $detail->type->data->developer_name ?? '';
-                if (isset($typeMap[$devName])) {
-                    $overall->{$typeMap[$devName]} = $detail->value ?? null;
+            // Build overall stats from details when present; otherwise use pre-built overall
+            if (! empty($row->details->data ?? [])) {
+                $overall = new \stdClass;
+                foreach ($row->details->data as $detail) {
+                    $devName = $detail->type->data->developer_name ?? '';
+                    if (isset($typeMap[$devName])) {
+                        $overall->{$typeMap[$devName]} = $detail->value ?? null;
+                    }
                 }
+                $row->overall = $overall;
+            } elseif (! isset($row->overall)) {
+                $row->overall = new \stdClass;
             }
-            $row->overall = $overall;
+
             $row->team_id = $row->participant_id ?? null;
             $row->team_name = $row->participant->data->name ?? null;
-            // $row->team is already aliased from participant by normaliseFields
             $row->recent_form = $row->form ?? '';
             $row->status = match ($row->result ?? '') {
                 'up' => 'up',
@@ -601,7 +1185,6 @@ class SoccerAPIController extends BaseController
             $buckets[$key][] = $row;
         }
 
-        // Sort buckets by display name so groups appear as A, B, C …
         uksort($buckets, fn ($a, $b) => strcmp($bucketNames[$a] ?? $a, $bucketNames[$b] ?? $b));
 
         $isMultiBucket = count($buckets) > 1;
@@ -620,372 +1203,58 @@ class SoccerAPIController extends BaseController
         return $result;
     }
 
-    private static function toObject(array $items): array
+    private static function encodeSeasonId(int $leagueId, int $year): string
     {
-        return array_values(array_map(
-            [self::class, 'itemToObject'],
-            array_filter($items, 'is_array')
-        ));
+        return $leagueId.':'.$year;
     }
 
-    private static function itemToObject(array $item): object
+    private static function decodeSeasonId(string $seasonId): array
     {
-        $obj = new \stdClass;
+        if (str_contains($seasonId, ':')) {
+            $parts = explode(':', $seasonId, 2);
 
-        foreach ($item as $key => $value) {
-            if (is_array($value) && ! array_is_list($value)) {
-                // associative array → nested object, wrapped in ->data for relation compatibility
-                $obj->$key = (object) ['data' => self::itemToObject($value)];
-            } elseif (is_array($value) && array_is_list($value)) {
-                // indexed array → wrap each item and keep as ->data collection
-                $obj->$key = (object) ['data' => self::toObject(
-                    array_filter($value, 'is_array')
-                )];
-            } else {
-                $obj->$key = $value;
-            }
+            return [(int) $parts[0], (int) $parts[1]];
         }
 
-        self::normaliseFields($obj);
-
-        return $obj;
+        return [0, 0];
     }
 
-    private static function normaliseFields(\stdClass $obj): void
+    private static function mapApiFootballStatus(string $short): string
     {
-        // Season: V3 returns the include key as lowercase "currentseason" regardless of how it was requested
-        if (! isset($obj->currentSeason) && isset($obj->currentseason)) {
-            $obj->currentSeason = $obj->currentseason;
-        }
-
-        if (isset($obj->currentSeason) && ! isset($obj->season)) {
-            $obj->season = $obj->currentSeason;
-        }
-
-        // current_season_id: extract from the included currentSeason data, or fall back to season_id
-        if (! isset($obj->current_season_id)) {
-            $seasonData = $obj->currentSeason->data ?? null;
-            if (isset($seasonData->id)) {
-                $obj->current_season_id = $seasonData->id;
-            } elseif (isset($obj->season_id)) {
-                $obj->current_season_id = $obj->season_id;
-            }
-        }
-
-        // current_stage_id
-        if (! isset($obj->current_stage_id) && isset($obj->stage_id)) {
-            $obj->current_stage_id = $obj->stage_id;
-        }
-
-        if (! isset($obj->time) && isset($obj->starting_at)) {
-            $state = $obj->state->data ?? null;
-            $status = $state
-                ? self::mapV3StateName($state->developer_name ?? $state->name ?? 'NS')
-                : self::mapV3StateId($obj->state_id ?? 0);
-
-            $obj->time = (object) [
-                'status' => $status,
-                'minute' => $obj->minute ?? null,
-                'added_time' => $obj->injury_time ?? $obj->added_time ?? null,
-                'injury_time' => $obj->injury_time ?? null,
-                'starting_at' => (object) ['date_time' => $obj->starting_at],
-            ];
-        }
-
-        if (! isset($obj->localTeam) && isset($obj->participants->data)) {
-            $participants = $obj->participants->data;
-            $home = null;
-            $away = null;
-
-            foreach ($participants as $p) {
-                $location = $p->meta->data->location ?? ($p->location ?? null);
-                if ($location === 'home') {
-                    $home = $p;
-                } elseif ($location === 'away') {
-                    $away = $p;
-                }
-            }
-
-            if ($home) {
-                $obj->localTeam = (object) ['data' => $home];
-                $obj->localteam_id = $home->id ?? null;
-            }
-
-            if ($away) {
-                $obj->visitorTeam = (object) ['data' => $away];
-                $obj->visitorteam_id = $away->id ?? null;
-            }
-        }
-
-        if (isset($obj->scores->data) && is_array($obj->scores->data)) {
-            $homeGoals = null;
-            $awayGoals = null;
-            $homePen = null;
-            $awayPen = null;
-
-            foreach ($obj->scores->data as $score) {
-                // "description" is the direct field; fall back to the type relationship when the sub-include was requested
-                $typeName = $score->description ?? $score->type->data->developer_name ?? $score->type->data->name ?? '';
-                $goals = $score->score->data->goals ?? null;
-                $part = $score->score->data->participant ?? '';
-
-                if (strtoupper($typeName) === 'CURRENT') {
-                    if ($part === 'home') {
-                        $homeGoals = $goals;
-                    } elseif ($part === 'away') {
-                        $awayGoals = $goals;
-                    }
-                } elseif (in_array(strtoupper($typeName), ['PENALTY', 'PENALTY_SHOOTOUT'])) {
-                    if ($part === 'home') {
-                        $homePen = $goals;
-                    } elseif ($part === 'away') {
-                        $awayPen = $goals;
-                    }
-                }
-            }
-
-            $obj->scores = (object) [
-                'localteam_score' => $homeGoals,
-                'visitorteam_score' => $awayGoals,
-                // ft_score is a formatted string used by the AET template: "2 - 1 (ET)"
-                'ft_score' => ($homeGoals !== null && $awayGoals !== null) ? "$homeGoals - $awayGoals" : null,
-                'localteam_pen_score' => $homePen,
-                'visitorteam_pen_score' => $awayPen,
-            ];
-        }
-
-        if (! isset($obj->logo_path) && isset($obj->image_path)) {
-            $obj->logo_path = $obj->image_path;
-        }
-
-        if (! isset($obj->national_team)) {
-            $obj->national_team = ($obj->type ?? '') === 'national';
-        }
-
-        // coverage: provide a default so views don't break
-        if (! isset($obj->coverage)) {
-            $obj->coverage = (object) ['topscorer_goals' => false];
-        }
-
-        if (! isset($obj->team) && isset($obj->participant->data)) {
-            $obj->team = $obj->participant;
-        }
-
-        // coaches.coach sub-include returns pivot rows; extract the nested profile of the active coach.
-        if (! isset($obj->coach) && isset($obj->coaches->data)) {
-            $coaches = $obj->coaches->data;
-            $active = null;
-            foreach ($coaches as $c) {
-                if ($c->active ?? false) {
-                    $active = $c;
-                    break;
-                }
-            }
-            $pivot = $active ?? ($coaches[0] ?? null);
-            $profile = $pivot->coach->data ?? $pivot;
-            if ($profile && ! isset($profile->firstname) && isset($profile->display_name)) {
-                $parts = explode(' ', $profile->display_name, 2);
-                $profile->firstname = $parts[0] ?? '';
-                $profile->lastname = $parts[1] ?? '';
-            }
-            $obj->coach = (object) ['data' => $profile];
-        }
-
-        if (! isset($obj->goals) && isset($obj->total)) {
-            $obj->goals = $obj->total;
-        }
-
-        // lineups include: type_id 11 = starters, type_id 12 = bench
-        if (! isset($obj->lineup) && isset($obj->lineups->data)) {
-            $obj->lineup = (object) ['data' => array_values(array_filter($obj->lineups->data, fn ($e) => ($e->type_id ?? 0) === 11))];
-            $obj->bench = (object) ['data' => array_values(array_filter($obj->lineups->data, fn ($e) => ($e->type_id ?? 0) === 12))];
-        }
-
-        if (! isset($obj->number) && isset($obj->jersey_number)) {
-            $obj->number = $obj->jersey_number;
-            if (! isset($obj->stats)) {
-                $obj->stats = (object) [
-                    'goals' => (object) ['scored' => 0],
-                    'cards' => (object) ['yellowcards' => 0, 'redcards' => 0],
-                ];
-            }
-        }
-
-        // Fixture: ensure required collections are never null (prevents count(null) TypeError in views)
-        if (isset($obj->starting_at)) {
-            if (! isset($obj->lineup)) {
-                $obj->lineup = (object) ['data' => []];
-            }
-            if (! isset($obj->bench)) {
-                $obj->bench = (object) ['data' => []];
-            }
-            if (! isset($obj->sidelined)) {
-                $obj->sidelined = (object) ['data' => []];
-            }
-            if (! isset($obj->comments)) {
-                $obj->comments = (object) ['data' => []];
-            }
-            if (! isset($obj->events)) {
-                $obj->events = (object) ['data' => []];
-            }
-            if (! isset($obj->stats)) {
-                $obj->stats = (object) ['data' => []];
-            }
-            // V3 has no formations object
-            if (! isset($obj->formations)) {
-                $obj->formations = (object) ['localteam_formation' => null, 'visitorteam_formation' => null];
-            }
-        }
-
-        // Fixture coaches: split into localCoach / visitorCoach keyed by participant_id
-        if (! isset($obj->localCoach) && isset($obj->coaches->data) && isset($obj->localteam_id)) {
-            foreach ($obj->coaches->data as $c) {
-                $pid = $c->participant_id ?? null;
-                if ($pid === $obj->localteam_id && ! isset($obj->localCoach)) {
-                    $obj->localCoach = (object) ['data' => $c->coach->data ?? $c];
-                } elseif ($pid === $obj->visitorteam_id && ! isset($obj->visitorCoach)) {
-                    $obj->visitorCoach = (object) ['data' => $c->coach->data ?? $c];
-                }
-            }
-        }
-
-        // Events: guard — has minute + type_id but is not a fixture itself
-        if (isset($obj->type_id, $obj->minute) && ! isset($obj->starting_at)) {
-            if (! isset($obj->type)) {
-                $obj->type = self::mapV3EventTypeId($obj->type_id);
-            }
-            if (! isset($obj->team_id) && isset($obj->participant_id)) {
-                $obj->team_id = $obj->participant_id;
-            }
-            if (! isset($obj->player_name)) {
-                $obj->player_name = $obj->player->data->common_name ?? $obj->player->data->display_name ?? '';
-            }
-            if (! isset($obj->related_player_name)) {
-                $obj->related_player_name = isset($obj->related_player->data)
-                    ? ($obj->related_player->data->common_name ?? $obj->related_player->data->display_name ?? null)
-                    : null;
-            }
-            if (! isset($obj->extra_minute)) {
-                $obj->extra_minute = null;
-            }
-        }
-
-        if (! isset($obj->city) && isset($obj->city_id)) {
-            $obj->city = '';
-        }
-
-        if (! isset($obj->reason) && isset($obj->player_id) && ! isset($obj->jersey_number)) {
-            $obj->reason = $obj->category ?? $obj->description ?? '';
-            if (! isset($obj->team_id) && isset($obj->participant_id)) {
-                $obj->team_id = $obj->participant_id;
-            }
-        }
-
-        // Coach profile: ensure common_name and coach_id for view rendering
-        if (isset($obj->firstname)) {
-            if (! isset($obj->common_name)) {
-                $obj->common_name = trim(($obj->firstname ?? '').' '.($obj->lastname ?? ''));
-            }
-            if (! isset($obj->coach_id) && isset($obj->id)) {
-                $obj->coach_id = $obj->id;
-            }
-        }
-
-        // Statistics: flatten nested data.value onto the stat object
-        if (! isset($obj->value) && isset($obj->type_id) && isset($obj->participant_id) && isset($obj->data->data->value)) {
-            $obj->value = $obj->data->data->value;
-        }
-    }
-
-    private static function mapV3StateName(string $state): string
-    {
-        return match (strtoupper($state)) {
-            'NS', 'NOT_STARTED' => 'NS',
-            'INPLAY_1ST_HALF', 'LIVE' => 'LIVE',
-            'HT', 'HALF_TIME' => 'HT',
-            'INPLAY_2ND_HALF' => 'LIVE',
-            'ET', 'EXTRA_TIME', 'INPLAY_ET', 'EXTRA_TIME_HALF_TIME', 'INPLAY_ET_2ND_HALF' => 'ET',
-            'PEN_BREAK', 'PENALTIES', 'INPLAY_PENALTIES' => 'LIVE',
-            'AET', 'AFTER_EXTRA_TIME' => 'AET',
-            'FT_PEN', 'AFTER_PENALTIES', 'PEN_RESULT' => 'FT_PEN',
-            'FT', 'FINISHED', 'AWARDED' => 'FT',
-            'CANCL', 'CANCELLED' => 'CANCL',
-            'POSTP', 'POSTPONED' => 'POSTP',
-            'SUSP', 'SUSPENDED' => 'SUSP',
-            'ABAN', 'ABANDONED' => 'ABAN',
-            'TBA' => 'TBA',
-            default => $state,
+        return match ($short) {
+            'NS' => 'NS',
+            '1H' => 'LIVE',
+            'HT' => 'HT',
+            '2H' => 'LIVE',
+            'ET' => 'ET',
+            'BT' => 'BREAK',
+            'P' => 'PEN_LIVE',
+            'SUSP' => 'SUSP',
+            'INT' => 'INT',
+            'FT' => 'FT',
+            'AET' => 'AET',
+            'PEN' => 'FT_PEN',
+            'PST' => 'POSTP',
+            'CANC' => 'CANCL',
+            'ABD' => 'ABAN',
+            'AWD' => 'AWARDED',
+            'WO' => 'WO',
+            'LIVE' => 'LIVE',
+            'TBD' => 'TBA',
+            default => $short,
         };
     }
 
-    private static function mapV3StateId(int $stateId): string
+    private static function parseRoundString(?string $roundStr): array
     {
-        return match ($stateId) {
-            1 => 'NS',
-            2 => 'LIVE',
-            3 => 'HT',
-            4 => 'ET',
-            5 => 'FT',
-            6 => 'FT_PEN',
-            7 => 'AET',
-            8 => 'POSTP',
-            9 => 'SUSP',
-            10 => 'CANCL',
-            11 => 'ABAN',
-            13 => 'TBA',
-            default => 'NS',
-        };
-    }
-
-    private static function mapV3EventTypeId(int $typeId): string
-    {
-        return match ($typeId) {
-            14 => 'goal',
-            15 => 'redcard',
-            16 => 'yellowcard',
-            17 => 'yellowred',
-            18 => 'substitution',
-            19 => 'pen_shootout_goal',
-            20 => 'pen_shootout_miss',
-            21 => 'own_goal',
-            default => 'unknown',
-        };
-    }
-
-    private static function fetchSeasonFixtures(int|string $seasonId): array
-    {
-        $localeQuery = array_filter(['locale' => config('sportmonks-football-api.locale', '')]);
-
-        try {
-            $response = SportmonksFootballApi::schedule()->withQueries($localeQuery)->bySeasonId($seasonId);
-        } catch (\Exception $e) {
-            Log::error('Schedule API error: '.$e->getMessage());
-
-            return [];
+        if ($roundStr === null) {
+            return ['Regular Season', null];
         }
 
-        if (! is_array($response) || ! isset($response['data'])) {
-            return [];
+        if (preg_match('/^(.*)\s-\s(\d+)$/', $roundStr, $m)) {
+            return [trim($m[1]), $m[2]];
         }
 
-        $fixtures = [];
-
-        foreach ($response['data'] as $stage) {
-            $stageArr = ['id' => $stage['id'] ?? null, 'name' => $stage['name'] ?? null];
-            $rounds = $stage['rounds']['data'] ?? $stage['rounds'] ?? [];
-
-            foreach ($rounds as $round) {
-                $roundArr = ['id' => $round['id'] ?? null, 'name' => $round['name'] ?? null];
-                $roundFixtures = $round['fixtures']['data'] ?? $round['fixtures'] ?? [];
-
-                foreach ($roundFixtures as $fixture) {
-                    $fixture['stage'] = $stageArr;
-                    $fixture['round'] = $roundArr;
-                    $fixtures[] = $fixture;
-                }
-            }
-        }
-
-        return self::toObject($fixtures);
+        return [$roundStr, null];
     }
 }
