@@ -138,9 +138,9 @@
                 $favorite_league = "fas";
             }
         @endphp
-        <div id="heading" style="text-align: center">
+        <div id="heading" class="text-center">
             <h3><a href="{{ route("setFavoriteLeagues", ["id" => $league->id]) }}"><i class="{{ $favorite_league }} fa-star fa-fw fa-xs" aria-hidden="true" style="transform: translate(10%, -10%);"></i></a>&nbsp;<a href="{{ route("leaguesDetails", ["id" => $league->id]) }}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }}</a></h3>
-                <table style="width:100%">
+                <table >
                     @if(@getimagesize($homeTeam->logo_path) && @getimagesize($awayTeam->logo_path))
                         <tr>
                             <td width="49%"><img style="max-height: 200px; max-width: 200px" alt="homeTeam-logo" src={{ $homeTeam->logo_path }}></td>
@@ -150,15 +150,15 @@
                     @endif
                     <tr style="height: 10px"></tr>
                     <tr>
-                        <td width="49%" style="vertical-align: top"><h5><a href="{{ route("setFavoriteTeams", ["id" => $homeTeam->id]) }}"><i class="{{ $favorite_homeTeam }} fa-star fa-fw" aria-hidden="true"></i></a>&nbsp;<a href="{{ route("teamsDetails", ["id" => $homeTeam->id]) }}">{{ $homeTeam->name }}</a></h5></td>
+                        <td width="49%" class="align-top"><h5><a href="{{ route("setFavoriteTeams", ["id" => $homeTeam->id]) }}"><i class="{{ $favorite_homeTeam }} fa-star fa-fw" aria-hidden="true"></i></a>&nbsp;<a href="{{ route("teamsDetails", ["id" => $homeTeam->id]) }}">{{ $homeTeam->name }}</a></h5></td>
                         <td></td>
-                        <td width="49%" style="vertical-align: top"><h5><a href="{{ route("setFavoriteTeams", ["id" => $awayTeam->id]) }}"><i class="{{ $favorite_awayTeam }} fa-star fa-fw" aria-hidden="true"></i></a>&nbsp;<a href="{{ route("teamsDetails", ["id" => $awayTeam->id]) }}">{{ $awayTeam->name }}</a></h5></td>
+                        <td width="49%" class="align-top"><h5><a href="{{ route("setFavoriteTeams", ["id" => $awayTeam->id]) }}"><i class="{{ $favorite_awayTeam }} fa-star fa-fw" aria-hidden="true"></i></a>&nbsp;<a href="{{ route("teamsDetails", ["id" => $awayTeam->id]) }}">{{ $awayTeam->name }}</a></h5></td>
                     </tr>
                 </table>
 
             @switch($fixture->time->status)
                 @case("FT_PEN")
-                    <p style="font-size: x-large; margin: 0;">{{ $fixture->scores->localteam_score }} - {{ $fixture->scores->visitorteam_score }}</p>
+                    <p class="score-display">{{ $fixture->scores->localteam_score }} - {{ $fixture->scores->visitorteam_score }}</p>
                     <p>
                     @if(isset($fixture->scores->localteam_pen_score) && isset($fixture->scores->visitorteam_pen_score))
                         ({{ $fixture->scores->localteam_pen_score }} - {{ $fixture->scores->visitorteam_pen_score }}) {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "penalties") }}
@@ -166,28 +166,28 @@
                     </p>
                     @break
                 @case("AET")
-                    <p style="font-size: x-large; margin: 0;"> {{$fixture->scores->ft_score}} (ET) </p>
+                    <p class="score-display"> {{$fixture->scores->ft_score}} (ET) </p>
                     @break
                 @default
-                    <p style="font-size: x-large; margin: 0;"> {{$fixture->scores->localteam_score}} - {{$fixture->scores->visitorteam_score}} </p>
+                    <p class="score-display"> {{$fixture->scores->localteam_score}} - {{$fixture->scores->visitorteam_score}} </p>
                     @break
             @endswitch
             @if(in_array($fixture->time->status, array("LIVE", "HT", "ET", "PEN_LIVE", "AET", "BREAK")))
                 @if($fixture->time->status == "HT")
-                    <p style="font-size: medium; margin: 0;"> {{$fixture->time->status}} </p>
+                    <p class="fixture-status"> {{$fixture->time->status}} </p>
                 @elseif($fixture->time->minute == null && $fixture->time->added_time == null)
-                    <p style="font-size: medium; margin: 0;"> {{$fixture->time->status}} - 0&apos;</p>
+                    <p class="fixture-status"> {{$fixture->time->status}} - 0&apos;</p>
                 @elseif($fixture->time->added_time == null)
-                    <p style="font-size: medium; margin: 0;"> {{$fixture->time->status}} - {{$fixture->time->minute}}&apos;</p>
+                    <p class="fixture-status"> {{$fixture->time->status}} - {{$fixture->time->minute}}&apos;</p>
                 @elseif(!$fixture->time->added_time == null)
-                    <p style="font-size: medium; margin: 0;"> {{$fixture->time->status}} - {{$fixture->time->minute}}+{{$fixture->time->injury_time}}&apos;</p>
+                    <p class="fixture-status"> {{$fixture->time->status}} - {{$fixture->time->minute}}+{{$fixture->time->injury_time}}&apos;</p>
                 @endif
             @else
-                <p style="font-size: medium; margin: 0;"> {{date($date_format . " H:i", strtotime($fixture->time->starting_at->date_time))}} </p>
+                <p class="fixture-status"> {{date($date_format . " H:i", strtotime($fixture->time->starting_at->date_time))}} </p>
             @endif
 
             @if(isset($venue))
-                <p style="margin: 0;">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Venue") }}: {{$venue->name}} @if($venue->city !== "")- {{$venue->city}}@endif </p>
+                <p class="m-0">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Venue") }}: {{$venue->name}} @if($venue->city !== "")- {{$venue->city}}@endif </p>
             @endif
             @if(isset($referee) && !is_null($referee->fullname))
                 <p>{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Referee") }}: {{$referee->fullname}} </p>
@@ -197,21 +197,21 @@
         {{-- Nav tabs --}}
         <ul class="nav nav-tabs" id="nav_tabs" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="events-tab" data-toggle="tab" href="#match_summary" role="tab" aria-controls="match_summary" aria-selected="true">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Match Summary") }}</a>
+                <a class="nav-link active" id="events-tab" data-bs-toggle="tab" href="#match_summary" role="tab" aria-controls="match_summary" aria-selected="true">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Match Summary") }}</a>
             </li>
             @if(count($statistics) > 0)
             <li class="nav-item">
-                <a class="nav-link" id="statistics-tab" data-toggle="tab" href="#statistics" role="tab" aria-controls="statistics" aria-selected="true">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Statistics") }}</a>
+                <a class="nav-link" id="statistics-tab" data-bs-toggle="tab" href="#statistics" role="tab" aria-controls="statistics" aria-selected="true">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Statistics") }}</a>
             </li>
             @endif
             @if(count($lineup) > 1)
                 <li class="nav-item">
-                    <a class="nav-link" id="lineups-tab" data-toggle="tab" href="#lineups" role="tab" aria-controls="lineups" aria-selected="true">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Lineups") }}</a>
+                    <a class="nav-link" id="lineups-tab" data-bs-toggle="tab" href="#lineups" role="tab" aria-controls="lineups" aria-selected="true">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Lineups") }}</a>
                 </li>
             @endif
             @if(count($h2h_fixtures) > 0)
                 <li class="nav-item">
-                    <a class="nav-link" id="head2head-tab" data-toggle="tab" href="#head2head" role="tab" aria-controls="head2head" aria-selected="true">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "H2H") }}</a>
+                    <a class="nav-link" id="head2head-tab" data-bs-toggle="tab" href="#head2head" role="tab" aria-controls="head2head" aria-selected="true">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "H2H") }}</a>
                 </li>
             @endif
         </ul>
@@ -226,9 +226,9 @@
                                 @continue
                             @endif
                             @if($event->team_id == $homeTeam->id)
-                                <div class="row no-gutters justify-content-end justify-content-md-around align-items-start timeline-nodes-left">
+                                <div class="row g-0 justify-content-end justify-content-md-around align-items-start timeline-nodes-left">
                             @else
-                                <div class="row no-gutters justify-content-end justify-content-md-around align-items-start timeline-nodes-right">
+                                <div class="row g-0 justify-content-end justify-content-md-around align-items-start timeline-nodes-right">
                             @endif
                                     <div class="col-10 col-md-5 order-3 order-md-1 timeline-content">
                                         <span class="text-light timeline-content-span">{{$event->minute}}@if(!is_null($event->extra_minute))+{{$event->extra_minute}}@endif&apos;</span>
@@ -246,7 +246,7 @@
                         @endforeach
                     </div>
                 @else
-                    <span style="font-weight: bold">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Match Summary") }} @choice("application.msg_no_data", 1)</span>
+                    <span class="fw-bold">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Match Summary") }} @choice("application.msg_no_data", 1)</span>
                 @endif
             </div>
             <div class="tab-pane fade" id="statistics" role="tabpanel" aria-labelledby="statistics-tab">
@@ -294,9 +294,9 @@
                                 $away_display = $row['is_pct'] ? $away_val . '%' : $away_val;
                             @endphp
                             <tr>
-                                <td colspan="2" style="text-align: left"><span>{{ $home_display }}</span></td>
-                                <td colspan="2" style="text-align: center"><span>{{ $row['label'] }}</span></td>
-                                <td colspan="2" style="text-align: right"><span>{{ $away_display }}</span></td>
+                                <td colspan="2" class="text-start"><span>{{ $home_display }}</span></td>
+                                <td colspan="2" class="text-center"><span>{{ $row['label'] }}</span></td>
+                                <td colspan="2" class="text-end"><span>{{ $away_display }}</span></td>
                             </tr>
                             <tr>
                                 <td colspan="3" style="width: 50%">
@@ -313,18 +313,18 @@
                         @endforeach
                     </table>
                 @else
-                    <span style="font-weight: bold">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Statistics") }} @choice("application.msg_no_data", 2)</span>
+                    <span class="fw-bold">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Statistics") }} @choice("application.msg_no_data", 2)</span>
                 @endif
             </div>
             <div class="tab-pane fade" id="lineups" role="tabpanel" aria-labelledby="lineups-tab">
                 @if(count($lineup) > 0)
                     <table class="table table-borderless table-sm">
                         @if($fixture->formations->localteam_formation && $fixture->formations->visitorteam_formation)
-                        <tr style="text-align: center">
+                        <tr class="text-center">
                             <td colspan="3">
                                 <span>{{$fixture->formations->localteam_formation}}</span>
                             </td>
-                            <td style="font-weight: bold">
+                            <td class="fw-bold">
                                 <span>{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Formation") }}</span>
                             </td>
                             <td colspan="3">
@@ -332,7 +332,7 @@
                             </td>
                         </tr>
                         @endif
-                        <tr style="font-weight: bold; text-align: center; background: #D3D3D3">
+                        <tr class="fixture-round-header">
                             <td colspan="7">
                                 <span>{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Starting lineups") }}</span>
                             </td>
@@ -395,24 +395,24 @@
                             @endphp
                             @if(isset($home_lineup_player) && isset($away_lineup_player))
                                 <tr>
-                                    <td style="width:1%">{{$home_lineup_player->number}}</td>
-                                    <td style="width: 1%"><img src="/images/flags/shiny/16/{{$home_lineup_player->nationality}}.png" alt="homePlayer-nationality"></td>
-                                    <td style="text-align: left">
+                                    <td class="td-narrow">{{$home_lineup_player->number}}</td>
+                                    <td class="td-narrow"><img src="/images/flags/shiny/16/{{$home_lineup_player->nationality}}.png" alt="homePlayer-nationality"></td>
+                                    <td class="text-start">
                                         {{$home_lineup_player->common_name}}
                                         @foreach($home_lineup_player->events as $event)
                                             <img src="{{$event}}" alt="stat">
                                         @endforeach
                                     </td>
                                     <td></td>
-                                    <td style="text-align: right">{{$away_lineup_player->common_name}}</td>
-                                    <td style="width: 1%"><img src="/images/flags/shiny/16/{{$away_lineup_player->nationality}}.png" alt="awayPlayer-nationality"></td>
-                                    <td style="width:1%">{{$away_lineup_player->number}}</td>
+                                    <td class="text-end">{{$away_lineup_player->common_name}}</td>
+                                    <td class="td-narrow"><img src="/images/flags/shiny/16/{{$away_lineup_player->nationality}}.png" alt="awayPlayer-nationality"></td>
+                                    <td class="td-narrow">{{$away_lineup_player->number}}</td>
                                 </tr>
                             @elseif(isset($home_lineup_player) && !isset($away_lineup_player))
                                 <tr>
-                                    <td style="width:1%">{{$home_lineup_player->number}}</td>
-                                    <td style="width: 1%"><img src="/images/flags/shiny/16/{{$home_lineup_player->nationality}}.png" alt="homePlayer-nationality"></td>
-                                    <td style="text-align: left">
+                                    <td class="td-narrow">{{$home_lineup_player->number}}</td>
+                                    <td class="td-narrow"><img src="/images/flags/shiny/16/{{$home_lineup_player->nationality}}.png" alt="homePlayer-nationality"></td>
+                                    <td class="text-start">
                                         {{$home_lineup_player->common_name}}
                                         @foreach($home_lineup_player->events as $event)
                                             <img src="{{$event}}" alt="stat">
@@ -422,15 +422,15 @@
                             @elseif(!isset($home_lineup_player) && isset($away_lineup_player))
                                 <tr>
                                     <td colspan="4"></td>
-                                    <td style="text-align: right">{{$away_lineup_player->common_name}}</td>
-                                    <td style="width: 1%"><img src="/images/flags/shiny/16/{{$away_lineup_player->nationality}}.png" alt="awayPlayer-nationality"></td>
-                                    <td style="width:1%">{{$away_lineup_player->number}}</td>
+                                    <td class="text-end">{{$away_lineup_player->common_name}}</td>
+                                    <td class="td-narrow"><img src="/images/flags/shiny/16/{{$away_lineup_player->nationality}}.png" alt="awayPlayer-nationality"></td>
+                                    <td class="td-narrow">{{$away_lineup_player->number}}</td>
                                 </tr>
                             @endif
                             @php unset($home_lineup_player); unset($away_lineup_player) @endphp
                         @endfor
                         @if(count($bench) > 0)
-                            <tr style="font-weight: bold; text-align: center; background: #D3D3D3">
+                            <tr class="fixture-round-header">
                                 <td colspan="7">
                                     <span>{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Substitutes") }}</span>
                                 </td>
@@ -493,24 +493,24 @@
                                 @endphp
                                 @if(isset($home_bench_player) && isset($away_bench_player))
                                     <tr>
-                                        <td style="width:1%">{{$home_bench_player->number}}</td>
-                                        <td style="width: 1%"><img src="/images/flags/shiny/16/{{$home_bench_player->nationality}}.png" alt="homePlayer-nationality"></td>
-                                        <td style="text-align: left">
+                                        <td class="td-narrow">{{$home_bench_player->number}}</td>
+                                        <td class="td-narrow"><img src="/images/flags/shiny/16/{{$home_bench_player->nationality}}.png" alt="homePlayer-nationality"></td>
+                                        <td class="text-start">
                                             {{$home_bench_player->common_name}}
                                             @foreach($home_bench_player->events as $event)
                                                 <img src="{{$event}}" alt="stat">
                                             @endforeach
                                         </td>
                                         <td></td>
-                                        <td style="text-align: right">{{$away_bench_player->common_name}}</td>
-                                        <td style="width: 1%"><img src="/images/flags/shiny/16/{{$away_bench_player->nationality}}.png" alt="awayPlayer-nationality"></td>
-                                        <td style="width:1%">{{$away_bench_player->number}}</td>
+                                        <td class="text-end">{{$away_bench_player->common_name}}</td>
+                                        <td class="td-narrow"><img src="/images/flags/shiny/16/{{$away_bench_player->nationality}}.png" alt="awayPlayer-nationality"></td>
+                                        <td class="td-narrow">{{$away_bench_player->number}}</td>
                                     </tr>
                                 @elseif(isset($home_bench_player) && !isset($away_bench_player))
                                     <tr>
-                                        <td style="width:1%">{{$home_bench_player->number}}</td>
-                                        <td style="width: 1%"><img src="/images/flags/shiny/16/{{$home_bench_player->nationality}}.png" alt="homePlayer-nationality"></td>
-                                        <td style="text-align: left">
+                                        <td class="td-narrow">{{$home_bench_player->number}}</td>
+                                        <td class="td-narrow"><img src="/images/flags/shiny/16/{{$home_bench_player->nationality}}.png" alt="homePlayer-nationality"></td>
+                                        <td class="text-start">
                                             {{$home_bench_player->common_name}}
                                             @foreach($home_bench_player->events as $event)
                                                 <img src="{{$event}}" alt="stat">
@@ -520,16 +520,16 @@
                                 @elseif(!isset($home_bench_player) && isset($away_bench_player))
                                     <tr>
                                         <td colspan="4"></td>
-                                        <td style="text-align: right">{{$away_bench_player->common_name}}</td>
-                                        <td style="width: 1%"><img src="/images/flags/shiny/16/{{$away_bench_player->nationality}}.png" alt="awayPlayer-nationality"></td>
-                                        <td style="width:1%">{{$away_bench_player->number}}</td>
+                                        <td class="text-end">{{$away_bench_player->common_name}}</td>
+                                        <td class="td-narrow"><img src="/images/flags/shiny/16/{{$away_bench_player->nationality}}.png" alt="awayPlayer-nationality"></td>
+                                        <td class="td-narrow">{{$away_bench_player->number}}</td>
                                     </tr>
                                 @endif
                                 @php unset($home_bench_player); unset($away_bench_player) @endphp
                             @endfor
                         @endif
                         @if(count($sidelined) > 0)
-                            <tr style="font-weight: bold; text-align: center; background: #D3D3D3">
+                            <tr class="fixture-round-header">
                                 <td colspan="7">
                                     <span>{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Missing players") }}</span>
                                 </td>
@@ -574,23 +574,23 @@
                                 @if(isset($home_sidelined_player) && isset($away_sidelined_player))
                                     <tr>
                                         <td></td>
-                                        <td style="width: 1%"><img src="/images/flags/shiny/16/{{$home_sidelined_player->nationality}}.png" alt="homePlayer-nationality"></td>
-                                        <td style="text-align: left">{{$home_sidelined_player->common_name}} <span style="color: #A9A9A9">({{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("injuries", $home_sidelined_player->reason) }})</span></td>
+                                        <td class="td-narrow"><img src="/images/flags/shiny/16/{{$home_sidelined_player->nationality}}.png" alt="homePlayer-nationality"></td>
+                                        <td class="text-start">{{$home_sidelined_player->common_name}} <span class="text-muted-alt">({{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("injuries", $home_sidelined_player->reason) }})</span></td>
                                         <td></td>
-                                        <td style="text-align: right">{{$away_sidelined_player->common_name}} <span style="color: #A9A9A9">({{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("injuries", $away_sidelined_player->reason) }})</span></td>
-                                        <td style="width: 1%"><img src="/images/flags/shiny/16/{{$away_sidelined_player->nationality}}.png" alt="awayPlayer-nationality"></td>
+                                        <td class="text-end">{{$away_sidelined_player->common_name}} <span class="text-muted-alt">({{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("injuries", $away_sidelined_player->reason) }})</span></td>
+                                        <td class="td-narrow"><img src="/images/flags/shiny/16/{{$away_sidelined_player->nationality}}.png" alt="awayPlayer-nationality"></td>
                                     </tr>
                                 @elseif(isset($home_sidelined_player) && !isset($away_sidelined_player))
                                     <tr>
                                         <td></td>
-                                        <td style="width: 1%"><img src="/images/flags/shiny/16/{{$home_sidelined_player->nationality}}.png" alt="homePlayer-nationality"></td>
-                                        <td style="text-align: left">{{$home_sidelined_player->common_name}} <span style="color: #A9A9A9">({{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("injuries", $home_sidelined_player->reason) }})</span></td>
+                                        <td class="td-narrow"><img src="/images/flags/shiny/16/{{$home_sidelined_player->nationality}}.png" alt="homePlayer-nationality"></td>
+                                        <td class="text-start">{{$home_sidelined_player->common_name}} <span class="text-muted-alt">({{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("injuries", $home_sidelined_player->reason) }})</span></td>
                                     </tr>
                                 @elseif(!isset($home_sidelined_player) && isset($away_sidelined_player))
                                     <tr>
                                         <td colspan="4"></td>
-                                        <td style="text-align: right">{{$away_sidelined_player->common_name}} <span style="color: #A9A9A9">({{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("injuries", $away_sidelined_player->reason) }})</span></td>
-                                        <td style="width: 1%"><img src="/images/flags/shiny/16/{{$away_sidelined_player->nationality}}.png" alt="awayPlayer-nationality"></td>
+                                        <td class="text-end">{{$away_sidelined_player->common_name}} <span class="text-muted-alt">({{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("injuries", $away_sidelined_player->reason) }})</span></td>
+                                        <td class="td-narrow"><img src="/images/flags/shiny/16/{{$away_sidelined_player->nationality}}.png" alt="awayPlayer-nationality"></td>
                                     </tr>
                                 @endif
                                 @php unset($home_sidelined_player); unset($away_sidelined_player) @endphp
@@ -612,35 +612,35 @@
                                     }
                                 }
                             @endphp
-                        <tr style="font-weight: bold; text-align: center; background: #D3D3D3">
+                        <tr class="fixture-round-header">
                             <td colspan="7">
                                 <span>{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Coaches") }}</span>
                             </td>
                         </tr>
                         <tr>
                             @if(isset($localCoach) && isset($visitorCoach))
-                                <td style="width: 1%"></td>
-                                <td style="width:1%"><img src="/images/flags/shiny/16/{{$localCoach->nationality}}.png" alt="localCoach-nationality"></td>
-                                <td style="text-align: left">{{$localCoach->common_name}}</td>
+                                <td class="td-narrow"></td>
+                                <td class="td-narrow"><img src="/images/flags/shiny/16/{{$localCoach->nationality}}.png" alt="localCoach-nationality"></td>
+                                <td class="text-start">{{$localCoach->common_name}}</td>
                                 <td></td>
-                                <td style="text-align: right">{{$visitorCoach->common_name}}</td>
-                                <td style="width:1%"><img src="/images/flags/shiny/16/{{$visitorCoach->nationality}}.png" alt="visitiorCoach-nationality"></td>
-                                <td style="width: 1%"></td>
+                                <td class="text-end">{{$visitorCoach->common_name}}</td>
+                                <td class="td-narrow"><img src="/images/flags/shiny/16/{{$visitorCoach->nationality}}.png" alt="visitiorCoach-nationality"></td>
+                                <td class="td-narrow"></td>
                             @elseif(isset($localCoach) && !isset($visitorCoach))
-                                <td style="width: 1%"></td>
-                                <td style="width:1%"><img src="/images/flags/shiny/16/{{$localCoach->nationality}}.png" alt="localCoach-nationality"></td>
-                                <td style="text-align: left">{{$localCoach->common_name}}</td>
+                                <td class="td-narrow"></td>
+                                <td class="td-narrow"><img src="/images/flags/shiny/16/{{$localCoach->nationality}}.png" alt="localCoach-nationality"></td>
+                                <td class="text-start">{{$localCoach->common_name}}</td>
                             @elseif(!isset($localCoach) && isset($visitorCoach))
                                 <td colspan="4"></td>
-                                <td style="text-align: right">{{$visitorCoach->common_name}}</td>
-                                <td style="width:1%"><img src="/images/flags/shiny/16/{{$visitorCoach->nationality}}.png" alt="visitorCoach-nationality"></td>
-                                <td style="width: 1%"></td>
+                                <td class="text-end">{{$visitorCoach->common_name}}</td>
+                                <td class="td-narrow"><img src="/images/flags/shiny/16/{{$visitorCoach->nationality}}.png" alt="visitorCoach-nationality"></td>
+                                <td class="td-narrow"></td>
                             @endif
                         </tr>
                         @endif
                     </table>
                 @else
-                    <span style="font-weight: bold">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Lineups") }} @choice("application.msg_no_data", 2)</span>
+                    <span class="fw-bold">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "Lineups") }} @choice("application.msg_no_data", 2)</span>
                 @endif
             </div>
             <div class="tab-pane fade" id="head2head" role="tabpanel" aria-labelledby="head2head-tab">
@@ -709,7 +709,7 @@
                         @if($h2h_fixture->league_id == $last_league_id)
                             @if(isset($h2h_fixture->round) and $last_round_id !== $h2h_fixture->round->data->name)
                                     <tr>
-                                        <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
+                                        <td class="fixture-round-header" colspan="5">
                                             @if($h2h_fixture->stage->data->name !== "Regular Season")
                                                 {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $h2h_fixture->stage->data->name) }}
                                             @endif
@@ -721,7 +721,7 @@
                                     </tr>
                             @elseif(isset($h2h_fixture->round) and $last_stage_id !== $h2h_fixture->stage->data->name)
                                 <tr>
-                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
+                                    <td class="fixture-round-header" colspan="5">
                                         {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $h2h_fixture->stage->data->name) }}
                                         @if($h2h_fixture->season->data->name != $last_season_name)
                                             - {{ $h2h_fixture->season->data->name }}
@@ -732,12 +732,12 @@
                             <tr>
                                 <td scope="row">{{date($date_format . " H:i", strtotime($h2h_fixture->time->starting_at->date_time))}}</td>
                                 {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
-                                <td scope="row" style="text-align: right"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}&nbsp;<img src="{{ $homeTeamLogo }}" alt="team_logo"></a></td>
+                                <td scope="row" class="td-action"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}&nbsp;<img src="{{ $homeTeamLogo }}" alt="team_logo"></a></td>
                                 {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
-                                <td scope="row" style="text-align: center">{!! nl2br(e($scoreLine)) !!}</td>
+                                <td scope="row" class="td-score">{!! nl2br(e($scoreLine)) !!}</td>
                                 {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
-                                <td scope="row" style="text-align: left"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}><img src="{{ $awayTeamLogo }}" alt="team_logo">&nbsp;{{$awayTeam->name}}</a></td>
-                                <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $h2h_fixture->id])}}"><i class="fa fa-info-circle" aria-hidden="true" style="margin-right: 10px"></i></a></td>
+                                <td scope="row" class="td-away"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}><img src="{{ $awayTeamLogo }}" alt="team_logo">&nbsp;{{$awayTeam->name}}</a></td>
+                                <td scope="row" class="td-action"><a href="{{route("fixturesDetails", ["id" => $h2h_fixture->id])}}"><i class="fa fa-info-circle" aria-hidden="true" ></i></a></td>
                             </tr>
                         @else
                             @php $last_league_id = 0; $last_round_id = 0; $last_stage_id = 0; @endphp
@@ -745,7 +745,7 @@
                                 @if(isset($h2h_fixture->round))
                                     @if($last_round_id !== $h2h_fixture->round->data->name)
                                         <tr>
-                                            <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">
+                                            <td class="fixture-league-header" colspan="5">
                                                 <a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }}</a> -
                                                 @if($h2h_fixture->stage->data->name !== "Regular Season")
                                                     {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $h2h_fixture->stage->data->name) }} -
@@ -759,7 +759,7 @@
                                     @endif
                                 @elseif($last_stage_id !== $h2h_fixture->stage->data->name)
                                     <tr>
-                                        <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">
+                                        <td class="fixture-league-header" colspan="5">
                                             <a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }}</a> -
                                             {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $h2h_fixture->stage->data->name) }}
                                             @if($h2h_fixture->season->data->name != $last_season_name || $h2h_fixture->league_id !== $last_league_id)
@@ -768,7 +768,7 @@
                                         </td>
                                     </tr>
                                 @endif
-                                <thead style="visibility: collapse">
+                                <thead class="thead-hidden">
                                     <tr>
                                         <th scope="col" width="20%"></th>
                                         <th scope="col" width="26.25%"></th>
@@ -781,12 +781,12 @@
                                 <tr>
                                     <td scope="row">{{date($date_format . " H:i", strtotime($h2h_fixture->time->starting_at->date_time))}}</td>
                                     {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
-                                    <td scope="row" style="text-align: right"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}&nbsp;<img src="{{ $homeTeamLogo }}" alt="team_logo"></a></td>
+                                    <td scope="row" class="td-action"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}&nbsp;<img src="{{ $homeTeamLogo }}" alt="team_logo"></a></td>
                                     {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
-                                    <td scope="row" style="text-align: center">{!! nl2br(e($scoreLine)) !!}</td>
+                                    <td scope="row" class="td-score">{!! nl2br(e($scoreLine)) !!}</td>
                                     {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
-                                    <td scope="row" style="text-align: left"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}><img src="{{ $awayTeamLogo }}" alt="team_logo">&nbsp;{{$awayTeam->name}}</a></td>
-                                    <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $h2h_fixture->id])}}"><i class="fa fa-info-circle" aria-hidden="true" style="margin-right: 10px"></i></a></td>
+                                    <td scope="row" class="td-away"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}><img src="{{ $awayTeamLogo }}" alt="team_logo">&nbsp;{{$awayTeam->name}}</a></td>
+                                    <td scope="row" class="td-action"><a href="{{route("fixturesDetails", ["id" => $h2h_fixture->id])}}"><i class="fa fa-info-circle" aria-hidden="true" ></i></a></td>
                                 </tr>
                                 @endif
                                 @php $last_league_id = $h2h_fixture->league_id; if(isset($h2h_fixture->round)) {$last_round_id = $h2h_fixture->round->data->name;} if(isset($h2h_fixture->stage)) {$last_stage_id = $h2h_fixture->stage->data->name;} $last_season_name = $h2h_fixture->season->data->name; @endphp
@@ -794,7 +794,7 @@
                     </tbody>
                 </table>
                 @else
-                    <span style="font-weight: bold">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "H2H") }} @choice("application.msg_no_data", 2)</span>
+                    <span class="fw-bold">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "H2H") }} @choice("application.msg_no_data", 2)</span>
                 @endif
             </div>
         </div>

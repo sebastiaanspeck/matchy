@@ -2,7 +2,7 @@
 
 @section("content")
     <div class="container">
-        <div id="heading" style="text-align: center">
+        <div id="heading" class="text-center">
             <table width="100%">
                 <tr>
                     <td><img src="{{$team->logo_path}}" style="max-height: 200px; max-width: 200px" alt="team_logo"></td>
@@ -15,7 +15,7 @@
                             $favorite_team = "fas";
                         }
                     @endphp
-                    <td style="vertical-align: top"><h3><a href="{{ route("setFavoriteTeams", ["id" => $team->id]) }}"><i class="{{ $favorite_team }} fa-star fa-fw fa-xs" aria-hidden="true"></i></a>&nbsp;{{$team->name}}</h3></td>
+                    <td class="align-top"><h3><a href="{{ route("setFavoriteTeams", ["id" => $team->id]) }}"><i class="{{ $favorite_team }} fa-star fa-fw fa-xs" aria-hidden="true"></i></a>&nbsp;{{$team->name}}</h3></td>
                 </tr>
                 @if(isset($coach))
                     <tr>
@@ -29,12 +29,12 @@
         <ul class="nav nav-tabs" id="nav_tabs" role="tablist">
             @if($last_fixtures->count() > 0)
                 <li class="nav-item">
-                    <a class="nav-link active" id="last_fixtures-tab" data-toggle="tab" href="#last_fixtures" role="tab" aria-controls="last_fixtures" aria-selected="true">@choice("application.last fixtures", $last_fixtures->count())</a>
+                    <a class="nav-link active" id="last_fixtures-tab" data-bs-toggle="tab" href="#last_fixtures" role="tab" aria-controls="last_fixtures" aria-selected="true">@choice("application.last fixtures", $last_fixtures->count())</a>
                 </li>
             @endif
             @if($upcoming_fixtures->count() > 0)
                 <li class="nav-item">
-                    <a class="nav-link" id="upcoming_fixtures-tab" data-toggle="tab" href="#upcoming_fixtures" role="tab" aria-controls="upcoming_fixtures" aria-selected="false">@choice("application.upcoming fixtures", $upcoming_fixtures->count())</a>
+                    <a class="nav-link" id="upcoming_fixtures-tab" data-bs-toggle="tab" href="#upcoming_fixtures" role="tab" aria-controls="upcoming_fixtures" aria-selected="false">@choice("application.upcoming fixtures", $upcoming_fixtures->count())</a>
                 </li>
             @endif
         </ul>
@@ -98,7 +98,7 @@
                             @if(isset($last_fixture->round))
                                 @if($last_round_id !== $last_fixture->round->data->name)
                                     <tr>
-                                        <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
+                                        <td class="fixture-round-header" colspan="5">
                                             @if($last_fixture->stage->data->name !== "Regular Season")
                                                 {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $last_fixture->stage->data->name) }} -
                                             @endif
@@ -107,25 +107,25 @@
                                 @endif
                             @elseif($last_stage_id !== $last_fixture->stage->data->name)
                                 <tr>
-                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $last_fixture->stage->data->name) }}</td>
+                                    <td class="fixture-round-header" colspan="5">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $last_fixture->stage->data->name) }}</td>
                                 </tr>
                             @endif
                             <tr>
                                 <td scope="row">{{date($date_format . " H:i", strtotime($last_fixture->time->starting_at->date_time))}}</td>
                                 {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
-                                <td scope="row" style="text-align: right"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}&nbsp;<img src="{{ $homeTeamLogo }}" alt="team_logo"></a></td>
+                                <td scope="row" class="td-action"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}&nbsp;<img src="{{ $homeTeamLogo }}" alt="team_logo"></a></td>
                                 {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
-                                <td scope="row" style="text-align: center">{!! nl2br(e($scoreLine)) !!}</td>
+                                <td scope="row" class="td-score">{!! nl2br(e($scoreLine)) !!}</td>
                                 {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
-                                <td scope="row" style="text-align: left"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}><img src="{{ $awayTeamLogo }}" alt="team_logo">&nbsp;{{$awayTeam->name}}</a></td>
-                                <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $last_fixture->id])}}"><i class="fa fa-info-circle" aria-hidden="true" style="margin-right: 10px"></i></a></td>
+                                <td scope="row" class="td-away"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}><img src="{{ $awayTeamLogo }}" alt="team_logo">&nbsp;{{$awayTeam->name}}</a></td>
+                                <td scope="row" class="td-action"><a href="{{route("fixturesDetails", ["id" => $last_fixture->id])}}"><i class="fa fa-info-circle" aria-hidden="true" ></i></a></td>
                             </tr>
                         @else
-                            <table class="table table-striped table-light table-sm" style="width:100%">
+                            <table class="table table-striped table-light table-sm" >
                                 @if(isset($last_fixture->round))
                                     @if($last_round_id !== $last_fixture->round->data->name)
                                         <tr>
-                                            <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">
+                                            <td class="fixture-league-header" colspan="5">
                                                 <a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }}</a> -
                                                 @if($last_fixture->stage->data->name !== "Regular Season")
                                                     {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $last_fixture->stage->data->name) }} -
@@ -135,10 +135,10 @@
                                     @endif
                                 @elseif($last_stage_id !== $last_fixture->stage->data->name)
                                     <tr>
-                                        <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }}</a> - {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $last_fixture->stage->data->name) }}</td>
+                                        <td class="fixture-league-header" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }}</a> - {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $last_fixture->stage->data->name) }}</td>
                                     </tr>
                                 @endif
-                                <thead style="visibility: collapse">
+                                <thead class="thead-hidden">
                                     <tr>
                                         <th scope="col" width="20%"></th>
                                         <th scope="col" width="26.25%"></th>
@@ -151,12 +151,12 @@
                                 <tr>
                                     <td scope="row">{{date($date_format . " H:i", strtotime($last_fixture->time->starting_at->date_time))}}</td>
                                     {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
-                                    <td scope="row" style="text-align: right"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}&nbsp;<img src="{{ $homeTeamLogo }}" alt="team_logo"></a></td>
+                                    <td scope="row" class="td-action"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}" class={{$homeTeamClass}}>{{$homeTeam->name}}&nbsp;<img src="{{ $homeTeamLogo }}" alt="team_logo"></a></td>
                                     {{-- show score, if FT_PEN -> show penalty score, if AET -> show (ET) --}}
-                                    <td scope="row" style="text-align: center">{!! nl2br(e($scoreLine)) !!}</td>
+                                    <td scope="row" class="td-score">{!! nl2br(e($scoreLine)) !!}</td>
                                     {{-- show winning team in green, losing team in red, if draw, show both in orange --}}
-                                    <td scope="row" style="text-align: left"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}><img src="{{ $awayTeamLogo }}" alt="team_logo">&nbsp;{{$awayTeam->name}}</a></td>
-                                    <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $last_fixture->id])}}"><i class="fa fa-info-circle" aria-hidden="true" style="margin-right: 10px"></i></a></td>
+                                    <td scope="row" class="td-away"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}" class={{$awayTeamClass}}><img src="{{ $awayTeamLogo }}" alt="team_logo">&nbsp;{{$awayTeam->name}}</a></td>
+                                    <td scope="row" class="td-action"><a href="{{route("fixturesDetails", ["id" => $last_fixture->id])}}"><i class="fa fa-info-circle" aria-hidden="true" ></i></a></td>
                                 </tr>
                         @endif
                         @php $last_league_id = $last_fixture->league_id; if(isset($last_fixture->round)) {$last_round_id = $last_fixture->round->data->name;} $last_stage_id = $last_fixture->stage->data->name; @endphp
@@ -182,7 +182,7 @@
                             @if(isset($upcoming_fixture->round))
                                 @if($last_round_id !== $upcoming_fixture->round->data->name)
                                     <tr>
-                                        <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">
+                                        <td class="fixture-round-header" colspan="5">
                                             @if($upcoming_fixture->stage->data->name !== "Regular Season")
                                                 {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $upcoming_fixture->stage->data->name) }} -
                                             @endif
@@ -191,22 +191,22 @@
                                 @endif
                             @elseif($last_stage_id !== $upcoming_fixture->stage->data->name)
                                 <tr>
-                                    <td style="font-weight: bold; text-align: center; background-color: #d3d3d3;" colspan="5">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $upcoming_fixture->stage->data->name) }}</td>
+                                    <td class="fixture-round-header" colspan="5">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $upcoming_fixture->stage->data->name) }}</td>
                                 </tr>
                             @endif
                             <tr>
                                 <td scope="row">{{date($date_format . " H:i", strtotime($upcoming_fixture->time->starting_at->date_time))}}</td>
-                                <td scope="row" style="text-align: right"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}">{{$homeTeam->name}}&nbsp;<img src="{{ $homeTeamLogo }}" alt="team_logo"></a></td>
-                                <td scope="row" style="text-align: center"> - </td>
-                                <td scope="row" style="text-align: left"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}"><img src="{{ $awayTeamLogo }}" alt="team_logo">&nbsp;{{$awayTeam->name}}</a></td>
-                                <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $upcoming_fixture->id])}}"><i class="fa fa-info-circle" aria-hidden="true" style="margin-right: 10px"></i></a></td>
+                                <td scope="row" class="td-action"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}">{{$homeTeam->name}}&nbsp;<img src="{{ $homeTeamLogo }}" alt="team_logo"></a></td>
+                                <td scope="row" class="td-score"> - </td>
+                                <td scope="row" class="td-away"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}"><img src="{{ $awayTeamLogo }}" alt="team_logo">&nbsp;{{$awayTeam->name}}</a></td>
+                                <td scope="row" class="td-action"><a href="{{route("fixturesDetails", ["id" => $upcoming_fixture->id])}}"><i class="fa fa-info-circle" aria-hidden="true" ></i></a></td>
                             </tr>
                         @else
-                            <table class="table table-striped table-light table-sm" style="width:100%">
+                            <table class="table table-striped table-light table-sm" >
                                 @if(isset($upcoming_fixture->round))
                                     @if($last_round_id !== $upcoming_fixture->round->data->name)
                                         <tr>
-                                            <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5">
+                                            <td class="fixture-league-header" colspan="5">
                                                 <a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }}</a> -
                                                 @if($upcoming_fixture->stage->data->name !== "Regular Season")
                                                     {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $upcoming_fixture->stage->data->name) }} -
@@ -216,10 +216,10 @@
                                     @endif
                                 @elseif($last_stage_id !== $upcoming_fixture->stage->data->name)
                                     <tr>
-                                        <td style="font-weight: bold; text-align: center; background-color: #bdbdbd;" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }}</a> - {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $upcoming_fixture->stage->data->name) }}</td>
+                                        <td class="fixture-league-header" colspan="5"><a href="{{route("leaguesDetails", ["id" => $league->id])}}">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("leagues", $league->name) }}</a> - {{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("cup_stages", $upcoming_fixture->stage->data->name) }}</td>
                                     </tr>
                                 @endif
-                                <thead style="visibility: collapse">
+                                <thead class="thead-hidden">
                                     <tr>
                                         <th scope="col" width="20%"></th>
                                         <th scope="col" width="26.25%"></th>
@@ -231,10 +231,10 @@
                                 <tbody>
                                 <tr>
                                     <td scope="row">{{date($date_format . " H:i", strtotime($upcoming_fixture->time->starting_at->date_time))}}</td>
-                                    <td scope="row" style="text-align: right"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}">{{$homeTeam->name}}&nbsp;<img src="{{ $homeTeamLogo }}" alt="team_logo"></a></td>
-                                    <td scope="row" style="text-align: center"> - </td>
-                                    <td scope="row" style="text-align: left"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}"><img src="{{ $awayTeamLogo }}" alt="team_logo">&nbsp;{{$awayTeam->name}}</a></td>
-                                    <td scope="row" style="text-align: right"><a href="{{route("fixturesDetails", ["id" => $upcoming_fixture->id])}}"><i class="fa fa-info-circle" aria-hidden="true" style="margin-right: 10px"></i></a></td>
+                                    <td scope="row" class="td-action"><a href="{{route("teamsDetails", ["id" => $homeTeam->id])}}">{{$homeTeam->name}}&nbsp;<img src="{{ $homeTeamLogo }}" alt="team_logo"></a></td>
+                                    <td scope="row" class="td-score"> - </td>
+                                    <td scope="row" class="td-away"><a href="{{route("teamsDetails", ["id" => $awayTeam->id])}}"><img src="{{ $awayTeamLogo }}" alt="team_logo">&nbsp;{{$awayTeam->name}}</a></td>
+                                    <td scope="row" class="td-action"><a href="{{route("fixturesDetails", ["id" => $upcoming_fixture->id])}}"><i class="fa fa-info-circle" aria-hidden="true" ></i></a></td>
                                 </tr>
                         @endif
                                 @php $last_league_id = $upcoming_fixture->league_id; if(isset($upcoming_fixture->round)) {$last_round_id = $upcoming_fixture->round->data->name;} $last_stage_id = $upcoming_fixture->stage->data->name; @endphp

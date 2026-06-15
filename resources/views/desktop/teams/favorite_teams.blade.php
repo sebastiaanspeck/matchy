@@ -31,7 +31,7 @@
                 {{$teams->links()}}
             </div>
         @else
-            <span style="font-weight: bold">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "msg_no_favorite_teams") }}</span>
+            <span class="fw-bold">{{ \App\Http\Controllers\SoccerAPI\SoccerAPIController::translateString("application", "msg_no_favorite_teams") }}</span>
         @endif
     </div>
 @endsection
