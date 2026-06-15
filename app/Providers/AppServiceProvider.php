@@ -18,8 +18,8 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(FootballApiProviderInterface::class, function () {
             return match (config('football-api.provider')) {
-                'sportmonks' => new SportmonksProvider(),
-                default => new ApiFootballProvider(),
+                'sportmonks' => new SportmonksProvider,
+                default => new ApiFootballProvider,
             };
         });
     }
